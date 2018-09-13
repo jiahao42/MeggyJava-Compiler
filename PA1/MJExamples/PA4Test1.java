@@ -1,4 +1,3 @@
-
 /** 
  *
  * @File:      PA4Test4
@@ -8,30 +7,81 @@
  *
  */
 
+
 import meggy.Meggy;
-// import meggy.Meggy.Color;
+
+// 1. Test return value
+// 2. Test parameter variables
+// 3. Test operator < 
 
 class PA4Test1 {
   public static void main(String[] parameters) {
-    new MeggyHelper().SetLineColor(1, Meggy.Color.RED);
+    new TestReturnValue().testAll();
+    new TestParameters().testAll();
+    new TestLessThan().testLessThan();
   }
 }
 
-class MeggyHelper {
-  public void SetLineColor(int line, Meggy.Color color) {
-    if (line < 8) {
-      Meggy.setPixel((byte) 0, (byte) line, color);
-      Meggy.setPixel((byte) 1, (byte) line, color);
-      Meggy.setPixel((byte) 2, (byte) line, color);
-      Meggy.setPixel((byte) 3, (byte) line, color);
-      Meggy.setPixel((byte) 4, (byte) line, color);
-      Meggy.setPixel((byte) 5, (byte) line, color);
-      Meggy.setPixel((byte) 6, (byte) line, color);
-      Meggy.setPixel((byte) 7, (byte) line, color);
-    }
+class TestReturnValue {
+  public void testAll() {
+    this.testBoolean();
+    this.testByte();
+    this.testInt();
+    this.testVoid();
+    this.testColor();
+    this.testButton();
+    this.testTone();
   }
 
-  public boolean inBounds(byte x, byte y) {
-    return ((byte) (0 - 1) < x) && (x < (byte) 8) && ((byte) (0 - 1) < y) && (y < (byte) 8);
+  public boolean testBoolean() {
+    return true;
+  }
+
+  public byte testByte() {
+    return (byte)1;
+  }
+
+  public int testInt() {
+    return 1;
+  }
+
+  public void testVoid() {
+
+  }
+
+  public Meggy.Color testColor() {
+    return Meggy.Color.DARK;
+  }
+
+  public Meggy.Button testButton() {
+    return Meggy.Button.Up;
+  }
+
+  public Meggy.Tone testTone() {
+    return Meggy.Tone.C3;
+  }
+
+}
+
+class TestParameters {
+  public void testAll() {
+    this.testBoolean(true);
+    this.testByte((byte)0);
+    this.testInt(0);
+    this.testColor(Meggy.Color.DARK);
+    this.testButton(Meggy.Button.Up);
+    this.testTone(Meggy.Tone.C3);
+  }
+  public void testBoolean(boolean b){}
+  public void testByte(byte b){}
+  public void testInt(int i){}
+  public void testColor(Meggy.Color c){}
+  public void testButton(Meggy.Button b){}
+  public void testTone(Meggy.Tone t){}
+}
+
+class TestLessThan {
+  public boolean testLessThan() {
+      return 1 < 2;
   }
 }
