@@ -21,32 +21,38 @@ SRC += $(PA2) $(PA3) $(PA4) $(PA5)
 
 dependent = meggy/Meggy.java meggy/MeggyException.java meggy/arg_opts
 
-all: $(PA2:%=%.java.ast.dot) $(PA3:%=%.java.ast.dot) $(PA4:%=%.java.ast.dot) $(PA5:%=%.java.ast.dot)
-# $(SRC:%=%.java.ast.dot)
+all: $(SRC:%=%.java.ast.dot) $(SRC:%=%.java.ST.dot)
 
-$(PA2:%=%.java.ast.dot): $(PA2:%=%.java)
+PA2%.java.ast.dot: PA2%.java $(dependent)
+	@echo "Compiling $<..." 
+	$(JAVA) $(J_FLAG) MJ_PA2.jar $<
 	@echo "--------------------------------------------------------"
-	@echo "Compile test code for PA2" 
-	@echo "--------------------------------------------------------"
-	$(foreach var,$(PA2:%=%.java),$(JAVA) $(J_FLAG) MJ_PA2.jar $(var);)
 
-$(PA3:%=%.java.ast.dot): $(PA3:%=%.java)
+PA3%.java.ast.dot: PA3%.java $(dependent)
+	@echo "Compiling $<..." 
+	$(JAVA) $(J_FLAG) MJ_PA3.jar $<
 	@echo "--------------------------------------------------------"
-	@echo "Compile test code for PA3" 
-	@echo "--------------------------------------------------------"
-	$(foreach var,$(PA3:%=%.java),$(JAVA) $(J_FLAG) MJ_PA3.jar $(var);)
 
-$(PA4:%=%.java.ast.dot): $(PA4:%=%.java)
+PA4%.java.ast.dot: PA4%.java $(dependent)
+	@echo "Compiling $<..." 
+	$(JAVA) $(J_FLAG) MJ_PA4.jar $<
 	@echo "--------------------------------------------------------"
-	@echo "Compile test code for PA4" 
-	@echo "--------------------------------------------------------"
-	$(foreach var,$(PA4:%=%.java),$(JAVA) $(J_FLAG) MJ_PA4.jar $(var);)
 
-$(PA5:%=%.java.ast.dot): $(PA5:%=%.java)
+PA5%.java.ast.dot: PA5%.java $(dependent)
+	@echo "Compiling $<..." 
+	$(JAVA) $(J_FLAG) MJ_PA5.jar $<
 	@echo "--------------------------------------------------------"
-	@echo "Compile test code for PA5" 
+
+
+run: $(SRC:%=%.class)
+
+%.class: %.java $(dependent)
+	@echo "Compiling $<..."
+	javac $<
+	@echo "Running $<..."
+	java $(basename $@)
 	@echo "--------------------------------------------------------"
-	$(foreach var,$(PA5:%=%.java),$(JAVA) $(J_FLAG) MJ_PA5.jar $(var);)
+
 
 clean: 
-	rm -rf $(SRC:%=%.java.ST.dot) $(SRC:%=%.java.ast.dot)
+	rm -rf $(SRC:%=%.java.ST.dot) $(SRC:%=%.java.ast.dot) $(SRC:%=%.class)

@@ -39,6 +39,7 @@ class TestAssign {
   public void testAssign() {
     int a;
     int b;
+    a = 0;
     b = a;
     a = -b;
     a = (a + b - a + (-b));

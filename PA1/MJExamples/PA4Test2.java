@@ -32,7 +32,7 @@ class MultiClassTest1 {
 
 class MultiClassTest2 {
   public int sameNameFunction() {
-    this.testThis();
+    return this.testThis();
   }
   public int testThis() {
     return new MultiClassTest3().sameNameFunction();
