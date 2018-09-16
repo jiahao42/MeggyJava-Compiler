@@ -11,7 +11,8 @@ import meggy.Meggy;
 
 class PA5Test3 {
   public static void main(String[] parameters) {
-    
+    new MixedTest().mixedTestOne(); 
+    new TestTimes().test();
   }
 }
 
@@ -19,7 +20,7 @@ class MixedTest {
   public void mixedTestOne() {
     MeggyHelper _This_1s_a_1dentifi3r;
     _This_1s_a_1dentifi3r = new MeggyHelper();
-    _This_1s_a_1dentifi3r.setColorByLine(0, Meggy.Color.YELLOW);
+    _This_1s_a_1dentifi3r.setColorByLine(2, Meggy.Color.YELLOW);
     _This_1s_a_1dentifi3r.sing();
     _This_1s_a_1dentifi3r.comparePixel((byte)0, (byte)1, (byte)2, (byte)3);
   }
@@ -76,5 +77,12 @@ class MeggyHelper {
       res = false;
     }
     return res;
+  }
+}
+
+class TestTimes {
+  int a;
+  public void test() {
+    // a = 1 * 2;
   }
 }

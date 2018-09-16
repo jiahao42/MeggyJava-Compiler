@@ -21,7 +21,7 @@ SRC += $(PA2) $(PA3) $(PA4) $(PA5)
 
 dependent = meggy/Meggy.java meggy/MeggyException.java meggy/arg_opts
 
-all: $(SRC:%=%.java.ast.dot) $(SRC:%=%.java.ST.dot)
+dot: $(SRC:%=%.java.ast.dot) $(SRC:%=%.java.ST.dot)
 
 PA2%.java.ast.dot: PA2%.java $(dependent)
 	@echo "Compiling $<..." 
@@ -55,4 +55,4 @@ run: $(SRC:%=%.class)
 
 
 clean: 
-	rm -rf $(SRC:%=%.java.ST.dot) $(SRC:%=%.java.ast.dot) $(SRC:%=%.class)
+	rm -rf $(SRC:%=%.java.ST.dot) $(SRC:%=%.java.ast.dot) *.class

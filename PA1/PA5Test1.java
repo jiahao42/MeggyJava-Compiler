@@ -16,6 +16,7 @@ import meggy.Meggy;
 class PA5Test1 {
   public static void main(String[] parameters) {
     new TestObjectCreation().testObjectCreation();
+    new SwitchPixel().switchPixel((byte)1, (byte)2, (byte)3, (byte)4);
   }
 }
 
@@ -54,5 +55,14 @@ class TestObjectCreation {
     t.testAssign();
     v = new TestVarDeclare();
     v.testVar();
+  }
+}
+
+class SwitchPixel {
+  public void switchPixel(byte x0, byte y0, byte x1, byte y1) {
+    Meggy.Color c;
+    c = Meggy.getPixel(x0, y0);
+    Meggy.setPixel(x0, y0, Meggy.getPixel(x1, x1));
+    Meggy.setPixel(x1, y1, c);
   }
 }

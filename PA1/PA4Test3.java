@@ -50,9 +50,9 @@ class MixedTest {
 
   public void safeSwitchPixel(byte x1, byte y1, byte x2, byte y2) {
     if (this.boundary_guard(x1, y1) && this.boundary_guard(x2, y2))
-      Meggy.setPixel((byte)8 ,(byte)8, Meggy.getPixel(x1, y1));
+      Meggy.setPixel((byte)7 ,(byte)7, Meggy.getPixel(x1, y1));
       Meggy.setPixel(x1, y1, Meggy.getPixel(x2, y2));
-      Meggy.setPixel(x2, x2, Meggy.getPixel((byte)8 ,(byte)8));
-      Meggy.setPixel((byte)8 ,(byte)8, Meggy.Color.DARK);
+      Meggy.setPixel(x2, x2, Meggy.getPixel((byte)7 ,(byte)7));
+      Meggy.setPixel((byte)7 ,(byte)7, Meggy.Color.DARK);
   }
 }

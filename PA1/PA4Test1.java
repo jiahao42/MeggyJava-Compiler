@@ -19,6 +19,11 @@ class PA4Test1 {
     new TestReturnValue().testAll();
     new TestParameters().testAll();
     new TestLessThan().testLessThan();
+    Meggy.setPixel((byte)1, (byte)2, Meggy.Color.RED);
+    Meggy.delay(5);
+    if (Meggy.checkButton(Meggy.Button.Down) == true) {
+      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.BLUE);
+    }
   }
 }
 
