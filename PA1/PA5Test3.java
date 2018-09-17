@@ -20,9 +20,31 @@ class MixedTest {
   public void mixedTestOne() {
     MeggyHelper _This_1s_a_1dentifi3r;
     _This_1s_a_1dentifi3r = new MeggyHelper();
-    _This_1s_a_1dentifi3r.setColorByLine(2, Meggy.Color.YELLOW);
-    _This_1s_a_1dentifi3r.sing();
-    _This_1s_a_1dentifi3r.comparePixel((byte)0, (byte)1, (byte)2, (byte)3);
+    while(true) {
+      _This_1s_a_1dentifi3r.setColorByLine(2, Meggy.Color.YELLOW);
+      Meggy.delay(80);
+      _This_1s_a_1dentifi3r.setColorByLine(2, Meggy.Color.RED);
+      Meggy.delay(80);
+      _This_1s_a_1dentifi3r.setColorByLine(2, Meggy.Color.VIOLET);
+      Meggy.delay(80);
+      _This_1s_a_1dentifi3r.setColorByLine(2, Meggy.Color.ORANGE);
+      Meggy.delay(80);
+      _This_1s_a_1dentifi3r.setColorByLine(3, Meggy.Color.WHITE);
+      Meggy.delay(80);
+      _This_1s_a_1dentifi3r.setColorByLine(5, Meggy.Color.VIOLET);
+      Meggy.delay(80);
+      _This_1s_a_1dentifi3r.setColorByLine(7, Meggy.Color.GREEN);
+      Meggy.delay(80);
+      _This_1s_a_1dentifi3r.setColorByLine(4, Meggy.Color.WHITE);
+      Meggy.delay(80);
+      _This_1s_a_1dentifi3r.setColorByLine(5, Meggy.Color.GREEN);
+      _This_1s_a_1dentifi3r.setColorByLine(1, Meggy.Color.GREEN);
+      _This_1s_a_1dentifi3r.setColorByLine(3, Meggy.Color.VIOLET);
+      _This_1s_a_1dentifi3r.setColorByLine(6, Meggy.Color.RED);
+      _This_1s_a_1dentifi3r.setColorByLine(2, Meggy.Color.VIOLET);
+      _This_1s_a_1dentifi3r.sing();
+      _This_1s_a_1dentifi3r.comparePixel((byte)0, (byte)1, (byte)2, (byte)3);
+    }
   }
 }
 
@@ -40,7 +62,7 @@ class MeggyHelper {
     int i;
     int duration;
     i = 0;
-    duration = 30;
+    duration = 120;
     while (i < 10) {
       Meggy.toneStart(Meggy.Tone.C3, duration);
       Meggy.delay(5);
@@ -66,6 +88,7 @@ class MeggyHelper {
       Meggy.delay(5);
       Meggy.toneStart(Meggy.Tone.B3, duration);      
       Meggy.delay(5);
+      i = i + 1;
     }
   }
 

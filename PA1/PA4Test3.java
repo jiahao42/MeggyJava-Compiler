@@ -15,12 +15,19 @@ import meggy.Meggy;
 
 class PA4Test3 {
   public static void main(String[] parameters) {
-    new MixedTest().SetLineColor(1, Meggy.Color.RED);
-    Meggy.toneStart(Meggy.Tone.Cs3, 10 + 3);
-    if (Meggy.checkButton(Meggy.Button.Left) == true) {
-      new MixedTest().safeSetPixel((byte)1, (byte)2, Meggy.Color.BLUE);
-    } else {
-      new MixedTest().safeSwitchPixel((byte)2, (byte)3, (byte)3, (byte)4);
+    while (true) {
+      new MixedTest().SetLineColor(1, Meggy.Color.RED);
+      Meggy.toneStart(Meggy.Tone.Cs3, 10 + 3 + 30);
+      Meggy.toneStart(Meggy.Tone.Ds3, 10 + 3 + 20);
+      Meggy.toneStart(Meggy.Tone.B3, 10 + 3 + 10);
+      if (Meggy.checkButton(Meggy.Button.Left) == true) {
+        new MixedTest().safeSetPixel((byte)1, (byte)2, Meggy.Color.BLUE);
+        new MixedTest().SetLineColor(4, Meggy.Color.GREEN);
+      } else {
+        new MixedTest().safeSwitchPixel((byte)2, (byte)3, (byte)3, (byte)4);
+        new MixedTest().safeSetPixel((byte)1, (byte)2, Meggy.Color.RED);
+        new MixedTest().SetLineColor(7, Meggy.Color.GREEN);
+      }
     }
   }
 }
