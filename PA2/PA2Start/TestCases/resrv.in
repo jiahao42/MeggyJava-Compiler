@@ -1,0 +1,11 @@
+main boolean int byte false if else true while public return String
+static void this class extends new length import
+meggy.Meggy Meggy.setPixel Meggy.setAuxLEDs Meggy.toneStart Meggy.delay 
+Meggy.getPixel Meggy.checkButton Meggy.Tone.C3 Meggy.Tone.Cs3 Meggy.Tone.D3
+Meggy.Tone.Ds3 Meggy.Tone.F3 Meggy.Tone.Fs3 Meggy.Tone.G3 Meggy.Tone.Gs3 
+Meggy.Tone.A3 Meggy.Tone.As3 Meggy.Tone.B3 Meggy.Tone.E3
+Meggy.Color.RED Meggy.Color.WHITE Meggy.Color.BLUE Meggy.Color.GREEN 
+Meggy.Color.ORANGE Meggy.Color.YELLOW Meggy.Color.VIOLET Meggy.Color.DARK
+Meggy.Button.A Meggy.Button.B Meggy.Button.Up Meggy.Button.Down 
+Meggy.Button.Left Meggy.Button.Right
+Meggy.Color Meggy.Button  Meggy.Tone
