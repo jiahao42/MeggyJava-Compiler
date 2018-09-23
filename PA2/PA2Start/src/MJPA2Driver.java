@@ -40,7 +40,7 @@ public class MJPA2Driver {
               System.out.print("symbol: " + symbol + "  symbolValue: ");
               if(symbol.value!=null) {
                 SymbolValue symval = (SymbolValue)symbol.value;
-                System.out.println(" [" + symval.lexeme + "]" + symval.line);
+                System.out.println(" [" + symval.lexeme + "  at: (" + symval.line + "," + symval.pos + ")  value: " + symval.value + "]" );
               } else {
                 System.out.println(" null value");
               }

@@ -17,6 +17,7 @@
 
     Wim Bohm and Michelle Strout, 6/2011
   
+"^(_|[a-Z])_|[0-9]|[a-Z]" { return new Symbol(sym.ID, new SymbolValue(yyline, yychar+sym.LENGTH, yytext()));}
 */
 
 package mjparser;
@@ -36,10 +37,10 @@ import java_cup.runtime.Symbol;
 EOL=(\r|\n|\r\n)
 
 %%
-"+"         {return new Symbol(sym.PLUS,new SymbolValue(yyline+1, yychar+1, yytext()));}
+"+"         {return new Symbol(sym.PLUS,new SymbolValue(yyline, yychar+1, yytext()));}
 
 {EOL} {/*reset pos to -1, if 0, otherwise line 1 starts at 0, rest start at 1 */ yychar=-1;}
 [ \t\r\n\f] { /* ignore white space. */ }
-. { System.err.println("Illegal character: "+yytext()); }
+. { return new Symbol(sym.error, new SymbolValue(yyline, yychar+1, yytext()));}
 
 

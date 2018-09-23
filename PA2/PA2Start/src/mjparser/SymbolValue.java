@@ -12,14 +12,14 @@ public class SymbolValue {
   }
 
   public SymbolValue(int line, int pos, String lexeme, int value) {
-    this.line = line; 
+    this.line = line + 1; 
     this.pos = pos;
     this.lexeme = lexeme;
     this.value = value;
   }
 
   public SymbolValue(int line, int pos, String lexeme) {
-      this.line = line; 
+      this.line = line + 1; 
       this.pos = pos;
       this.lexeme = lexeme;
       this.value = -1;

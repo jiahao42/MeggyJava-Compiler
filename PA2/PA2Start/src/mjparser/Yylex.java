@@ -9,6 +9,7 @@
     Ignore single line comments: // until eol 
     ALSO: ignore C style comments, see http://ostermiller.org/findcomment.html
     Wim Bohm and Michelle Strout, 6/2011
+"^(_|[a-Z])_|[0-9]|[a-Z]" { return new Symbol(sym.ID, new SymbolValue(yyline, yychar+sym.LENGTH, yytext()));}
 */
 package mjparser;
 import java_cup.runtime.Symbol;
@@ -286,7 +287,7 @@ public class Yylex implements java_cup.runtime.Scanner {
 					case -2:
 						break;
 					case 2:
-						{return new Symbol(sym.PLUS,new SymbolValue(yyline+1, yychar+1, yytext()));}
+						{return new Symbol(sym.PLUS,new SymbolValue(yyline, yychar+1, yytext()));}
 					case -3:
 						break;
 					case 3:
@@ -298,7 +299,7 @@ public class Yylex implements java_cup.runtime.Scanner {
 					case -5:
 						break;
 					case 5:
-						{ System.err.println("Illegal character: "+yytext()); }
+						{ return new Symbol(sym.error, new SymbolValue(yyline, yychar+1, yytext()));}
 					case -6:
 						break;
 					case 6:

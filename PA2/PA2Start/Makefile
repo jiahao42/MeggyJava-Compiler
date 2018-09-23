@@ -23,7 +23,7 @@
 
 # created mj.cup to be bogus, only needed for token defs WB, June 2011
 
-JAVA_CUP_RUNTIME = $(shell pwd)
+JAVA_CUP_RUNTIME = $(shell pwd)/src/
 
 SRC_DIR = src
 PARSE_DIR = $(SRC_DIR)/mjparser
