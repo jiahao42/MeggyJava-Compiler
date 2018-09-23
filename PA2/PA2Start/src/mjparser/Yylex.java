@@ -9,7 +9,6 @@
     Ignore single line comments: // until eol 
     ALSO: ignore C style comments, see http://ostermiller.org/findcomment.html
     Wim Bohm and Michelle Strout, 6/2011
-"^(_|[a-Z])_|[0-9]|[a-Z]" { return new Symbol(sym.ID, new SymbolValue(yyline, yychar+sym.LENGTH, yytext()));}
 */
 package mjparser;
 import java_cup.runtime.Symbol;
@@ -226,16 +225,31 @@ public class Yylex implements java_cup.runtime.Scanner {
 		/* 3 */ YY_NO_ANCHOR,
 		/* 4 */ YY_NO_ANCHOR,
 		/* 5 */ YY_NO_ANCHOR,
-		/* 6 */ YY_NO_ANCHOR
+		/* 6 */ YY_NO_ANCHOR,
+		/* 7 */ YY_NO_ANCHOR,
+		/* 8 */ YY_NO_ANCHOR,
+		/* 9 */ YY_NO_ANCHOR,
+		/* 10 */ YY_NO_ANCHOR,
+		/* 11 */ YY_NO_ANCHOR,
+		/* 12 */ YY_NO_ANCHOR,
+		/* 13 */ YY_NO_ANCHOR,
+		/* 14 */ YY_NO_ANCHOR,
+		/* 15 */ YY_NO_ANCHOR,
+		/* 16 */ YY_NOT_ACCEPT,
+		/* 17 */ YY_NO_ANCHOR,
+		/* 18 */ YY_NO_ANCHOR,
+		/* 19 */ YY_NOT_ACCEPT
 	};
 	private int yy_cmap[] = unpackFromString(1,130,
-"5:9,4,3,5,4,2,5:18,4,5:10,1,5:84,0:2")[0];
+"3:9,14,13,3,14,12,3:18,14,3:7,6,7,2,4,9,5,3,1,10:10,3,8,3:5,11:26,3:4,11,3," +
+"11:26,3:5,0:2")[0];
 
-	private int yy_rmap[] = unpackFromString(1,7,
-"0,1:2,2,1:3")[0];
+	private int yy_rmap[] = unpackFromString(1,20,
+"0,1,2,1:7,3,4,5,1,6,7:2,1:2,8")[0];
 
-	private int yy_nxt[][] = unpackFromString(3,6,
-"1,2,3,6,4,5,-1:9,6,-1:2");
+	private int yy_nxt[][] = unpackFromString(9,15,
+"1,2,3,17,4,5,6,7,8,9,10,11,12,18,13,-1:16,14,16,-1:22,10,-1:14,11:2,-1:16,1" +
+"8,-1:2,14:11,-1:2,14,-1,16,19,16:9,-1:2,16,-1,15,19,16:9,-1:2,16");
 
 	public java_cup.runtime.Symbol next_token ()
 		throws java.io.IOException {
@@ -287,24 +301,68 @@ public class Yylex implements java_cup.runtime.Scanner {
 					case -2:
 						break;
 					case 2:
-						{return new Symbol(sym.PLUS,new SymbolValue(yyline, yychar+1, yytext()));}
+						{ return new Symbol(sym.error, new SymbolValue(yyline, yychar+1, yytext()));}
 					case -3:
 						break;
 					case 3:
-						{/*reset pos to -1, if 0, otherwise line 1 starts at 0, rest start at 1 */ yychar=-1;}
+						{ return new Symbol(sym.TIMES,new SymbolValue(yyline, yychar+1, yytext()));}
 					case -4:
 						break;
 					case 4:
-						{ /* ignore white space. */ }
+						{ return new Symbol(sym.PLUS,new SymbolValue(yyline, yychar+1, yytext()));}
 					case -5:
 						break;
 					case 5:
-						{ return new Symbol(sym.error, new SymbolValue(yyline, yychar+1, yytext()));}
+						{ return new Symbol(sym.MINUS,new SymbolValue(yyline, yychar+1, yytext()));}
 					case -6:
 						break;
 					case 6:
-						{/*reset pos to -1, if 0, otherwise line 1 starts at 0, rest start at 1 */ yychar=-1;}
+						{ return new Symbol(sym.LPAREN,new SymbolValue(yyline, yychar+1, yytext()));}
 					case -7:
+						break;
+					case 7:
+						{ return new Symbol(sym.RPAREN,new SymbolValue(yyline, yychar+1, yytext()));}
+					case -8:
+						break;
+					case 8:
+						{ return new Symbol(sym.SEMI,new SymbolValue(yyline, yychar+1, yytext()));}
+					case -9:
+						break;
+					case 9:
+						{ return new Symbol(sym.COMMA,new SymbolValue(yyline, yychar+1, yytext()));}
+					case -10:
+						break;
+					case 10:
+						{ return new Symbol(sym.INT_LITERAL, new SymbolValue(yyline, yychar+1, yytext(), new Integer(yytext()))); }
+					case -11:
+						break;
+					case 11:
+						{ return new Symbol(sym.ID, new SymbolValue(yyline, yychar+1, yytext()));}
+					case -12:
+						break;
+					case 12:
+						{/*reset pos to -1, if 0, otherwise line 1 starts at 0, rest start at 1 */ yychar=-1;}
+					case -13:
+						break;
+					case 13:
+						{ /* ignore white space. */ }
+					case -14:
+						break;
+					case 14:
+						{ /* ignore the comments */ }
+					case -15:
+						break;
+					case 15:
+						{ /* ignore the comments */ }
+					case -16:
+						break;
+					case 17:
+						{ return new Symbol(sym.error, new SymbolValue(yyline, yychar+1, yytext()));}
+					case -17:
+						break;
+					case 18:
+						{/*reset pos to -1, if 0, otherwise line 1 starts at 0, rest start at 1 */ yychar=-1;}
+					case -18:
 						break;
 					default:
 						yy_error(YY_E_INTERNAL,false);

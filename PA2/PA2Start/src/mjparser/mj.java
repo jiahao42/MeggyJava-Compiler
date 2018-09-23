@@ -8,6 +8,7 @@ package mjparser;
 
 import java_cup.runtime.*;
 import java.util.*;
+import java.lang.*;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;

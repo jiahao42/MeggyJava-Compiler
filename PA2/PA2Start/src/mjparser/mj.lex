@@ -17,7 +17,6 @@
 
     Wim Bohm and Michelle Strout, 6/2011
   
-"^(_|[a-Z])_|[0-9]|[a-Z]" { return new Symbol(sym.ID, new SymbolValue(yyline, yychar+sym.LENGTH, yytext()));}
 */
 
 package mjparser;
@@ -37,7 +36,17 @@ import java_cup.runtime.Symbol;
 EOL=(\r|\n|\r\n)
 
 %%
-"+"         {return new Symbol(sym.PLUS,new SymbolValue(yyline, yychar+1, yytext()));}
+/\*.*\*/    { /* ignore the comments */ }
+//.*        { /* ignore the comments */ }
+"+"         { return new Symbol(sym.PLUS,new SymbolValue(yyline, yychar+1, yytext()));}
+"-"         { return new Symbol(sym.MINUS,new SymbolValue(yyline, yychar+1, yytext()));}
+"*"         { return new Symbol(sym.TIMES,new SymbolValue(yyline, yychar+1, yytext()));}
+"("         { return new Symbol(sym.LPAREN,new SymbolValue(yyline, yychar+1, yytext()));}
+")"         { return new Symbol(sym.RPAREN,new SymbolValue(yyline, yychar+1, yytext()));}
+";"         { return new Symbol(sym.SEMI,new SymbolValue(yyline, yychar+1, yytext()));}
+","         { return new Symbol(sym.COMMA,new SymbolValue(yyline, yychar+1, yytext()));}
+[0-9]+      { return new Symbol(sym.INT_LITERAL, new SymbolValue(yyline, yychar+1, yytext(), new Integer(yytext()))); }
+[_a-zA-Z][_a-zA-Z0-9]* { return new Symbol(sym.ID, new SymbolValue(yyline, yychar+1, yytext()));}
 
 {EOL} {/*reset pos to -1, if 0, otherwise line 1 starts at 0, rest start at 1 */ yychar=-1;}
 [ \t\r\n\f] { /* ignore white space. */ }
