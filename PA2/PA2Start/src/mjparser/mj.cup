@@ -2,6 +2,7 @@
 package mjparser;
 import java_cup.runtime.*;
 import java.util.*;
+import java.lang.*;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -116,20 +117,17 @@ main_class ::=
                 // The syntax for loading a text resource file 
                 // from a jar file here:
                 // http://www.rgagnon.com/javadetails/java-0077.html
-                final String[] logs = {"avrH.rtl.s", "avrF.rtl.s"};  
-                for (int i = 0; i < logs.length; i++) {
-                    System.out.println("Generate log using " + logs[i]);
-                    mainPrologue 
-                        = this.getClass().getClassLoader().getResourceAsStream(
-                            logs[i]);
-                    reader = new BufferedReader(new 
-                        InputStreamReader(mainPrologue));
-
-                    String line = null;
-                    while ((line = reader.readLine()) != null) {
+                System.out.println("Generate prolog using avrH.rtl.s");
+                mainPrologue 
+                    = this.getClass().getClassLoader().getResourceAsStream(
+                        "avrH.rtl.s");
+                reader = new BufferedReader(new 
+                    InputStreamReader(mainPrologue));
+                String line = null;
+                while ((line = reader.readLine()) != null) {
                     parser.out.println(line);
-                    }
                 }
+                parser.out.println("\n");
             } catch ( Exception e2) {
                 e2.printStackTrace();
             }
@@ -145,15 +143,55 @@ main_class ::=
           :}
         statement_list:list RBRACE
           {:
+
           :}
         RBRACE 
           {:
+            InputStream mainPrologue=null;
+            BufferedReader reader=null;
+            try {
+                // The syntax for loading a text resource file 
+                // from a jar file here:
+                // http://www.rgagnon.com/javadetails/java-0077.html
+                System.out.println("Generate prolog using avrF.rtl.s");
+                mainPrologue 
+                    = this.getClass().getClassLoader().getResourceAsStream(
+                        "avrF.rtl.s");
+                reader = new BufferedReader(new 
+                    InputStreamReader(mainPrologue));
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    parser.out.println(line);
+                }
+            } catch ( Exception e2) {
+                e2.printStackTrace();
+            }
+            finally{
+                try{
+                    if(mainPrologue!=null) mainPrologue.close();
+                    if(reader!=null) reader.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             parser.out.flush();
           :}
     ;
 
 statement ::= 
     MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI
+    {:
+        parser.out.println("### Meggy.setPixel(x,y,color) call");
+        parser.out.println("# load a one byte expression off stack");
+        parser.out.println("pop    r20");
+        parser.out.println("# load a one byte expression off stack");
+        parser.out.println("pop    r22");
+        parser.out.println("# load a one byte expression off stack");
+        parser.out.println("pop    r24");
+        parser.out.println("call   _Z6DrawPxhhh");
+        parser.out.println("call   _Z12DisplaySlatev\n");
+    :}
     ;
 
 statement_list ::=
@@ -162,8 +200,33 @@ statement_list ::=
     ;
 
 exp ::= 
-    LPAREN BYTE RPAREN exp 
-    | INT_LITERAL 
-    | COLOR_LITERAL
+    LPAREN BYTE RPAREN exp:e
+    {:
+        parser.out.println("# Casting int to byte by popping");
+        parser.out.println("# 2 bytes off stack and only pushing low order bits");
+        parser.out.println("# back on.  Low order bits are on top of stack.");
+        parser.out.println("pop    r24");
+        parser.out.println("pop    r25");
+        parser.out.println("push   r24\n");
+    :}
+    | INT_LITERAL:n
+    {:
+        parser.out.println("# Load constant int " + n.value);
+        parser.out.println("ldi    r24,lo8(" + n.value + ")");
+        parser.out.println("ldi    r25,hi8(" + n.value + ")");
+        parser.out.println("# push two byte expression onto stack");
+        parser.out.println("push   r25");
+        parser.out.println("push   r24\n");
+        RESULT = n.value;
+    :}
+    | COLOR_LITERAL:c
+    {:
+        parser.out.println("# Color expression " + c.lexeme);
+        parser.out.println("ldi    r22," + c.value);
+        parser.out.println("# push one byte expression onto stack");
+        parser.out.println("push   r22\n");
+        RESULT = c.value;
+    :}
     ;
+
 
