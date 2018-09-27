@@ -33,6 +33,8 @@ public class MJPA2Driver {
           // construct the lexer, 
           // the lexer will be the same for all of the parsers
           Yylex lexer = new Yylex(new FileReader(filename));
+          mj parser = new mj(lexer);
+          // parser.
           
           // Exercise the lexer: print out all of the tokens 
           java_cup.runtime.Symbol symbol = lexer.next_token();

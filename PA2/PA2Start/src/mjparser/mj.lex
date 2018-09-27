@@ -114,9 +114,9 @@ EOL=(\r|\n|\r\n)
 
 [0-9]+      { return new Symbol(sym.INT_LITERAL, new SymbolValue(yyline, yychar+1, yytext(), new Integer(yytext()))); }
 [_a-zA-Z][_a-zA-Z0-9]* { return new Symbol(sym.ID, new SymbolValue(yyline, yychar+1, yytext()));}
-/\*[^\*]*\*[^/]*/    { /* ignore the comments, use non-greedy!!! */ }
-//.*        { /* ignore the comments */ }
-{EOL} {/*reset pos to -1, if 0, otherwise line 1 starts at 0, rest start at 1 */ yychar=-1;}
+/\*[^*]*\*+([^\*/][^\*]*\*+)*/    { /* ignore the comments, use non-greedy!!! */ }
+//.*        { /* ignore the single line comments */ }
+{EOL} {/* reset pos to -1, if 0, otherwise line 1 starts at 0, rest start at 1 */ yychar=-1;}
 [ \t\r\n\f] { /* ignore white space. */ }
 . { System.out.println("Illegal character: " + yytext());}
 

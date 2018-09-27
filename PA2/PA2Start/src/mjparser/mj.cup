@@ -104,28 +104,31 @@ main_class ::=
                         new java.io.FileOutputStream(name.lexeme+".java.s"));
                 parser.out = new PrintWriter(sout);
                 // Check filename is class name, if not exit with error message
-                System.exit(0);   
+                // System.exit(0);   
             :}
         LBRACE PUBLIC STATIC VOID MAIN 
         LPAREN STRING LBRACKET RBRACKET ID:param RPAREN
         LBRACE 
           {: 
-            System.out.println("Generate prolog using avrH.rtl.s");
             InputStream mainPrologue=null;
             BufferedReader reader=null;
             try {
                 // The syntax for loading a text resource file 
                 // from a jar file here:
                 // http://www.rgagnon.com/javadetails/java-0077.html
-                mainPrologue 
-                    = this.getClass().getClassLoader().getResourceAsStream(
-                        "avrH.rtl.s");
-                reader = new BufferedReader(new 
-                    InputStreamReader(mainPrologue));
+                final String[] logs = {"avrH.rtl.s", "avrF.rtl.s"};  
+                for (int i = 0; i < logs.length; i++) {
+                    System.out.println("Generate log using " + logs[i]);
+                    mainPrologue 
+                        = this.getClass().getClassLoader().getResourceAsStream(
+                            logs[i]);
+                    reader = new BufferedReader(new 
+                        InputStreamReader(mainPrologue));
 
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                  parser.out.println(line);
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                    parser.out.println(line);
+                    }
                 }
             } catch ( Exception e2) {
                 e2.printStackTrace();
@@ -147,5 +150,20 @@ main_class ::=
           {:
             parser.out.flush();
           :}
+    ;
+
+statement ::= 
+    MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI
+    ;
+
+statement_list ::=
+    statement
+    | statement statement_list
+    ;
+
+exp ::= 
+    LPAREN BYTE RPAREN exp 
+    | INT_LITERAL 
+    | COLOR_LITERAL
     ;
 
