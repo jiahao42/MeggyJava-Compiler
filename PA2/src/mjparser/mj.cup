@@ -150,10 +150,7 @@ main_class ::=
             InputStream mainPrologue=null;
             BufferedReader reader=null;
             try {
-                // The syntax for loading a text resource file 
-                // from a jar file here:
-                // http://www.rgagnon.com/javadetails/java-0077.html
-                System.out.println("Generate prolog using avrF.rtl.s");
+                System.out.println("Generate epilog using avrF.rtl.s");
                 mainPrologue 
                     = this.getClass().getClassLoader().getResourceAsStream(
                         "avrF.rtl.s");
