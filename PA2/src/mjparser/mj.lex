@@ -52,6 +52,7 @@ EOL=(\r|\n|\r\n)
 ","         { return new Symbol(sym.COMMA,new SymbolValue(yyline, yychar+1, yytext()));}
 "["         { return new Symbol(sym.LBRACKET,new SymbolValue(yyline, yychar+1, yytext()));}
 "]"         { return new Symbol(sym.RBRACKET,new SymbolValue(yyline, yychar+1, yytext()));}
+"."         { return new Symbol(sym.DOT,new SymbolValue(yyline, yychar+1, yytext()));}
 
 "main"         { return new Symbol(sym.MAIN,new SymbolValue(yyline, yychar+1, yytext()));}
 "boolean"         { return new Symbol(sym.BOOLEAN,new SymbolValue(yyline, yychar+1, yytext()));}
