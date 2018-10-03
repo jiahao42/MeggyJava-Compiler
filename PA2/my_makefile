@@ -1,0 +1,13 @@
+JAVA = java
+SCANNER = MJPA2
+PROG = MJ
+
+PA2_SRC = $(wildcard *.java)
+PA2_OBJ = $(PA2_SRC:%.java=%.java.s)
+
+PA2: $(PA2_OBJ)
+	echo
+
+PA2%.java.s: PA2%.java
+	@echo "Compiling $<..." 
+	$(JAVA) -jar $(PROG).jar $<

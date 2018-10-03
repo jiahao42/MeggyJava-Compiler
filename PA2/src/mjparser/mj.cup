@@ -191,9 +191,8 @@ statement ::=
     :}
     ;
 
-statement_list ::=
-    statement
-    | statement statement_list
+statement_list ::= statement statement_list  
+    | /* empty */
     ;
 
 exp ::= 

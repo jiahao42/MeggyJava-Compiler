@@ -56,8 +56,8 @@ Warning : Terminal "LENGTH" was declared but never used
 [4] NT$2 ::= 
 [5] main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE 
 [6] statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI 
-[7] statement_list ::= statement 
-[8] statement_list ::= statement statement_list 
+[7] statement_list ::= statement statement_list 
+[8] statement_list ::= 
 [9] exp ::= LPAREN BYTE RPAREN exp 
 [10] exp ::= INT_LITERAL 
 [11] exp ::= COLOR_LITERAL 
@@ -189,14 +189,14 @@ transition on LBRACE to state [20]
 -------------------
 lalr_state [20]: {
   [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE (*) NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
-  [NT$1 ::= (*) , {MEGGYSETPIXEL }]
+  [NT$1 ::= (*) , {RBRACE MEGGYSETPIXEL }]
 }
 transition on NT$1 to state [21]
 
 -------------------
 lalr_state [21]: {
+  [statement_list ::= (*) , {RBRACE }]
   [statement_list ::= (*) statement statement_list , {RBRACE }]
-  [statement_list ::= (*) statement , {RBRACE }]
   [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 (*) statement_list RBRACE NT$2 RBRACE , {EOF }]
   [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {RBRACE MEGGYSETPIXEL }]
 }
@@ -212,11 +212,10 @@ transition on RBRACE to state [40]
 
 -------------------
 lalr_state [23]: {
-  [statement_list ::= (*) statement statement_list , {RBRACE }]
-  [statement_list ::= statement (*) , {RBRACE }]
-  [statement_list ::= (*) statement , {RBRACE }]
-  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {RBRACE MEGGYSETPIXEL }]
+  [statement_list ::= (*) , {RBRACE }]
   [statement_list ::= statement (*) statement_list , {RBRACE }]
+  [statement_list ::= (*) statement statement_list , {RBRACE }]
+  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {RBRACE MEGGYSETPIXEL }]
 }
 transition on MEGGYSETPIXEL to state [24]
 transition on statement to state [23]
@@ -403,13 +402,13 @@ From state #18
 From state #19
  [term 7:SHIFT(to state 20)]
 From state #20
- [term 40:REDUCE(with prod 3)]
+ [term 8:REDUCE(with prod 3)] [term 40:REDUCE(with prod 3)]
 From state #21
- [term 40:SHIFT(to state 24)]
+ [term 8:REDUCE(with prod 8)] [term 40:SHIFT(to state 24)]
 From state #22
  [term 8:SHIFT(to state 40)]
 From state #23
- [term 8:REDUCE(with prod 7)] [term 40:SHIFT(to state 24)]
+ [term 8:REDUCE(with prod 8)] [term 40:SHIFT(to state 24)]
 From state #24
  [term 5:SHIFT(to state 25)]
 From state #25
@@ -445,7 +444,7 @@ From state #37
 From state #38
  [term 6:REDUCE(with prod 9)] [term 21:REDUCE(with prod 9)]
 From state #39
- [term 8:REDUCE(with prod 8)]
+ [term 8:REDUCE(with prod 7)]
 From state #40
  [term 8:REDUCE(with prod 4)]
 From state #41

@@ -19,16 +19,16 @@ main:
     /* Need to call this so that the meggy library gets set up */
 
 
-# Load constant int 2
-ldi    r24,lo8(2)
-ldi    r25,hi8(2)
+# Load constant int 1
+ldi    r24,lo8(1)
+ldi    r25,hi8(1)
 # push two byte expression onto stack
 push   r25
 push   r24
 
-# Load constant int 3
-ldi    r24,lo8(3)
-ldi    r25,hi8(3)
+# Load constant int 2
+ldi    r24,lo8(2)
+ldi    r25,hi8(2)
 # push two byte expression onto stack
 push   r25
 push   r24
@@ -62,8 +62,8 @@ ldi    r25,hi8(3)
 push   r25
 push   r24
 
-# Color expression Meggy.Color.RED
-ldi    r22,1
+# Color expression Meggy.Color.YELLOW
+ldi    r22,3
 # push one byte expression onto stack
 push   r22
 
@@ -77,13 +77,6 @@ pop    r24
 call   _Z6DrawPxhhh
 call   _Z12DisplaySlatev
 
-# Load constant int 2
-ldi    r24,lo8(2)
-ldi    r25,hi8(2)
-# push two byte expression onto stack
-push   r25
-push   r24
-
 # Load constant int 3
 ldi    r24,lo8(3)
 ldi    r25,hi8(3)
@@ -91,8 +84,15 @@ ldi    r25,hi8(3)
 push   r25
 push   r24
 
-# Color expression Meggy.Color.ORANGE
-ldi    r22,2
+# Load constant int 4
+ldi    r24,lo8(4)
+ldi    r25,hi8(4)
+# push two byte expression onto stack
+push   r25
+push   r24
+
+# Color expression Meggy.Color.YELLOW
+ldi    r22,3
 # push one byte expression onto stack
 push   r22
 
@@ -106,22 +106,22 @@ pop    r24
 call   _Z6DrawPxhhh
 call   _Z12DisplaySlatev
 
-# Load constant int 2
-ldi    r24,lo8(2)
-ldi    r25,hi8(2)
+# Load constant int 4
+ldi    r24,lo8(4)
+ldi    r25,hi8(4)
 # push two byte expression onto stack
 push   r25
 push   r24
 
-# Load constant int 3
-ldi    r24,lo8(3)
-ldi    r25,hi8(3)
+# Load constant int 5
+ldi    r24,lo8(5)
+ldi    r25,hi8(5)
 # push two byte expression onto stack
 push   r25
 push   r24
 
-# Color expression Meggy.Color.WHITE
-ldi    r22,7
+# Color expression Meggy.Color.YELLOW
+ldi    r22,3
 # push one byte expression onto stack
 push   r22
 
