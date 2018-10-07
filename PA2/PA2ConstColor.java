@@ -11,9 +11,9 @@ import meggy.Meggy;
 
 class PA2ConstColor {
   public static void main(String[] parameters) {
-    Meggy.setPixel(2, 3, Meggy.Color.YELLOW);
-    Meggy.setPixel(2, 3, Meggy.Color.RED);
-    Meggy.setPixel(2, 3, Meggy.Color.ORANGE);
-    Meggy.setPixel(2, 3, Meggy.Color.WHITE);
+    Meggy.setPixel((byte)2, (byte)3, Meggy.Color.YELLOW);
+    Meggy.setPixel((byte)2, (byte)3, Meggy.Color.RED);
+    Meggy.setPixel((byte)2, (byte)3, Meggy.Color.ORANGE);
+    Meggy.setPixel((byte)2, (byte)3, Meggy.Color.WHITE);
   }
 }
