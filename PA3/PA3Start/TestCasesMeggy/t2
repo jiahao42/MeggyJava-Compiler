@@ -1,0 +1,22 @@
+PA2error.java:11: error: ')' expected
+               Meggy.setPixel( (byte)84me, (byte)2, Meggy.Color.BLUE );
+                                       ^
+PA2error.java:11: error: illegal start of expression
+               Meggy.setPixel( (byte)84me, (byte)2, Meggy.Color.BLUE );
+                                         ^
+PA2error.java:11: error: ';' expected
+               Meggy.setPixel( (byte)84me, (byte)2, Meggy.Color.BLUE );
+                                          ^
+PA2error.java:11: error: not a statement
+               Meggy.setPixel( (byte)84me, (byte)2, Meggy.Color.BLUE );
+                                            ^
+PA2error.java:11: error: ';' expected
+               Meggy.setPixel( (byte)84me, (byte)2, Meggy.Color.BLUE );
+                                                ^
+PA2error.java:11: error: not a statement
+               Meggy.setPixel( (byte)84me, (byte)2, Meggy.Color.BLUE );
+                                                               ^
+PA2error.java:11: error: ';' expected
+               Meggy.setPixel( (byte)84me, (byte)2, Meggy.Color.BLUE );
+                                                                    ^
+7 errors

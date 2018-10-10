@@ -1,0 +1,510 @@
+Warning : Terminal "UMINUS" was declared but never used
+Warning : Terminal "INT" was declared but never used
+Warning : Terminal "MINUS" was declared but never used
+Warning : Terminal "NOT" was declared but never used
+Warning : Terminal "AND" was declared but never used
+Warning : Terminal "LT" was declared but never used
+Warning : Terminal "BUTTON_LITERAL" was declared but never used
+Warning : Terminal "PLUS" was declared but never used
+Warning : Terminal "ASSIGN" was declared but never used
+Warning : Terminal "IF" was declared but never used
+Warning : Terminal "THIS" was declared but never used
+Warning : Terminal "DOT" was declared but never used
+Warning : Terminal "MEGGYGETPIXEL" was declared but never used
+Warning : Terminal "TONE_LITERAL" was declared but never used
+Warning : Terminal "BOOLEAN" was declared but never used
+Warning : Terminal "RETURN" was declared but never used
+Warning : Terminal "EQUAL" was declared but never used
+Warning : Terminal "TRUE" was declared but never used
+Warning : Terminal "NEW" was declared but never used
+Warning : Terminal "MEGGYSETAUXLEDS" was declared but never used
+Warning : Terminal "MEGGYTONESTART" was declared but never used
+Warning : Terminal "TIMES" was declared but never used
+Warning : Terminal "MEGGYCHECKBUTTON" was declared but never used
+Warning : Terminal "MEGGYCOLOR" was declared but never used
+Warning : Terminal "ELSE" was declared but never used
+Warning : Terminal "WHILE" was declared but never used
+Warning : Terminal "MEGGYTONE" was declared but never used
+Warning : Terminal "EXTENDS" was declared but never used
+Warning : Terminal "MEGGYDELAY" was declared but never used
+Warning : Terminal "FALSE" was declared but never used
+Warning : Terminal "MEGGYBUTTON" was declared but never used
+Warning : Terminal "LENGTH" was declared but never used
+===== Terminals =====
+[0]EOF [1]error [2]PLUS [3]MINUS [4]TIMES 
+[5]LPAREN [6]RPAREN [7]LBRACE [8]RBRACE [9]BOOLEAN 
+[10]INT [11]BYTE [12]MAIN [13]IMPORT [14]IF 
+[15]ELSE [16]LT [17]EQUAL [18]AND [19]NOT 
+[20]WHILE [21]COMMA [22]DOT [23]NEW [24]PUBLIC 
+[25]RETURN [26]STATIC [27]STRING [28]VOID [29]CLASS 
+[30]EXTENDS [31]LBRACKET [32]RBRACKET [33]LENGTH [34]SEMI 
+[35]ASSIGN [36]MEGGY [37]MEGGYCOLOR [38]MEGGYBUTTON [39]MEGGYTONE 
+[40]MEGGYSETPIXEL [41]MEGGYSETAUXLEDS [42]MEGGYTONESTART [43]MEGGYDELAY [44]MEGGYGETPIXEL 
+[45]MEGGYCHECKBUTTON [46]INT_LITERAL [47]ID [48]TRUE [49]FALSE 
+[50]COLOR_LITERAL [51]BUTTON_LITERAL [52]TONE_LITERAL [53]THIS [54]UMINUS 
+
+
+===== Non terminals =====
+[0]program [1]exp [2]statement [3]statement_list [4]main_class 
+[5]NT$0 [6]NT$1 [7]NT$2 
+
+===== Productions =====
+[0] $START ::= program EOF 
+[1] program ::= IMPORT MEGGY SEMI main_class 
+[2] NT$0 ::= 
+[3] NT$1 ::= 
+[4] NT$2 ::= 
+[5] main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE 
+[6] statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI 
+[7] statement_list ::= statement_list statement 
+[8] statement_list ::= 
+[9] exp ::= LPAREN BYTE RPAREN exp 
+[10] exp ::= INT_LITERAL 
+[11] exp ::= COLOR_LITERAL 
+
+===== Viable Prefix Recognizer =====
+START lalr_state [0]: {
+  [program ::= (*) IMPORT MEGGY SEMI main_class , {EOF }]
+  [$START ::= (*) program EOF , {EOF }]
+}
+transition on IMPORT to state [2]
+transition on program to state [1]
+
+-------------------
+lalr_state [1]: {
+  [$START ::= program (*) EOF , {EOF }]
+}
+transition on EOF to state [42]
+
+-------------------
+lalr_state [2]: {
+  [program ::= IMPORT (*) MEGGY SEMI main_class , {EOF }]
+}
+transition on MEGGY to state [3]
+
+-------------------
+lalr_state [3]: {
+  [program ::= IMPORT MEGGY (*) SEMI main_class , {EOF }]
+}
+transition on SEMI to state [4]
+
+-------------------
+lalr_state [4]: {
+  [main_class ::= (*) CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+  [program ::= IMPORT MEGGY SEMI (*) main_class , {EOF }]
+}
+transition on main_class to state [6]
+transition on CLASS to state [5]
+
+-------------------
+lalr_state [5]: {
+  [main_class ::= CLASS (*) ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on ID to state [7]
+
+-------------------
+lalr_state [6]: {
+  [program ::= IMPORT MEGGY SEMI main_class (*) , {EOF }]
+}
+
+-------------------
+lalr_state [7]: {
+  [NT$0 ::= (*) , {LBRACE }]
+  [main_class ::= CLASS ID (*) NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on NT$0 to state [8]
+
+-------------------
+lalr_state [8]: {
+  [main_class ::= CLASS ID NT$0 (*) LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on LBRACE to state [9]
+
+-------------------
+lalr_state [9]: {
+  [main_class ::= CLASS ID NT$0 LBRACE (*) PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on PUBLIC to state [10]
+
+-------------------
+lalr_state [10]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC (*) STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on STATIC to state [11]
+
+-------------------
+lalr_state [11]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC (*) VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on VOID to state [12]
+
+-------------------
+lalr_state [12]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID (*) MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on MAIN to state [13]
+
+-------------------
+lalr_state [13]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN (*) LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on LPAREN to state [14]
+
+-------------------
+lalr_state [14]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN (*) STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on STRING to state [15]
+
+-------------------
+lalr_state [15]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING (*) LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on LBRACKET to state [16]
+
+-------------------
+lalr_state [16]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET (*) RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on RBRACKET to state [17]
+
+-------------------
+lalr_state [17]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET (*) ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on ID to state [18]
+
+-------------------
+lalr_state [18]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID (*) RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on RPAREN to state [19]
+
+-------------------
+lalr_state [19]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN (*) LBRACE NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on LBRACE to state [20]
+
+-------------------
+lalr_state [20]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE (*) NT$1 statement_list RBRACE NT$2 RBRACE , {EOF }]
+  [NT$1 ::= (*) , {RBRACE MEGGYSETPIXEL }]
+}
+transition on NT$1 to state [21]
+
+-------------------
+lalr_state [21]: {
+  [statement_list ::= (*) , {RBRACE MEGGYSETPIXEL }]
+  [statement_list ::= (*) statement_list statement , {RBRACE MEGGYSETPIXEL }]
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 (*) statement_list RBRACE NT$2 RBRACE , {EOF }]
+}
+transition on statement_list to state [22]
+
+-------------------
+lalr_state [22]: {
+  [statement_list ::= statement_list (*) statement , {RBRACE MEGGYSETPIXEL }]
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list (*) RBRACE NT$2 RBRACE , {EOF }]
+  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {RBRACE MEGGYSETPIXEL }]
+}
+transition on MEGGYSETPIXEL to state [25]
+transition on statement to state [24]
+transition on RBRACE to state [23]
+
+-------------------
+lalr_state [23]: {
+  [NT$2 ::= (*) , {RBRACE }]
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE (*) NT$2 RBRACE , {EOF }]
+}
+transition on NT$2 to state [40]
+
+-------------------
+lalr_state [24]: {
+  [statement_list ::= statement_list statement (*) , {RBRACE MEGGYSETPIXEL }]
+}
+
+-------------------
+lalr_state [25]: {
+  [statement ::= MEGGYSETPIXEL (*) LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {RBRACE MEGGYSETPIXEL }]
+}
+transition on LPAREN to state [26]
+
+-------------------
+lalr_state [26]: {
+  [exp ::= (*) INT_LITERAL , {COMMA }]
+  [statement ::= MEGGYSETPIXEL LPAREN (*) exp COMMA exp COMMA exp RPAREN SEMI , {RBRACE MEGGYSETPIXEL }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {COMMA }]
+}
+transition on exp to state [30]
+transition on LPAREN to state [29]
+transition on INT_LITERAL to state [28]
+transition on COLOR_LITERAL to state [27]
+
+-------------------
+lalr_state [27]: {
+  [exp ::= COLOR_LITERAL (*) , {RPAREN COMMA }]
+}
+
+-------------------
+lalr_state [28]: {
+  [exp ::= INT_LITERAL (*) , {RPAREN COMMA }]
+}
+
+-------------------
+lalr_state [29]: {
+  [exp ::= LPAREN (*) BYTE RPAREN exp , {RPAREN COMMA }]
+}
+transition on BYTE to state [37]
+
+-------------------
+lalr_state [30]: {
+  [statement ::= MEGGYSETPIXEL LPAREN exp (*) COMMA exp COMMA exp RPAREN SEMI , {RBRACE MEGGYSETPIXEL }]
+}
+transition on COMMA to state [31]
+
+-------------------
+lalr_state [31]: {
+  [exp ::= (*) INT_LITERAL , {COMMA }]
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA (*) exp COMMA exp RPAREN SEMI , {RBRACE MEGGYSETPIXEL }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {COMMA }]
+}
+transition on exp to state [32]
+transition on LPAREN to state [29]
+transition on INT_LITERAL to state [28]
+transition on COLOR_LITERAL to state [27]
+
+-------------------
+lalr_state [32]: {
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp (*) COMMA exp RPAREN SEMI , {RBRACE MEGGYSETPIXEL }]
+}
+transition on COMMA to state [33]
+
+-------------------
+lalr_state [33]: {
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA (*) exp RPAREN SEMI , {RBRACE MEGGYSETPIXEL }]
+  [exp ::= (*) INT_LITERAL , {RPAREN }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {RPAREN }]
+  [exp ::= (*) COLOR_LITERAL , {RPAREN }]
+}
+transition on exp to state [34]
+transition on LPAREN to state [29]
+transition on INT_LITERAL to state [28]
+transition on COLOR_LITERAL to state [27]
+
+-------------------
+lalr_state [34]: {
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp (*) RPAREN SEMI , {RBRACE MEGGYSETPIXEL }]
+}
+transition on RPAREN to state [35]
+
+-------------------
+lalr_state [35]: {
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN (*) SEMI , {RBRACE MEGGYSETPIXEL }]
+}
+transition on SEMI to state [36]
+
+-------------------
+lalr_state [36]: {
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI (*) , {RBRACE MEGGYSETPIXEL }]
+}
+
+-------------------
+lalr_state [37]: {
+  [exp ::= LPAREN BYTE (*) RPAREN exp , {RPAREN COMMA }]
+}
+transition on RPAREN to state [38]
+
+-------------------
+lalr_state [38]: {
+  [exp ::= (*) INT_LITERAL , {RPAREN COMMA }]
+  [exp ::= LPAREN BYTE RPAREN (*) exp , {RPAREN COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {RPAREN COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {RPAREN COMMA }]
+}
+transition on exp to state [39]
+transition on LPAREN to state [29]
+transition on INT_LITERAL to state [28]
+transition on COLOR_LITERAL to state [27]
+
+-------------------
+lalr_state [39]: {
+  [exp ::= LPAREN BYTE RPAREN exp (*) , {RPAREN COMMA }]
+}
+
+-------------------
+lalr_state [40]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 (*) RBRACE , {EOF }]
+}
+transition on RBRACE to state [41]
+
+-------------------
+lalr_state [41]: {
+  [main_class ::= CLASS ID NT$0 LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN LBRACE NT$1 statement_list RBRACE NT$2 RBRACE (*) , {EOF }]
+}
+
+-------------------
+lalr_state [42]: {
+  [$START ::= program EOF (*) , {EOF }]
+}
+
+-------------------
+-------- ACTION_TABLE --------
+From state #0
+ [term 13:SHIFT(to state 2)]
+From state #1
+ [term 0:SHIFT(to state 42)]
+From state #2
+ [term 36:SHIFT(to state 3)]
+From state #3
+ [term 34:SHIFT(to state 4)]
+From state #4
+ [term 29:SHIFT(to state 5)]
+From state #5
+ [term 47:SHIFT(to state 7)]
+From state #6
+ [term 0:REDUCE(with prod 1)]
+From state #7
+ [term 7:REDUCE(with prod 2)]
+From state #8
+ [term 7:SHIFT(to state 9)]
+From state #9
+ [term 24:SHIFT(to state 10)]
+From state #10
+ [term 26:SHIFT(to state 11)]
+From state #11
+ [term 28:SHIFT(to state 12)]
+From state #12
+ [term 12:SHIFT(to state 13)]
+From state #13
+ [term 5:SHIFT(to state 14)]
+From state #14
+ [term 27:SHIFT(to state 15)]
+From state #15
+ [term 31:SHIFT(to state 16)]
+From state #16
+ [term 32:SHIFT(to state 17)]
+From state #17
+ [term 47:SHIFT(to state 18)]
+From state #18
+ [term 6:SHIFT(to state 19)]
+From state #19
+ [term 7:SHIFT(to state 20)]
+From state #20
+ [term 8:REDUCE(with prod 3)] [term 40:REDUCE(with prod 3)]
+From state #21
+ [term 8:REDUCE(with prod 8)] [term 40:REDUCE(with prod 8)]
+From state #22
+ [term 8:SHIFT(to state 23)] [term 40:SHIFT(to state 25)]
+From state #23
+ [term 8:REDUCE(with prod 4)]
+From state #24
+ [term 8:REDUCE(with prod 7)] [term 40:REDUCE(with prod 7)]
+From state #25
+ [term 5:SHIFT(to state 26)]
+From state #26
+ [term 5:SHIFT(to state 29)] [term 46:SHIFT(to state 28)]
+ [term 50:SHIFT(to state 27)]
+From state #27
+ [term 6:REDUCE(with prod 11)] [term 21:REDUCE(with prod 11)]
+From state #28
+ [term 6:REDUCE(with prod 10)] [term 21:REDUCE(with prod 10)]
+From state #29
+ [term 11:SHIFT(to state 37)]
+From state #30
+ [term 21:SHIFT(to state 31)]
+From state #31
+ [term 5:SHIFT(to state 29)] [term 46:SHIFT(to state 28)]
+ [term 50:SHIFT(to state 27)]
+From state #32
+ [term 21:SHIFT(to state 33)]
+From state #33
+ [term 5:SHIFT(to state 29)] [term 46:SHIFT(to state 28)]
+ [term 50:SHIFT(to state 27)]
+From state #34
+ [term 6:SHIFT(to state 35)]
+From state #35
+ [term 34:SHIFT(to state 36)]
+From state #36
+ [term 8:REDUCE(with prod 6)] [term 40:REDUCE(with prod 6)]
+From state #37
+ [term 6:SHIFT(to state 38)]
+From state #38
+ [term 5:SHIFT(to state 29)] [term 46:SHIFT(to state 28)]
+ [term 50:SHIFT(to state 27)]
+From state #39
+ [term 6:REDUCE(with prod 9)] [term 21:REDUCE(with prod 9)]
+From state #40
+ [term 8:SHIFT(to state 41)]
+From state #41
+ [term 0:REDUCE(with prod 5)]
+From state #42
+ [term 0:REDUCE(with prod 0)]
+------------------------------
+-------- REDUCE_TABLE --------
+From state #0
+ [non term 0->state 1]
+From state #1
+From state #2
+From state #3
+From state #4
+ [non term 4->state 6]
+From state #5
+From state #6
+From state #7
+ [non term 5->state 8]
+From state #8
+From state #9
+From state #10
+From state #11
+From state #12
+From state #13
+From state #14
+From state #15
+From state #16
+From state #17
+From state #18
+From state #19
+From state #20
+ [non term 6->state 21]
+From state #21
+ [non term 3->state 22]
+From state #22
+ [non term 2->state 24]
+From state #23
+ [non term 7->state 40]
+From state #24
+From state #25
+From state #26
+ [non term 1->state 30]
+From state #27
+From state #28
+From state #29
+From state #30
+From state #31
+ [non term 1->state 32]
+From state #32
+From state #33
+ [non term 1->state 34]
+From state #34
+From state #35
+From state #36
+From state #37
+From state #38
+ [non term 1->state 39]
+From state #39
+From state #40
+From state #41
+From state #42
+-----------------------------
+------- CUP v0.11a beta 20060608 Parser Generation Summary -------
+  0 errors and 32 warnings
+  55 terminals, 8 non-terminals, and 12 productions declared, 
+  producing 43 unique parse states.
+  32 terminals declared but not used.
+  0 non-terminals declared but not used.
+  0 productions never reduced.
+  0 conflicts detected (0 expected).
+  Code written to "mj.java", and "sym.java".
+---------------------------------------------------- (v0.11a beta 20060608)
