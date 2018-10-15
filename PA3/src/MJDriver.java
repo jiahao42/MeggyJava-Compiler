@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 
 import mjparser.*;
 import ast_visitors.*;
+import ast.node.*;
 
 public class MJDriver {
 
@@ -46,32 +47,39 @@ public class MJDriver {
           System.out.println("Driver finds input filename: " + parser.programName);
 
           // and parse
-          parser.parse();
-          ///*
-                
+					// parser.parse();
+					ast.node.Node ast_root = (ast.node.Node)parser.parse().value; 
+
           // print ast to file
           java.io.PrintStream astout =
             new java.io.PrintStream(
                 new java.io.FileOutputStream(filename + ".ast.dot"));
           ast_root.accept(new DotVisitor(new PrintWriter(astout)));
-          System.out.println("Printing AST to " + filename + ".ast.dot");
-        // /*
-          // create the symbol table
+					System.out.println("Printing AST to " + filename + ".ast.dot");
+					
+					// create the symbol table
+					/* TODO: Not implemented Symbol Table yet
           BuildSymTable stVisitor = new BuildSymTable();
           ast_root.accept(stVisitor);
-          symtable.SymTable globalST = stVisitor.getSymTable();
+					symtable.SymTable globalST = stVisitor.getSymTable();
+					*/
           
           // print ast to file
           java.io.PrintStream STout =
             new java.io.PrintStream(
                 new java.io.FileOutputStream(filename + ".ST.dot"));
-          System.out.println("Printing symbol table to " + filename + ".ST.dot");
-          globalST.outputDot(STout);
+					System.out.println("Printing symbol table to " + filename + ".ST.dot");
+					/* TODO: Not implemented Symbol Table yet
+					globalST.outputDot(STout);
+					*/
                     
-          // perform type checking 
-          ast_root.accept(new CheckTypes(globalST));
+					// perform type checking 
+					/* TODO: Not implemented Type check yet
+					ast_root.accept(new CheckTypes(globalST));
+					*/
           
-          // Determine whether to do register allocation or not.
+					// Determine whether to do register allocation or not.
+					/* TODO: Not implemented Register Allocation yet
           if ( args.length == 2 && args[0].equals("--regalloc") ) {
               // trying out register allocation
               AVRregAlloc regVisitor = new AVRregAlloc(globalST);
@@ -88,15 +96,17 @@ public class MJDriver {
           } else {
             // determine how to layout variables in AVR program
             ast_root.accept(new AVRallocVars(globalST));
-          }
+					}
+					*/
 
           // generate AVR code that evaluates the program
           java.io.PrintStream avrsout =
               new java.io.PrintStream(
-                      new java.io.FileOutputStream(filename + ".s"));
-          ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout),globalST));
+											new java.io.FileOutputStream(filename + ".s"));
+					/* TODO: Not implemented Type check yet
+					ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout),globalST));
+					*/ 
           System.out.println("Printing Atmel assembly to " + filename + ".s");
-          // */
 
         } catch(exceptions.SemanticException e) {
             System.err.println(e.getMessage());

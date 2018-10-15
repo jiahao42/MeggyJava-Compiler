@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import ast.node.*;
 
 
 parser code {:
@@ -79,8 +80,8 @@ terminal SymbolValue THIS;
 /* bogus terminal for unary precedence declaration */
 terminal UMINUS;
 
-non terminal program;
-non terminal Integer exp;
+non terminal Program program;
+non terminal IExp exp;
 non terminal statement;
 non terminal statement_list;
 non terminal main_class;
@@ -187,6 +188,7 @@ statement ::=
         parser.out.println("pop    r24");
         parser.out.println("call   _Z6DrawPxhhh");
         parser.out.println("call   _Z12DisplaySlatev\n");
+
     :}
     ;
 
@@ -204,6 +206,7 @@ exp ::=
         parser.out.println("pop    r24");
         parser.out.println("pop    r25");
         parser.out.println("push   r24\n");
+
     :}
     | INT_LITERAL:n
     {:
@@ -213,7 +216,7 @@ exp ::=
         parser.out.println("# push two byte expression onto stack");
         parser.out.println("push   r25");
         parser.out.println("push   r24\n");
-        RESULT = n.value; 
+        RESULT = new IntLiteral(n.line, n.pos, n.lexeme, n.value);
     :}
     | COLOR_LITERAL:c
     {:
@@ -221,7 +224,7 @@ exp ::=
         parser.out.println("ldi    r22," + c.value);
         parser.out.println("# push one byte expression onto stack");
         parser.out.println("push   r22\n");
-        RESULT = c.value;
+        RESULT = new ColorLiteral(c.line, c.pos, c.lexeme, c.value);
     :}
     ;
 
