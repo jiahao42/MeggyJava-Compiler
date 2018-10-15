@@ -49,7 +49,11 @@ public class MJDriver {
 
           // and parse
 					// parser.parse();
+					// parser.debug_parse();
 					Node ast_root = (Node)parser.parse().value; 
+					if (ast_root == null) {
+						System.out.println("Hmm?");
+					}
 
           // print ast to file
           java.io.PrintStream astout =

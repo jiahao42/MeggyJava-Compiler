@@ -73,6 +73,7 @@ terminal SymbolValue MEGGYTONESTART;
 terminal SymbolValue MEGGYDELAY;
 terminal SymbolValue MEGGYGETPIXEL;
 terminal SymbolValue MEGGYCHECKBUTTON;
+// terminal SymbolValue EOF;
 
 terminal SymbolValue INT_LITERAL, ID;
 terminal SymbolValue TRUE, FALSE;
@@ -147,7 +148,7 @@ main_class ::=
           {:
             RESULT = new MainClass(m.line, m.pos, m.lexeme, param.lexeme, blk);
           :}
-        RBRACE 
+        RBRACE
           {:
             InputStream mainPrologue=null;
             BufferedReader reader=null;
@@ -186,7 +187,12 @@ statement ::=
     ;
 
 statement_list ::=
-    statement_list:list statement:s {: list.add(s); RESULT = list; :}
+    statement_list:list statement:s 
+    {:  if (s != null) {
+            list.add(0, s);
+        } 
+        RESULT = list; 
+    :}
     |   /* Empty */
     {:
         RESULT = new LinkedList<IStatement>();
