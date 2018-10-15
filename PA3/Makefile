@@ -43,7 +43,7 @@ source: $(PARSE_DIR)/Yylex.java $(PARSE_DIR)/mj.java
 
 .PHONY:clean
 clean:
-	rm -rf $(SRC_DIR)/*.class $(SRC_DIR)/*/*.class
+	rm -rf $(SRC_DIR)/*.class $(SRC_DIR)/*/*.class $(SRC_DIR)/ast/*/*.class
 	rm -f $(PARSE_DIR)/sym.java $(PARSE_DIR)/mj.java $(PARSE_DIR)/Yylex.java
 	rm -rf META_INF
 	rm -rf $(PROG).jar
@@ -57,7 +57,7 @@ $(SCANNER).jar: $(SRC_DIR)/$(SCANNER)Driver.class
 	mv $(SRC_DIR)/$(SCANNER).jar .
 
 $(PROG).jar: $(SRC_DIR)/$(PROG)Driver.class
-	cd $(SRC_DIR); $(JAR) cmf $(PROG)MainClass.txt $(PROG).jar *.class */*.class avrH.rtl.s avrF.rtl.s -C $(JAVA_CUP_RUNTIME) java_cup  
+	cd $(SRC_DIR); $(JAR) cmf $(PROG)MainClass.txt $(PROG).jar *.class */*.class ast/*/*.class avrH.rtl.s avrF.rtl.s -C $(JAVA_CUP_RUNTIME) java_cup  
 	cd ..
 	mv $(SRC_DIR)/$(PROG).jar .
 
@@ -78,6 +78,7 @@ MAINSCANNER_DEPS = $(SRC_DIR)/$(SCANNER)Driver.java  \
 
 $(SRC_DIR)/$(SCANNER)Driver.class: $(MAINSCANNER_DEPS)
 	$(JCC) -classpath $(JAVA_CUP_RUNTIME):$(SRC_DIR) $(SRC_DIR)/$(SCANNER)Driver.java
+	@echo "$(JCC) -classpath $(JAVA_CUP_RUNTIME):$(SRC_DIR) $(SRC_DIR)/$(SCANNER)Driver.java"
 
 MAINPROG_DEPS = $(SRC_DIR)/$(PROG)Driver.java  \
             $(PARSE_DIR)/Yylex.java $(PARSE_DIR)/mj.java

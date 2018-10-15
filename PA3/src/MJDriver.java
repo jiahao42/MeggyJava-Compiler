@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 
 import mjparser.*;
 import ast_visitors.*;
+import ast.visitor.*;
 import ast.node.*;
 
 public class MJDriver {
@@ -48,7 +49,7 @@ public class MJDriver {
 
           // and parse
 					// parser.parse();
-					ast.node.Node ast_root = (ast.node.Node)parser.parse().value; 
+					Node ast_root = (Node)parser.parse().value; 
 
           // print ast to file
           java.io.PrintStream astout =
@@ -103,9 +104,10 @@ public class MJDriver {
           java.io.PrintStream avrsout =
               new java.io.PrintStream(
 											new java.io.FileOutputStream(filename + ".s"));
-					/* TODO: Not implemented Type check yet
+					/* TODO: Not implemented Symbol Table yet
 					ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout),globalST));
 					*/ 
+					ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout)));
           System.out.println("Printing Atmel assembly to " + filename + ".s");
 
         } catch(exceptions.SemanticException e) {

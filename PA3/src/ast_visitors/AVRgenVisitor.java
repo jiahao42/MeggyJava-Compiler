@@ -1,9 +1,8 @@
 package ast_visitors;
 
 import java.io.PrintWriter;
-import java.util.Stack;
 
-import ast.visitor.DepthFirstVisitor;
+import ast.visitor.*;
 import ast.node.*;
 
 public class AVRgenVisitor extends DepthFirstVisitor {
@@ -91,12 +90,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 @Override
   public void outByteCast(ByteCast node) {
-    parser.out.println("# Casting int to byte by popping");
-    parser.out.println("# 2 bytes off stack and only pushing low order bits");
-    parser.out.println("# back on.  Low order bits are on top of stack.");
-    parser.out.println("pop    r24");
-    parser.out.println("pop    r25");
-    parser.out.println("push   r24\n");
+    out.println("# Casting int to byte by popping");
+    out.println("# 2 bytes off stack and only pushing low order bits");
+    out.println("# back on.  Low order bits are on top of stack.");
+    out.println("pop    r24");
+    out.println("pop    r25");
+    out.println("push   r24\n");
   }
 @Override
   public void inByteType(ByteType node) {
@@ -144,10 +143,10 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 @Override
   public void outColorExp(ColorLiteral node) {
-    parser.out.println("# Color expression " + node.lexeme);
-    parser.out.println("ldi    r22," + node.value);
-    parser.out.println("# push one byte expression onto stack");
-    parser.out.println("push   r22\n");
+    out.println("# Color expression " + node.getLexeme());
+    out.println("ldi    r22," + node.getIntValue());
+    out.println("# push one byte expression onto stack");
+    out.println("push   r22\n");
   }
 @Override
   public void inColorArrayType(ColorArrayType node) {
@@ -219,12 +218,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 @Override
   public void outIntegerExp(IntLiteral node) {
-    parser.out.println("# Load constant int " + node.value);
-    parser.out.println("ldi    r24,lo8(" + node.value + ")");
-    parser.out.println("ldi    r25,hi8(" + node.value + ")");
-    parser.out.println("# push two byte expression onto stack");
-    parser.out.println("push   r25");
-    parser.out.println("push   r24\n");
+    out.println("# Load constant int " + node.getIntValue());
+    out.println("ldi    r24,lo8(" + node.getIntValue() + ")");
+    out.println("ldi    r25,hi8(" + node.getIntValue() + ")");
+    out.println("# push two byte expression onto stack");
+    out.println("push   r25");
+    out.println("push   r24\n");
   }
 @Override
   public void inIntType(IntType node) {
@@ -296,15 +295,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 @Override
   public void outMeggySetPixel(MeggySetPixel node) {
-    parser.out.println("### Meggy.setPixel(x,y,color) call");
-    parser.out.println("# load a one byte expression off stack");
-    parser.out.println("pop    r20");
-    parser.out.println("# load a one byte expression off stack");
-    parser.out.println("pop    r22");
-    parser.out.println("# load a one byte expression off stack");
-    parser.out.println("pop    r24");
-    parser.out.println("call   _Z6DrawPxhhh");
-    parser.out.println("call   _Z12DisplaySlatev\n");
+    out.println("### Meggy.setPixel(x,y,color) call");
+    out.println("# load a one byte expression off stack");
+    out.println("pop    r20");
+    out.println("# load a one byte expression off stack");
+    out.println("pop    r22");
+    out.println("# load a one byte expression off stack");
+    out.println("pop    r24");
+    out.println("call   _Z6DrawPxhhh");
+    out.println("call   _Z12DisplaySlatev\n");
   }
 @Override
   public void inMeggyToneStart(MeggyToneStart node) {

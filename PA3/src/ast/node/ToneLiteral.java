@@ -4,7 +4,7 @@
 
 package ast.node;
 
-import ast.visitor.Visitor;
+import ast.visitor.*;
 
 @SuppressWarnings("nls")
 public final class ToneLiteral extends ILiteral

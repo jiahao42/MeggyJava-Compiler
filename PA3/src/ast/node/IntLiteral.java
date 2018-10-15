@@ -4,7 +4,7 @@
 
 package ast.node;
 
-import ast.visitor.Visitor;
+import ast.visitor.*;
 
 @SuppressWarnings("nls")
 public final class IntLiteral extends ILiteral
@@ -12,7 +12,6 @@ public final class IntLiteral extends ILiteral
     public IntLiteral(int _line_, int _pos_, String _lexeme_, int _value_)
     {
         super(_line_, _pos_, _lexeme_, _value_);
-        System.out.println("FUCK!");
     }
 
     @Override
