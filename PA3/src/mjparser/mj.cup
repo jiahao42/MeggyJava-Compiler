@@ -99,7 +99,7 @@ precedence right UMINUS;
 start with program;
 
 program ::= 
-    IMPORT MEGGY SEMI main_class
+    IMPORT:i MEGGY SEMI main_class:m {: RESULT = new Program(i.line, i.pos, m, new LinkedList<IClassDecl>()); :}
     ;
     
 main_class ::=
