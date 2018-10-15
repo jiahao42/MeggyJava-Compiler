@@ -8,7 +8,7 @@ import ast.visitor.*;
 
 @SuppressWarnings("nls")
 public final class MainClass extends Node
-{
+{ 
     private String _name_;
     private String _param_;
     private IStatement _statement_;

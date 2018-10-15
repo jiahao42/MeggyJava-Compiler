@@ -13,7 +13,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 
 import mjparser.*;
-//import ast_visitors.*;
+import ast_visitors.*;
 
 public class MJDriver {
 
@@ -47,7 +47,7 @@ public class MJDriver {
 
           // and parse
           parser.parse();
-          /*
+          ///*
                 
           // print ast to file
           java.io.PrintStream astout =
@@ -55,7 +55,7 @@ public class MJDriver {
                 new java.io.FileOutputStream(filename + ".ast.dot"));
           ast_root.accept(new DotVisitor(new PrintWriter(astout)));
           System.out.println("Printing AST to " + filename + ".ast.dot");
-
+        // /*
           // create the symbol table
           BuildSymTable stVisitor = new BuildSymTable();
           ast_root.accept(stVisitor);
@@ -96,7 +96,7 @@ public class MJDriver {
                       new java.io.FileOutputStream(filename + ".s"));
           ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout),globalST));
           System.out.println("Printing Atmel assembly to " + filename + ".s");
-          */
+          // */
 
         } catch(exceptions.SemanticException e) {
             System.err.println(e.getMessage());

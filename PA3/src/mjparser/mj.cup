@@ -213,7 +213,7 @@ exp ::=
         parser.out.println("# push two byte expression onto stack");
         parser.out.println("push   r25");
         parser.out.println("push   r24\n");
-        RESULT = n.value;
+        RESULT = n.value; 
     :}
     | COLOR_LITERAL:c
     {:

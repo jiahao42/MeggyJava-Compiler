@@ -7,7 +7,7 @@ package ast.node;
 import ast.visitor.*;
 import java.util.*;
 
-@SuppressWarnings("nls")
+@SuppressWarnings("nls") 
 public final class Program extends Node
 {
     private MainClass _mainClass_;
