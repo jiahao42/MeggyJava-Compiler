@@ -82,9 +82,10 @@ terminal UMINUS;
 
 non terminal Program program;
 non terminal IExp exp;
-non terminal statement;
-non terminal statement_list;
-non terminal main_class;
+non terminal IStatement statement;
+non terminal LinkedList<IStatement> statement_list;
+non terminal BlockStatement block_statement;
+non terminal MainClass main_class;
 
 /* Declare precedence and associativity  here */
 precedence left TIMES;
@@ -107,9 +108,8 @@ main_class ::=
                 // Check filename is class name, if not exit with error message
                 // System.exit(0);   
             :}
-        LBRACE PUBLIC STATIC VOID MAIN 
+        LBRACE PUBLIC STATIC VOID MAIN:m 
         LPAREN STRING LBRACKET RBRACKET ID:param RPAREN
-        LBRACE 
           {: 
             InputStream mainPrologue=null;
             BufferedReader reader=null;
@@ -141,9 +141,9 @@ main_class ::=
                 }
             }
           :}
-        statement_list:list RBRACE
+        block_statement:blk
           {:
-
+            RESULT = new MainClass(m.line, m.pos, m.lexeme, param.lexeme, blk);
           :}
         RBRACE 
           {:
@@ -177,53 +177,37 @@ main_class ::=
     ;
 
 statement ::= 
-    MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI
+    MEGGYSETPIXEL:msp LPAREN exp:e1 COMMA exp:e2 COMMA exp:e3 RPAREN SEMI
     {:
-        parser.out.println("### Meggy.setPixel(x,y,color) call");
-        parser.out.println("# load a one byte expression off stack");
-        parser.out.println("pop    r20");
-        parser.out.println("# load a one byte expression off stack");
-        parser.out.println("pop    r22");
-        parser.out.println("# load a one byte expression off stack");
-        parser.out.println("pop    r24");
-        parser.out.println("call   _Z6DrawPxhhh");
-        parser.out.println("call   _Z12DisplaySlatev\n");
-
+        RESULT = new MeggySetPixel(msp.line, msp.pos, e1, e2, e3);
     :}
     ;
 
 statement_list ::=
-    statement_list statement
+    statement_list:list statement:s {: list.add(s); RESULT = list; :}
     |   /* Empty */
+    {:
+        RESULT = new LinkedList<IStatement>();
+    :}
+    ;
+block_statement ::=
+    LBRACE:lb statement_list:list RBRACE
+    {:
+        RESULT = new BlockStatement(lb.line, lb.pos, list);
+    :}
     ;
 
 exp ::= 
-    LPAREN BYTE RPAREN exp:e
+    LPAREN:lp BYTE:b RPAREN exp:e
     {:
-        parser.out.println("# Casting int to byte by popping");
-        parser.out.println("# 2 bytes off stack and only pushing low order bits");
-        parser.out.println("# back on.  Low order bits are on top of stack.");
-        parser.out.println("pop    r24");
-        parser.out.println("pop    r25");
-        parser.out.println("push   r24\n");
-
+        RESULT = new ByteCast(lp.line, lp.pos, e);
     :}
     | INT_LITERAL:n
     {:
-        parser.out.println("# Load constant int " + n.value);
-        parser.out.println("ldi    r24,lo8(" + n.value + ")");
-        parser.out.println("ldi    r25,hi8(" + n.value + ")");
-        parser.out.println("# push two byte expression onto stack");
-        parser.out.println("push   r25");
-        parser.out.println("push   r24\n");
         RESULT = new IntLiteral(n.line, n.pos, n.lexeme, n.value);
     :}
     | COLOR_LITERAL:c
     {:
-        parser.out.println("# Color expression " + c.lexeme);
-        parser.out.println("ldi    r22," + c.value);
-        parser.out.println("# push one byte expression onto stack");
-        parser.out.println("push   r22\n");
         RESULT = new ColorLiteral(c.line, c.pos, c.lexeme, c.value);
     :}
     ;

@@ -91,7 +91,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 @Override
   public void outByteCast(ByteCast node) {
-    defaultOut(node);
+    parser.out.println("# Casting int to byte by popping");
+    parser.out.println("# 2 bytes off stack and only pushing low order bits");
+    parser.out.println("# back on.  Low order bits are on top of stack.");
+    parser.out.println("pop    r24");
+    parser.out.println("pop    r25");
+    parser.out.println("push   r24\n");
   }
 @Override
   public void inByteType(ByteType node) {
@@ -139,7 +144,10 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 @Override
   public void outColorExp(ColorLiteral node) {
-    defaultOut(node);
+    parser.out.println("# Color expression " + node.lexeme);
+    parser.out.println("ldi    r22," + node.value);
+    parser.out.println("# push one byte expression onto stack");
+    parser.out.println("push   r22\n");
   }
 @Override
   public void inColorArrayType(ColorArrayType node) {
@@ -211,7 +219,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 @Override
   public void outIntegerExp(IntLiteral node) {
-    defaultOut(node);
+    parser.out.println("# Load constant int " + node.value);
+    parser.out.println("ldi    r24,lo8(" + node.value + ")");
+    parser.out.println("ldi    r25,hi8(" + node.value + ")");
+    parser.out.println("# push two byte expression onto stack");
+    parser.out.println("push   r25");
+    parser.out.println("push   r24\n");
   }
 @Override
   public void inIntType(IntType node) {
@@ -283,7 +296,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 @Override
   public void outMeggySetPixel(MeggySetPixel node) {
-    defaultOut(node);
+    parser.out.println("### Meggy.setPixel(x,y,color) call");
+    parser.out.println("# load a one byte expression off stack");
+    parser.out.println("pop    r20");
+    parser.out.println("# load a one byte expression off stack");
+    parser.out.println("pop    r22");
+    parser.out.println("# load a one byte expression off stack");
+    parser.out.println("pop    r24");
+    parser.out.println("call   _Z6DrawPxhhh");
+    parser.out.println("call   _Z12DisplaySlatev\n");
   }
 @Override
   public void inMeggyToneStart(MeggyToneStart node) {
