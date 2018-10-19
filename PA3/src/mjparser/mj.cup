@@ -118,6 +118,18 @@ statement ::=
     {:
         RESULT = new MeggySetPixel(msp.line, msp.pos, e1, e2, e3);
     :}
+    | MEGGYDELAY:md LPAREN exp:e RPAREN
+    {:
+        RESULT = new MeggyDelay(md.line, md.pos, e);
+    :}
+    | IF:i LPAREN exp:e RPAREN statement:s
+    {:
+        RESULT = new IfStatement(i.line, i.pos, e, s, null);
+    :}
+    | IF:i LPAREN exp:e RPAREN statement:then ELSE statement:else
+    {:
+        RESULT = new IfStatement(i.line, i.pos, e, then, else);
+    :}
     ;
 
 statement_list ::=
