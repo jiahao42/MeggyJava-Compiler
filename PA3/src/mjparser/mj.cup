@@ -122,13 +122,18 @@ statement ::=
     {:
         RESULT = new MeggyDelay(md.line, md.pos, e);
     :}
-    | IF:i LPAREN exp:e RPAREN statement:s
+/*    | IF:i LPAREN exp:e RPAREN statement:s
     {:
         RESULT = new IfStatement(i.line, i.pos, e, s, null);
     :}
-    | IF:i LPAREN exp:e RPAREN statement:then ELSE statement:else
+*/
+    | IF:i LPAREN exp:e RPAREN statement:s1 ELSE statement:s2
     {:
-        RESULT = new IfStatement(i.line, i.pos, e, then, else);
+        RESULT = new IfStatement(i.line, i.pos, e, s1, s2);
+    :}
+    | WHILE:w LPAREN exp:e RPAREN statement:s
+    {:
+        RESULT = new WhileStatement(w.line, w.pos, e, s);
     :}
     ;
 
