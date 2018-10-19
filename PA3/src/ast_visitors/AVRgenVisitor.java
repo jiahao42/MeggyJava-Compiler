@@ -4,6 +4,13 @@ import java.io.PrintWriter;
 import java.util.*;
 import ast.visitor.*;
 import ast.node.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class AVRgenVisitor extends DepthFirstVisitor {
   private PrintWriter out;
@@ -456,13 +463,59 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inProgram(Program node) {
-    defaultIn(node);
+    InputStream mainPrologue = null;
+    BufferedReader reader = null;
+    try {
+      // The syntax for loading a text resource file
+      // from a jar file here:
+      // http://www.rgagnon.com/javadetails/java-0077.html
+      System.out.println("Generate prolog using avrH.rtl.s");
+      mainPrologue = this.getClass().getClassLoader().getResourceAsStream("avrH.rtl.s");
+      reader = new BufferedReader(new InputStreamReader(mainPrologue));
+      String line = null;
+      while ((line = reader.readLine()) != null) {
+        this.out.println(line);
+      }
+      this.out.println("\n");
+    } catch (Exception e2) {
+      e2.printStackTrace();
+    } finally {
+      try {
+        if (mainPrologue != null)
+          mainPrologue.close();
+        if (reader != null)
+          reader.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   @Override
   public void outProgram(Program node) {
-    defaultOut(node);
-    this.out.flush();
+    InputStream mainPrologue = null;
+    BufferedReader reader = null;
+    try {
+      System.out.println("Generate epilog using avrF.rtl.s");
+      mainPrologue = this.getClass().getClassLoader().getResourceAsStream("avrF.rtl.s");
+      reader = new BufferedReader(new InputStreamReader(mainPrologue));
+      String line = null;
+      while ((line = reader.readLine()) != null) {
+        this.out.println(line);
+      }
+    } catch (Exception e2) {
+      e2.printStackTrace();
+    } finally {
+      try {
+        if (mainPrologue != null)
+          mainPrologue.close();
+        if (reader != null)
+          reader.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    this.out.flush(); // write all the buffer to file.
   }
 
   @Override

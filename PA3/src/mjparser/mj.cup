@@ -103,80 +103,14 @@ program ::=
     ;
     
 main_class ::=
-        CLASS ID:name         
-            {: java.io.PrintStream sout 
-                    = new java.io.PrintStream(
-                        new java.io.FileOutputStream(name.lexeme+".java.s"));
-                parser.out = new PrintWriter(sout);
-                // Check filename is class name, if not exit with error message
-                // System.exit(0);   
-            :}
+        CLASS ID
         LBRACE PUBLIC STATIC VOID MAIN:m 
         LPAREN STRING LBRACKET RBRACKET ID:param RPAREN
-          {: 
-            InputStream mainPrologue=null;
-            BufferedReader reader=null;
-            try {
-                // The syntax for loading a text resource file 
-                // from a jar file here:
-                // http://www.rgagnon.com/javadetails/java-0077.html
-                System.out.println("Generate prolog using avrH.rtl.s");
-                mainPrologue 
-                    = this.getClass().getClassLoader().getResourceAsStream(
-                        "avrH.rtl.s");
-                reader = new BufferedReader(new 
-                    InputStreamReader(mainPrologue));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    parser.out.println(line);
-                }
-                parser.out.println("\n");
-            } catch ( Exception e2) {
-                e2.printStackTrace();
-            }
-            finally{
-                try{
-                    if(mainPrologue!=null) mainPrologue.close();
-                    if(reader!=null) reader.close();
-                }
-                catch (IOException e) {
-                   e.printStackTrace();
-                }
-            }
-          :}
         block_statement:blk
           {:
             RESULT = new MainClass(m.line, m.pos, m.lexeme, param.lexeme, blk);
           :}
         RBRACE
-          {:
-            InputStream mainPrologue=null;
-            BufferedReader reader=null;
-            try {
-                System.out.println("Generate epilog using avrF.rtl.s");
-                mainPrologue 
-                    = this.getClass().getClassLoader().getResourceAsStream(
-                        "avrF.rtl.s");
-                reader = new BufferedReader(new 
-                    InputStreamReader(mainPrologue));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    parser.out.println(line);
-                }
-            } catch ( Exception e2) {
-                e2.printStackTrace();
-            }
-            finally{
-                try{
-                    if(mainPrologue!=null) mainPrologue.close();
-                    if(reader!=null) reader.close();
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            parser.out.flush();
-          :}
     ;
 
 statement ::= 
