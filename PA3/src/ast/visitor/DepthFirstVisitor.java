@@ -984,7 +984,7 @@ public class DepthFirstVisitor extends Visitor
     {
         inProgram(node);
         if(node.getMainClass() != null)
-        {
+        {   
             node.getMainClass().accept(this);
         }
         {

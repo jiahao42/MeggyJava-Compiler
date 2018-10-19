@@ -69,12 +69,12 @@ public class MJDriver {
 					symtable.SymTable globalST = stVisitor.getSymTable();
 					*/
           
-          // print ast to file
+					// print ast to file
+					/* TODO: Not implemented Symbol Table yet
           java.io.PrintStream STout =
             new java.io.PrintStream(
                 new java.io.FileOutputStream(filename + ".ST.dot"));
 					System.out.println("Printing symbol table to " + filename + ".ST.dot");
-					/* TODO: Not implemented Symbol Table yet
 					globalST.outputDot(STout);
 					*/
                     
@@ -103,7 +103,6 @@ public class MJDriver {
             ast_root.accept(new AVRallocVars(globalST));
 					}
 					*/
-
           // generate AVR code that evaluates the program
           java.io.PrintStream avrsout =
               new java.io.PrintStream(
@@ -117,7 +116,6 @@ public class MJDriver {
         } catch(exceptions.SemanticException e) {
             System.err.println(e.getMessage());
             System.exit(1);
-       
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
