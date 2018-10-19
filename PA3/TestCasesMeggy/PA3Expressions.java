@@ -7,12 +7,12 @@ import meggy.Meggy;
 
 class PA3Expressions {
 	public static void main(String[] whatever){
-	    
+	    {
 	        // Integer addition
-	        Meggy.setPixel( (byte)(2+1-3), (byte)(0+(3+5)) , Meggy.Color.VIOLET );
-		Meggy.setPixel( (byte)(2+(1-3)), (byte)(0-(3+5)) , Meggy.Color.VIOLET );
+	        Meggy.setPixel( (byte)(2+1+3), (byte)(0+3) , Meggy.Color.VIOLET );
+	        
 	        // Integer subtraction
-	        Meggy.setPixel( (byte)(7-1*6), (byte)(9-5), Meggy.Color.BLUE);
+	        Meggy.setPixel( (byte)(7-1-6), (byte)(9-5), Meggy.Color.BLUE);
 
 	        // Byte addition
 	        Meggy.setPixel( (byte)((byte)((byte)3+(byte)2)+(byte)1), 
@@ -24,16 +24,16 @@ class PA3Expressions {
 	                        Meggy.Color.YELLOW);
 
                 // Unary Minus
-	        Meggy.setPixel(-5+5, (byte)(10*-5), Meggy.Color.DARK);
+	        Meggy.setPixel( (byte)(-(2+1)+8), (byte)(10+-5), Meggy.Color.DARK);
                 // watch it! spaces significant
-Meggy.setPixel( (byte)( (byte)(0 - - - 6) * (byte)(-1)), (byte)(10+5), Meggy.Color.ORANGE);
+	        Meggy.setPixel( (byte)( (byte)(0 - - -6) * (byte)(-1)), (byte)(10+-5), Meggy.Color.ORANGE);
 	        
 	        // Mixed Integer and Byte
                 Meggy.setPixel( (byte)(3-(byte)1),  (byte)((byte)0+7), Meggy.Color.GREEN);
 
 
-	        // Only Byte multiplicatio
+	        // Only Byte multiplication
 	        Meggy.setPixel( (byte)((byte)3*(byte)2), (byte)(5), Meggy.Color.WHITE);
-	    
+	    }
     }
 }
