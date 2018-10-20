@@ -60,25 +60,22 @@ public class MJDriver {
 					System.out.println("Printing AST to " + filename + ".ast.dot");
 					
 					// create the symbol table
-					/* TODO: Not implemented Symbol Table yet
-          BuildSymTable stVisitor = new BuildSymTable();
-          ast_root.accept(stVisitor);
-					symtable.SymTable globalST = stVisitor.getSymTable();
-					*/
+					// TODO: Not implemented Symbol Table yet
+          // BuildSymTable stVisitor = new BuildSymTable();
+          // ast_root.accept(stVisitor);
+					// symtable.SymTable globalST = stVisitor.getSymTable();
           
 					// print ast to file
-					/* TODO: Not implemented Symbol Table yet
-          java.io.PrintStream STout =
-            new java.io.PrintStream(
-                new java.io.FileOutputStream(filename + ".ST.dot"));
-					System.out.println("Printing symbol table to " + filename + ".ST.dot");
-					globalST.outputDot(STout);
-					*/
+					// TODO: Not implemented Symbol Table yet
+          // java.io.PrintStream STout =
+          //   new java.io.PrintStream(
+          //       new java.io.FileOutputStream(filename + ".ST.dot"));
+					// System.out.println("Printing symbol table to " + filename + ".ST.dot");
+					// globalST.outputDot(STout);
                     
 					// perform type checking 
-					/* TODO: Not implemented Type check yet
-					ast_root.accept(new CheckTypes(globalST));
-					*/
+					// TODO: Not implemented Type check yet
+					// ast_root.accept(new CheckTypes(globalST));
           
 					// Determine whether to do register allocation or not.
 					/* TODO: Not implemented Register Allocation yet
@@ -104,9 +101,7 @@ public class MJDriver {
           java.io.PrintStream avrsout =
               new java.io.PrintStream(
 											new java.io.FileOutputStream(filename + ".s"));
-					/* TODO: Not implemented Symbol Table yet
-					ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout),globalST));
-					*/ 
+					// ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout), globalST));
 					ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout)));
           System.out.println("Printing Atmel assembly to " + filename + ".s");
 

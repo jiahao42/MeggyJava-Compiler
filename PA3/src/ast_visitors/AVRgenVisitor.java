@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import label.Label;
 
 public class AVRgenVisitor extends DepthFirstVisitor {
   private PrintWriter out;
@@ -18,6 +19,14 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   /** Constructor takes a PrintWriter, and stores in instance var. */
   public AVRgenVisitor(PrintWriter out) {
     this.out = out;
+  }
+
+  private void write2FileWithTab(String s) {
+    this.out.println("\t" + s);
+  }
+
+  private void write2File(String s) {
+    this.out.println(s);
   }
 
   @Override
@@ -107,12 +116,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outByteCast(ByteCast node) {
-    out.println("# Casting int to byte by popping");
-    out.println("# 2 bytes off stack and only pushing low order bits");
-    out.println("# back on.  Low order bits are on top of stack.");
-    out.println("pop    r24");
-    out.println("pop    r25");
-    out.println("push   r24\n");
+    write2FileWithTab("# Casting int to byte by popping");
+    write2FileWithTab("# 2 bytes off stack and only pushing low order bits");
+    write2FileWithTab("# back on.  Low order bits are on top of stack.");
+    write2FileWithTab("pop r24");
+    write2FileWithTab("pop r25");
+    write2FileWithTab("push r24\n");
   }
 
   @Override
@@ -167,10 +176,10 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inColorExp(ColorLiteral node) {
-    out.println("# Color expression " + node.getLexeme());
-    out.println("ldi    r22," + node.getIntValue());
-    out.println("# push one byte expression onto stack");
-    out.println("push   r22\n");
+    write2FileWithTab("# Color expression " + node.getLexeme());
+    write2FileWithTab("ldi r22," + node.getIntValue());
+    write2FileWithTab("# push one byte expression onto stack");
+    write2FileWithTab("push r22\n");
   }
 
   @Override
@@ -201,11 +210,18 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void inEqualExp(EqualExp node) {
     defaultIn(node);
+    write2FileWithTab("# start equality check");
   }
 
   @Override
   public void outEqualExp(EqualExp node) {
-    defaultOut(node);
+    // TODO: only support byte comparison
+    write2FileWithTab("# load a one byte expression off stack");
+    this.out.print("pop r18");
+    write2FileWithTab("# load a one byte expression off stack");
+    this.out.print("pop r24");
+    write2FileWithTab("# compare the operands");
+    write2FileWithTab("cp r24, r18");
   }
 
   @Override
@@ -241,6 +257,46 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void inIfStatement(IfStatement node) {
     defaultIn(node);
+    write2FileWithTab("#### if statement");
+  }
+
+  @Override
+  public void visitIfStatement(IfStatement node) {
+    Label trueBranch = new Label();
+    Label falseBranch = new Label();
+    Label compareBranch = new Label();
+    Label thenBranch = new Label();
+    inIfStatement(node);
+    if (node.getExp() != null) {
+      node.getExp().accept(this);
+    }
+    write2FileWithTab("breq " + trueBranch.toString());
+    write2File(falseBranch.toString() + " # false branch");
+    write2FileWithTab("ldi r24, 0");
+    write2FileWithTab("jmp " + thenBranch.toString());
+    write2File(trueBranch.toString() + " # true branch");
+    write2FileWithTab("ldi r24, 1");
+    write2File(compareBranch.toString() + " # get result");
+    write2FileWithTab("# push comparison result onto stack");
+    write2FileWithTab("push r24");
+    write2FileWithTab("# load condition and branch if false");
+    write2FileWithTab("# load a one byte expression off stack");
+    write2FileWithTab("pop r24");
+    write2FileWithTab("# load zero into reg");
+    write2FileWithTab("ldi r25, 1");
+    write2FileWithTab("# use cp to set SREG");
+    write2FileWithTab("cp r24, r25");
+    write2FileWithTab("breq " + trueBranch.toString());
+    write2FileWithTab("jmp " + falseBranch.toString());
+    write2File(trueBranch.toString());
+    if (node.getThenStatement() != null) {
+      node.getThenStatement().accept(this);
+    }
+    write2File(falseBranch.toString());
+    if (node.getElseStatement() != null) {
+      node.getElseStatement().accept(this);
+    }
+    outIfStatement(node);
   }
 
   @Override
@@ -260,12 +316,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inIntegerExp(IntLiteral node) {
-    out.println("# Load constant int " + node.getIntValue());
-    out.println("ldi    r24,lo8(" + node.getIntValue() + ")");
-    out.println("ldi    r25,hi8(" + node.getIntValue() + ")");
-    out.println("# push two byte expression onto stack");
-    out.println("push   r25");
-    out.println("push   r24\n");
+    write2FileWithTab("# Load constant int " + node.getIntValue());
+    write2FileWithTab("ldi r24,lo8(" + node.getIntValue() + ")");
+    write2FileWithTab("ldi r25,hi8(" + node.getIntValue() + ")");
+    write2FileWithTab("# push two byte expression onto stack");
+    write2FileWithTab("push r25");
+    write2FileWithTab("push r24\n");
   }
 
   @Override
@@ -360,15 +416,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outMeggySetPixel(MeggySetPixel node) {
-    out.println("### Meggy.setPixel(x,y,color) call");
-    out.println("# load a one byte expression off stack");
-    out.println("pop    r20");
-    out.println("# load a one byte expression off stack");
-    out.println("pop    r22");
-    out.println("# load a one byte expression off stack");
-    out.println("pop    r24");
-    out.println("call   _Z6DrawPxhhh");
-    out.println("call   _Z12DisplaySlatev\n");
+    write2FileWithTab("### Meggy.setPixel(x,y,color) call");
+    write2FileWithTab("# load a one byte expression off stack");
+    write2FileWithTab("pop r20");
+    write2FileWithTab("# load a one byte expression off stack");
+    write2FileWithTab("pop r22");
+    write2FileWithTab("# load a one byte expression off stack");
+    write2FileWithTab("pop r24");
+    write2FileWithTab("call   _Z6DrawPxhhh");
+    write2FileWithTab("call   _Z12DisplaySlatev\n");
   }
 
   @Override
@@ -474,9 +530,9 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       reader = new BufferedReader(new InputStreamReader(mainPrologue));
       String line = null;
       while ((line = reader.readLine()) != null) {
-        this.out.println(line);
+        write2FileWithTab(line);
       }
-      this.out.println("\n");
+      write2FileWithTab("\n");
     } catch (Exception e2) {
       e2.printStackTrace();
     } finally {
@@ -501,7 +557,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       reader = new BufferedReader(new InputStreamReader(mainPrologue));
       String line = null;
       while ((line = reader.readLine()) != null) {
-        this.out.println(line);
+        write2FileWithTab(line);
       }
     } catch (Exception e2) {
       e2.printStackTrace();

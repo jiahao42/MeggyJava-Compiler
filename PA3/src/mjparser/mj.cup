@@ -90,8 +90,15 @@ non terminal LinkedList<IStatement> statement_list;
 non terminal BlockStatement block_statement;
 non terminal MainClass main_class;
 
-/* Declare precedence and associativity  here */
+/* Declare precedence and associativity here
+Another problem is associativity with recursion
+recursion on both sides - associativity is unclear
+*/
 precedence left TIMES;
+precedence left PLUS;
+precedence left MINUS;
+precedence left EQUAL;
+precedence left ELSE;
 precedence right UMINUS;
 
 
@@ -122,11 +129,10 @@ statement ::=
     {:
         RESULT = new MeggyDelay(md.line, md.pos, e);
     :}
-/*    | IF:i LPAREN exp:e RPAREN statement:s
+    | IF:i LPAREN exp:e RPAREN statement:s
     {:
         RESULT = new IfStatement(i.line, i.pos, e, s, null);
     :}
-*/
     | IF:i LPAREN exp:e RPAREN statement:s1 ELSE statement:s2
     {:
         RESULT = new IfStatement(i.line, i.pos, e, s1, s2);
@@ -134,6 +140,10 @@ statement ::=
     | WHILE:w LPAREN exp:e RPAREN statement:s
     {:
         RESULT = new WhileStatement(w.line, w.pos, e, s);
+    :}
+    | block_statement:blk
+    {:
+        RESULT = blk;
     :}
     ;
 
@@ -161,6 +171,10 @@ exp ::=
     {:
         RESULT = new ByteCast(lp.line, lp.pos, e);
     :}
+    | exp:e1 EQUAL:eq exp:e2
+    {:
+        RESULT = new EqualExp(eq.line, eq.pos, e1, e2);
+    :}
     | INT_LITERAL:n
     {:
         RESULT = new IntLiteral(n.line, n.pos, n.lexeme, n.value);
@@ -169,6 +183,7 @@ exp ::=
     {:
         RESULT = new ColorLiteral(c.line, c.pos, c.lexeme, c.value);
     :}
+    | LPAREN exp RPAREN
     ;
 
 

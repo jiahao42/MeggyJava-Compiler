@@ -18,6 +18,7 @@ public abstract class Node implements IVisitable, Cloneable
     private int mPos;
     
     public Node(int line, int pos) {
+        System.out.println(getClass().getName());
         this.mLine = line;
         this.mPos = pos;
     }
