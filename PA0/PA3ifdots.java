@@ -12,11 +12,11 @@ import meggy.Meggy;
 class PA3ifdots {
 
     public static void main(String[] whatever){
-        if ((byte)2  == ((byte)3+1)-2) {
+        if ((byte)2 == (byte)3) {
             Meggy.setPixel( (byte)3, (byte)(4+3), Meggy.Color.BLUE );
         }
-        if (Meggy.checkButton(Meggy.Button.Down)) {
-            Meggy.setPixel( (byte)3, (byte)0, Meggy.Color.RED );
-        }
+        // if (Meggy.checkButton(Meggy.Button.Down)) {
+            // Meggy.setPixel( (byte)3, (byte)0, Meggy.Color.RED );
+        // }
     }
 }
