@@ -174,13 +174,29 @@ block_statement ::=
     ;
 
 exp ::= 
-    LPAREN:lp BYTE RPAREN exp:e
-    {:
-        RESULT = new ByteCast(lp.line, lp.pos, e);
-    :}
     | exp:e1 EQUAL:eq exp:e2
     {:
         RESULT = new EqualExp(eq.line, eq.pos, e1, e2);
+    :}
+    | exp:e1 AND:op exp:e2
+    {:
+        RESULT = new AndExp(op.line, op.pos, e1, e2);
+    :}
+    | exp:e1 PLUS:op exp:e2
+    {:
+        RESULT = new PlusExp(op.line, op.pos, e1, e2);
+    :}
+    | exp:e1 TIMES:op exp:e2
+    {:
+        RESULT = new MulExp(op.line, op.pos, e1, e2);
+    :}
+    | exp:e1 MINUS:op exp:e2
+    {:
+        RESULT = new MinusExp(op.line, op.pos, e1, e2);
+    :}
+    | LPAREN:lp BYTE RPAREN exp:e
+    {:
+        RESULT = new ByteCast(lp.line, lp.pos, e);
     :}
     | INT_LITERAL:n
     {:
