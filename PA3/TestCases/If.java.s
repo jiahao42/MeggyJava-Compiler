@@ -20,7 +20,9 @@
 	
 
 	#### if statement
+
 	# start equality check
+
 	# Load constant int 2
 	ldi r24,lo8(2)
 	ldi r25,hi8(2)
@@ -28,9 +30,16 @@
 	push r25
 	push r24
 
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24
+	pop r25
+	push r24
+
+	# Load constant int 2
+	ldi r24,lo8(2)
+	ldi r25,hi8(2)
 	# push two byte expression onto stack
 	push r25
 	push r24
@@ -43,23 +52,21 @@
 	push r24
 
 	# load a one byte expression off stack
-pop r18	# load a one byte expression off stack
-pop r24	# compare the operands
-	cp r24, r18
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
+	pop r18
+	# load a one byte expression off stack
 	pop r24
-	pop r25
-	push r24
-
+	# compare the operands
+	cp r24, r18
 	breq MJ_L0
-MJ_L1 # false branch
+
+MJ_L1: # false branch
 	ldi r24, 0
-	jmp MJ_L3
-MJ_L0 # true branch
+	jmp MJ_L2
+
+MJ_L0: # true branch
 	ldi r24, 1
-MJ_L2 # get result
+
+MJ_L2: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -69,9 +76,10 @@ MJ_L2 # get result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L0
-	jmp MJ_L1
-MJ_L0
+	breq MJ_L3
+	jmp MJ_L4
+
+MJ_L3: # then branch
 	# Load constant int 6
 	ldi r24,lo8(6)
 	ldi r25,hi8(6)
@@ -115,7 +123,8 @@ MJ_L0
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L1
+
+MJ_L4: # else branch
 	
 	
 	/* epilogue start */

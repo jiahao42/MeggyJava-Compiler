@@ -210,16 +210,16 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void inEqualExp(EqualExp node) {
     defaultIn(node);
-    write2FileWithTab("# start equality check");
+    write2FileWithTab("# start equality check\n");
   }
 
   @Override
   public void outEqualExp(EqualExp node) {
     // TODO: only support byte comparison
     write2FileWithTab("# load a one byte expression off stack");
-    this.out.print("pop r18");
+    write2FileWithTab("pop r18");
     write2FileWithTab("# load a one byte expression off stack");
-    this.out.print("pop r24");
+    write2FileWithTab("pop r24");
     write2FileWithTab("# compare the operands");
     write2FileWithTab("cp r24, r18");
   }
@@ -257,26 +257,27 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void inIfStatement(IfStatement node) {
     defaultIn(node);
-    write2FileWithTab("#### if statement");
+    write2FileWithTab("#### if statement\n");
   }
 
   @Override
   public void visitIfStatement(IfStatement node) {
-    Label trueBranch = new Label();
-    Label falseBranch = new Label();
-    Label compareBranch = new Label();
-    Label thenBranch = new Label();
+    String trueBranch = new Label().toString();
+    String falseBranch = new Label().toString();
+    String compareBranch = new Label().toString();
+    String thenBranch = new Label().toString();
+    String elseBranch = new Label().toString();
     inIfStatement(node);
     if (node.getExp() != null) {
       node.getExp().accept(this);
     }
-    write2FileWithTab("breq " + trueBranch.toString());
-    write2File(falseBranch.toString() + " # false branch");
+    write2FileWithTab("breq " + trueBranch);
+    write2File("\n" + falseBranch + ": # false branch");
     write2FileWithTab("ldi r24, 0");
-    write2FileWithTab("jmp " + thenBranch.toString());
-    write2File(trueBranch.toString() + " # true branch");
+    write2FileWithTab("jmp " + compareBranch);
+    write2File("\n" + trueBranch + ": # true branch");
     write2FileWithTab("ldi r24, 1");
-    write2File(compareBranch.toString() + " # get result");
+    write2File("\n" + compareBranch + ": # get comparison result");
     write2FileWithTab("# push comparison result onto stack");
     write2FileWithTab("push r24");
     write2FileWithTab("# load condition and branch if false");
@@ -286,13 +287,13 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     write2FileWithTab("ldi r25, 1");
     write2FileWithTab("# use cp to set SREG");
     write2FileWithTab("cp r24, r25");
-    write2FileWithTab("breq " + trueBranch.toString());
-    write2FileWithTab("jmp " + falseBranch.toString());
-    write2File(trueBranch.toString());
+    write2FileWithTab("breq " + thenBranch);
+    write2FileWithTab("jmp " + elseBranch);
+    write2File("\n" + thenBranch + ": # then branch");
     if (node.getThenStatement() != null) {
       node.getThenStatement().accept(this);
     }
-    write2File(falseBranch.toString());
+    write2File("\n" + elseBranch + ": # else branch");
     if (node.getElseStatement() != null) {
       node.getElseStatement().accept(this);
     }

@@ -73,7 +73,6 @@ terminal SymbolValue MEGGYTONESTART;
 terminal SymbolValue MEGGYDELAY;
 terminal SymbolValue MEGGYGETPIXEL;
 terminal SymbolValue MEGGYCHECKBUTTON;
-// terminal SymbolValue EOF;
 
 terminal SymbolValue INT_LITERAL, ID;
 terminal SymbolValue TRUE, FALSE;
@@ -90,16 +89,22 @@ non terminal LinkedList<IStatement> statement_list;
 non terminal BlockStatement block_statement;
 non terminal MainClass main_class;
 
-/* Declare precedence and associativity here
-Another problem is associativity with recursion
-recursion on both sides - associativity is unclear
+/* 
+Declare precedence and associativity here
+http://www.cs.princeton.edu/~appel/modern/java/CUP/manual.html#precedence
+The order of precedence, from highest to lowest, is bottom to top.
+Another problem is associativity with recursion, recursion on both sides - associativity is unclear
 */
-precedence left TIMES;
-precedence left PLUS;
-precedence left MINUS;
+/* https://introcs.cs.princeton.edu/java/11precedence/ */
+precedence left AND;
 precedence left EQUAL;
 precedence left ELSE;
+precedence left PLUS, MINUS;
+precedence left TIMES;
+precedence right NOT;
 precedence right UMINUS;
+precedence left RBRACKET, RBRACKET, DOT, LPAREN, RPAREN;
+
 
 
 /* Meggy Java Grammar */
@@ -167,7 +172,7 @@ block_statement ::=
     ;
 
 exp ::= 
-    LPAREN:lp BYTE:b RPAREN exp:e
+    LPAREN:lp BYTE RPAREN exp:e
     {:
         RESULT = new ByteCast(lp.line, lp.pos, e);
     :}
@@ -183,7 +188,10 @@ exp ::=
     {:
         RESULT = new ColorLiteral(c.line, c.pos, c.lexeme, c.value);
     :}
-    | LPAREN exp RPAREN
+    | LPAREN exp:e RPAREN 
+    {:
+        RESULT = e;
+    :}
     ;
 
 

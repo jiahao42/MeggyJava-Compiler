@@ -684,7 +684,7 @@ From state #36
  [term 21:REDUCE(with prod 14)]
 From state #37
  [term 7:REDUCE(with prod 6)] [term 8:REDUCE(with prod 6)]
- [term 14:REDUCE(with prod 6)] [term 15:SHIFT(to state 38)]
+ [term 14:REDUCE(with prod 6)] [term 15:REDUCE(with prod 6)]
  [term 20:REDUCE(with prod 6)] [term 40:REDUCE(with prod 6)]
  [term 43:REDUCE(with prod 6)]
 From state #38
@@ -707,7 +707,7 @@ From state #43
  [term 5:SHIFT(to state 32)] [term 46:SHIFT(to state 31)]
  [term 50:SHIFT(to state 30)]
 From state #44
- [term 6:REDUCE(with prod 13)] [term 17:SHIFT(to state 35)]
+ [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
  [term 21:REDUCE(with prod 13)]
 From state #45
  [term 5:SHIFT(to state 32)] [term 46:SHIFT(to state 31)]
