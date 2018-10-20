@@ -100,12 +100,12 @@ Declare precedence and associativity here
 */
 precedence left AND;
 precedence left EQUAL;
-precedence left ELSE;
 precedence left PLUS, MINUS;
 precedence left TIMES;
 precedence right NOT;
 precedence right UMINUS;
 precedence left RBRACKET, RBRACKET, DOT, LPAREN, RPAREN;
+precedence left ELSE;
 
 
 
