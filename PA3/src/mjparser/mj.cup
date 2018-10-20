@@ -91,11 +91,13 @@ non terminal MainClass main_class;
 
 /* 
 Declare precedence and associativity here
-http://www.cs.princeton.edu/~appel/modern/java/CUP/manual.html#precedence
-The order of precedence, from highest to lowest, is bottom to top.
-Another problem is associativity with recursion, recursion on both sides - associativity is unclear
+* How to write precedence in JCup
+    http://www.cs.princeton.edu/~appel/modern/java/CUP/manual.html#precedence
+    The order of precedence, from highest to lowest, is bottom to top.
+* Another problem is associativity with recursion, recursion on both sides - associativity is unclear
+* Operator Precedence in Java
+    https://introcs.cs.princeton.edu/java/11precedence/ 
 */
-/* https://introcs.cs.princeton.edu/java/11precedence/ */
 precedence left AND;
 precedence left EQUAL;
 precedence left ELSE;
@@ -155,7 +157,7 @@ statement ::=
 statement_list ::=
     statement_list:list statement:s 
     {:  if (s != null) {
-            list.add(0, s);
+            list.add(s);
         } 
         RESULT = list; 
     :}
