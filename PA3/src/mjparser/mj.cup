@@ -186,13 +186,17 @@ exp ::=
     {:
         RESULT = new PlusExp(op.line, op.pos, e1, e2);
     :}
+    | exp:e1 MINUS:op exp:e2
+    {:
+        RESULT = new MinusExp(op.line, op.pos, e1, e2);
+    :}
     | exp:e1 TIMES:op exp:e2
     {:
         RESULT = new MulExp(op.line, op.pos, e1, e2);
     :}
-    | exp:e1 MINUS:op exp:e2
+    | MINUS:m exp:e
     {:
-        RESULT = new MinusExp(op.line, op.pos, e1, e2);
+        RESULT = new NegExp(m.line, m.pos, e);
     :}
     | LPAREN:lp BYTE RPAREN exp:e
     {:

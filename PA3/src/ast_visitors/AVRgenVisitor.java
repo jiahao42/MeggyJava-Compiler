@@ -208,7 +208,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void inEqualExp(EqualExp node) {
     defaultIn(node);
-     write2File("# start equality check\n");
+     write2File("\t# start equality check\n");
   }
 
   @Override
@@ -457,7 +457,20 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outMinusExp(MinusExp node) {
-    defaultOut(node);
+    write2File(
+      "\n\t# load a two byte expression off stack" +
+      "\n\tpop    r18" +
+      "\n\tpop    r19" +
+      "\n\t# load a two byte expression off stack" +
+      "\n\tpop    r24" +
+      "\n\tpop    r25" +
+      "\n\t# Do INT sub operation" +
+      "\n\tsub    r24, r18" +
+      "\n\tsbc    r25, r19" +
+      "\n\t# push hi order byte first" +
+      "\n\t# push two byte expression onto stack" +
+      "\n\tpush   r25" +
+      "\n\tpush   r24");
   }
 
   @Override
@@ -467,6 +480,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outMulExp(MulExp node) {
+    // TODO: don't know how to do it yet
     defaultOut(node);
   }
 
@@ -497,7 +511,18 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outNegExp(NegExp node) {
-    defaultOut(node);
+    write2File(
+    "\n\t# neg int" +
+    "\n\t# load a two byte expression off stack" +
+    "\n\tpop    r24" +
+    "\n\tpop    r25" +
+    "\n\tldi     r22, 0" +
+    "\n\tldi     r23, 0" +
+    "\n\tsub     r22, r24" +
+    "\n\tsbc     r23, r25" +
+    "\n\t# push two byte expression back to stack" +
+    "\n\tpush   r23" +
+    "\n\tpush   r22");
   }
 
   @Override

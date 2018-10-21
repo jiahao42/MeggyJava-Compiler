@@ -14,26 +14,28 @@ class PA3Expressions {
 	        // Integer subtraction
 	        Meggy.setPixel( (byte)(7-1-6), (byte)(9-5), Meggy.Color.BLUE);
 
-	        // Byte addition
-	        Meggy.setPixel( (byte)((byte)((byte)3+(byte)2)+(byte)1), 
-	                        (byte)((byte)((byte)0+(byte)0)+(byte)7), Meggy.Color.RED);
+					// TODO: will fix it when Symbol Table is ready
+	        // // Byte addition
+	        // Meggy.setPixel( (byte)((byte)((byte)3+(byte)2)+(byte)1), 
+	        //                 (byte)((byte)((byte)0+(byte)0)+(byte)7), Meggy.Color.RED);
 
-	        // Byte subtraction
-	        Meggy.setPixel( (byte)((byte)((byte)3-(byte)2)-(byte)1), 
-	                        (byte)((byte)((byte)0-(byte)7)+(byte)7),
-	                        Meggy.Color.YELLOW);
+	        // // Byte subtraction
+	        // Meggy.setPixel( (byte)((byte)((byte)3-(byte)2)-(byte)1), 
+	        //                 (byte)((byte)((byte)0-(byte)7)+(byte)7),
+	        //                 Meggy.Color.YELLOW);
 
                 // Unary Minus
-	        Meggy.setPixel( (byte)(-(2+1)+8), (byte)(10+-5), Meggy.Color.DARK);
-                // watch it! spaces significant
-	        Meggy.setPixel( (byte)( (byte)(0 - - -6) * (byte)(-1)), (byte)(10+-5), Meggy.Color.ORANGE);
+					Meggy.setPixel( (byte)(-(2+1)+8), (byte)(10+-5), Meggy.Color.DARK);
+					// TODO: will fix it when Symbol Table is ready
+          //       // watch it! spaces significant
+	        // Meggy.setPixel( (byte)( (byte)(0 - - -6) * (byte)(-1)), (byte)(10+-5), Meggy.Color.ORANGE);
 	        
-	        // Mixed Integer and Byte
-                Meggy.setPixel( (byte)(3-(byte)1),  (byte)((byte)0+7), Meggy.Color.GREEN);
+	        // // Mixed Integer and Byte
+          //       Meggy.setPixel( (byte)(3-(byte)1),  (byte)((byte)0+7), Meggy.Color.GREEN);
 
 
-	        // Only Byte multiplication
-	        Meggy.setPixel( (byte)((byte)3*(byte)2), (byte)(5), Meggy.Color.WHITE);
+	        // // Only Byte multiplication
+	        // Meggy.setPixel( (byte)((byte)3*(byte)2), (byte)(5), Meggy.Color.WHITE);
 	    }
     }
 }

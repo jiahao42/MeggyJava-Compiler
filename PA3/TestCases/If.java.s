@@ -22,7 +22,7 @@ main:
 
 #### if statement
 
-# start equality check
+	# start equality check
 
 
 	# Load constant int 2
@@ -146,7 +146,7 @@ MJ_L4: # else branch
 
 #### if statement
 
-# start equality check
+	# start equality check
 
 
 	# Load constant int 2
@@ -270,7 +270,7 @@ MJ_L9: # else branch
 
 #### if statement
 
-# start equality check
+	# start equality check
 
 
 	# Load constant int 3
@@ -445,7 +445,7 @@ MJ_L14: # else branch
 
 #### if statement
 
-# start equality check
+	# start equality check
 
 
 	# Load constant int 3
