@@ -398,7 +398,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outMeggyGetPixel(MeggyGetPixel node) {
-    defaultOut(node);
+    write2File(
+      "\n\t### Meggy.getPixel(x,y) call" +
+      "\n\t# load a one byte expression off stack" +
+      "\n\tpop    r22" +
+      "\n\t# load a one byte expression off stack" +
+      "\n\tpop    r24" +
+      "\n\tcall   _Z6ReadPxhh" +
+      "\n\t# push one byte expression onto stack" +
+      "\n\tpush   r24");
   }
 
   @Override

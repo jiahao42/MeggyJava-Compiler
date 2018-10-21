@@ -198,6 +198,10 @@ exp ::=
     {:
         RESULT = new NegExp(m.line, m.pos, e);
     :}
+    | MEGGYGETPIXEL:m LPAREN exp:e1 COMMA exp:e2 RPAREN
+    {:
+        RESULT = new MeggyGetPixel(m.line, m.pos, e1, e2);
+    :}
     | LPAREN:lp BYTE RPAREN exp:e
     {:
         RESULT = new ByteCast(lp.line, lp.pos, e);
