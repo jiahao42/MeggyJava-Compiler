@@ -1,23 +1,18 @@
 Warning : Terminal "UMINUS" was declared but never used
 Warning : Terminal "INT" was declared but never used
-Warning : Terminal "NOT" was declared but never used
 Warning : Terminal "LT" was declared but never used
-Warning : Terminal "BUTTON_LITERAL" was declared but never used
 Warning : Terminal "ASSIGN" was declared but never used
 Warning : Terminal "THIS" was declared but never used
 Warning : Terminal "DOT" was declared but never used
 Warning : Terminal "TONE_LITERAL" was declared but never used
 Warning : Terminal "BOOLEAN" was declared but never used
 Warning : Terminal "RETURN" was declared but never used
-Warning : Terminal "TRUE" was declared but never used
 Warning : Terminal "NEW" was declared but never used
 Warning : Terminal "MEGGYSETAUXLEDS" was declared but never used
 Warning : Terminal "MEGGYTONESTART" was declared but never used
-Warning : Terminal "MEGGYCHECKBUTTON" was declared but never used
 Warning : Terminal "MEGGYCOLOR" was declared but never used
 Warning : Terminal "MEGGYTONE" was declared but never used
 Warning : Terminal "EXTENDS" was declared but never used
-Warning : Terminal "FALSE" was declared but never used
 Warning : Terminal "MEGGYBUTTON" was declared but never used
 Warning : Terminal "LENGTH" was declared but never used
 ===== Terminals =====
@@ -60,10 +55,15 @@ Warning : Terminal "LENGTH" was declared but never used
 [18] exp ::= exp TIMES exp 
 [19] exp ::= MINUS exp 
 [20] exp ::= MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN 
-[21] exp ::= LPAREN BYTE RPAREN exp 
-[22] exp ::= INT_LITERAL 
-[23] exp ::= COLOR_LITERAL 
-[24] exp ::= LPAREN exp RPAREN 
+[21] exp ::= MEGGYCHECKBUTTON LPAREN exp RPAREN 
+[22] exp ::= LPAREN BYTE RPAREN exp 
+[23] exp ::= INT_LITERAL 
+[24] exp ::= COLOR_LITERAL 
+[25] exp ::= BUTTON_LITERAL 
+[26] exp ::= TRUE 
+[27] exp ::= FALSE 
+[28] exp ::= NOT exp 
+[29] exp ::= LPAREN exp RPAREN 
 
 ===== Viable Prefix Recognizer =====
 START lalr_state [0]: {
@@ -77,7 +77,7 @@ transition on program to state [1]
 lalr_state [1]: {
   [$START ::= program (*) EOF , {EOF }]
 }
-transition on EOF to state [78]
+transition on EOF to state [87]
 
 -------------------
 lalr_state [2]: {
@@ -189,7 +189,7 @@ lalr_state [19]: {
   [NT$0 ::= (*) , {RBRACE }]
   [main_class ::= CLASS ID LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN block_statement (*) NT$0 RBRACE , {EOF }]
 }
-transition on NT$0 to state [76]
+transition on NT$0 to state [85]
 
 -------------------
 lalr_state [20]: {
@@ -239,19 +239,19 @@ lalr_state [24]: {
 lalr_state [25]: {
   [statement ::= MEGGYDELAY (*) LPAREN exp RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
-transition on LPAREN to state [73]
+transition on LPAREN to state [82]
 
 -------------------
 lalr_state [26]: {
   [statement ::= MEGGYSETPIXEL (*) LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
-transition on LPAREN to state [65]
+transition on LPAREN to state [74]
 
 -------------------
 lalr_state [27]: {
   [statement ::= WHILE (*) LPAREN exp RPAREN statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
-transition on LPAREN to state [61]
+transition on LPAREN to state [70]
 
 -------------------
 lalr_state [28]: {
@@ -262,94 +262,79 @@ transition on LPAREN to state [29]
 
 -------------------
 lalr_state [29]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [statement ::= IF LPAREN (*) exp RPAREN statement ELSE statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [statement ::= IF LPAREN (*) exp RPAREN statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [statement ::= IF LPAREN (*) exp RPAREN statement ELSE statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
 }
-transition on exp to state [35]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [32]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
 
 -------------------
 lalr_state [30]: {
-  [exp ::= COLOR_LITERAL (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= MINUS (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
 }
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [69]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
 
 -------------------
 lalr_state [31]: {
-  [exp ::= MEGGYGETPIXEL (*) LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= MEGGYCHECKBUTTON (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
 }
-transition on LPAREN to state [56]
+transition on LPAREN to state [66]
 
 -------------------
 lalr_state [32]: {
-  [exp ::= INT_LITERAL (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-
--------------------
-lalr_state [33]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= MINUS (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on exp to state [55]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
-
--------------------
-lalr_state [34]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= LPAREN (*) exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= LPAREN (*) BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-}
-transition on exp to state [51]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on BYTE to state [50]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
-
--------------------
-lalr_state [35]: {
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [statement ::= IF LPAREN exp (*) RPAREN statement ELSE statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
@@ -358,15 +343,547 @@ lalr_state [35]: {
   [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
 }
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-transition on RPAREN to state [36]
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+transition on RPAREN to state [62]
+
+-------------------
+lalr_state [33]: {
+  [exp ::= TRUE (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+
+-------------------
+lalr_state [34]: {
+  [exp ::= INT_LITERAL (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+
+-------------------
+lalr_state [35]: {
+  [exp ::= FALSE (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
 
 -------------------
 lalr_state [36]: {
+  [exp ::= MEGGYGETPIXEL (*) LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on LPAREN to state [57]
+
+-------------------
+lalr_state [37]: {
+  [exp ::= COLOR_LITERAL (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+
+-------------------
+lalr_state [38]: {
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= NOT (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [56]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
+
+-------------------
+lalr_state [39]: {
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= LPAREN (*) exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= LPAREN (*) BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+}
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on BYTE to state [42]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [41]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
+
+-------------------
+lalr_state [40]: {
+  [exp ::= BUTTON_LITERAL (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+
+-------------------
+lalr_state [41]: {
+  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= LPAREN exp (*) RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+}
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+transition on RPAREN to state [55]
+
+-------------------
+lalr_state [42]: {
+  [exp ::= LPAREN BYTE (*) RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on RPAREN to state [43]
+
+-------------------
+lalr_state [43]: {
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= LPAREN BYTE RPAREN (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [44]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
+
+-------------------
+lalr_state [44]: {
+  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= LPAREN BYTE RPAREN exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+
+-------------------
+lalr_state [45]: {
+  [exp ::= exp AND (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [54]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
+
+-------------------
+lalr_state [46]: {
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp PLUS (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [53]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
+
+-------------------
+lalr_state [47]: {
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp EQUAL (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [52]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
+
+-------------------
+lalr_state [48]: {
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp MINUS (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [51]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
+
+-------------------
+lalr_state [49]: {
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp TIMES (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [50]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
+
+-------------------
+lalr_state [50]: {
+  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp TIMES exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+
+-------------------
+lalr_state [51]: {
+  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp MINUS exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+
+-------------------
+lalr_state [52]: {
+  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp EQUAL exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+
+-------------------
+lalr_state [53]: {
+  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp PLUS exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+
+-------------------
+lalr_state [54]: {
+  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp AND exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+
+-------------------
+lalr_state [55]: {
+  [exp ::= LPAREN exp RPAREN (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+
+-------------------
+lalr_state [56]: {
+  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= NOT exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+
+-------------------
+lalr_state [57]: {
+  [exp ::= MEGGYGETPIXEL LPAREN (*) exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES EQUAL AND COMMA }]
+}
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [58]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
+
+-------------------
+lalr_state [58]: {
+  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= MEGGYGETPIXEL LPAREN exp (*) COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+}
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+transition on COMMA to state [59]
+
+-------------------
+lalr_state [59]: {
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= MEGGYGETPIXEL LPAREN exp COMMA (*) exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [60]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
+
+-------------------
+lalr_state [60]: {
+  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= MEGGYGETPIXEL LPAREN exp COMMA exp (*) RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+}
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+transition on RPAREN to state [61]
+
+-------------------
+lalr_state [61]: {
+  [exp ::= MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+}
+
+-------------------
+lalr_state [62]: {
   [statement ::= (*) WHILE LPAREN exp RPAREN statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= IF LPAREN exp RPAREN (*) statement ELSE statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
@@ -381,209 +898,19 @@ transition on IF to state [28]
 transition on WHILE to state [27]
 transition on MEGGYSETPIXEL to state [26]
 transition on MEGGYDELAY to state [25]
-transition on statement to state [47]
+transition on statement to state [63]
 transition on LBRACE to state [20]
 transition on block_statement to state [22]
 
 -------------------
-lalr_state [37]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp AND (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on exp to state [46]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
-
--------------------
-lalr_state [38]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp PLUS (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on exp to state [45]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
-
--------------------
-lalr_state [39]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp EQUAL (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on exp to state [44]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
-
--------------------
-lalr_state [40]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp MINUS (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on exp to state [43]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
-
--------------------
-lalr_state [41]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp TIMES (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on exp to state [42]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
-
--------------------
-lalr_state [42]: {
-  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp TIMES exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-
--------------------
-lalr_state [43]: {
-  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp MINUS exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-
--------------------
-lalr_state [44]: {
-  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp EQUAL exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-
--------------------
-lalr_state [45]: {
-  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp PLUS exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-
--------------------
-lalr_state [46]: {
-  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp AND exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-
--------------------
-lalr_state [47]: {
+lalr_state [63]: {
   [statement ::= IF LPAREN exp RPAREN statement (*) , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= IF LPAREN exp RPAREN statement (*) ELSE statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
-transition on ELSE to state [48]
+transition on ELSE to state [64]
 
 -------------------
-lalr_state [48]: {
+lalr_state [64]: {
   [statement ::= (*) WHILE LPAREN exp RPAREN statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
@@ -597,82 +924,71 @@ transition on IF to state [28]
 transition on WHILE to state [27]
 transition on MEGGYSETPIXEL to state [26]
 transition on MEGGYDELAY to state [25]
-transition on statement to state [49]
+transition on statement to state [65]
 transition on LBRACE to state [20]
 transition on block_statement to state [22]
 
 -------------------
-lalr_state [49]: {
+lalr_state [65]: {
   [statement ::= IF LPAREN exp RPAREN statement ELSE statement (*) , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
 
 -------------------
-lalr_state [50]: {
-  [exp ::= LPAREN BYTE (*) RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+lalr_state [66]: {
+  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= MEGGYCHECKBUTTON LPAREN (*) exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
 }
-transition on RPAREN to state [53]
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [67]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
 
 -------------------
-lalr_state [51]: {
-  [exp ::= LPAREN exp (*) RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+lalr_state [67]: {
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= MEGGYCHECKBUTTON LPAREN exp (*) RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
 }
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-transition on RPAREN to state [52]
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+transition on RPAREN to state [68]
 
 -------------------
-lalr_state [52]: {
-  [exp ::= LPAREN exp RPAREN (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
+lalr_state [68]: {
+  [exp ::= MEGGYCHECKBUTTON LPAREN exp RPAREN (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
 }
 
 -------------------
-lalr_state [53]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= LPAREN BYTE RPAREN (*) exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on exp to state [54]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
-
--------------------
-lalr_state [54]: {
-  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= LPAREN BYTE RPAREN exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-
--------------------
-lalr_state [55]: {
+lalr_state [69]: {
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
@@ -680,120 +996,47 @@ lalr_state [55]: {
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
   [exp ::= MINUS exp (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
 }
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
 
 -------------------
-lalr_state [56]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= MEGGYGETPIXEL LPAREN (*) exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
-}
-transition on exp to state [57]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
-
--------------------
-lalr_state [57]: {
-  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= MEGGYGETPIXEL LPAREN exp (*) COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-}
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-transition on COMMA to state [58]
-
--------------------
-lalr_state [58]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+lalr_state [70]: {
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= MEGGYGETPIXEL LPAREN exp COMMA (*) exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-}
-transition on exp to state [59]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
-
--------------------
-lalr_state [59]: {
-  [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= MEGGYGETPIXEL LPAREN exp COMMA exp (*) RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-  [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-}
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-transition on RPAREN to state [60]
-
--------------------
-lalr_state [60]: {
-  [exp ::= MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN (*) , {PLUS MINUS TIMES RPAREN EQUAL AND COMMA }]
-}
-
--------------------
-lalr_state [61]: {
   [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [statement ::= WHILE LPAREN (*) exp RPAREN statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
 }
-transition on exp to state [62]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [71]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
 
 -------------------
-lalr_state [62]: {
+lalr_state [71]: {
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
@@ -801,15 +1044,15 @@ lalr_state [62]: {
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [statement ::= WHILE LPAREN exp (*) RPAREN statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-transition on RPAREN to state [63]
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+transition on RPAREN to state [72]
 
 -------------------
-lalr_state [63]: {
+lalr_state [72]: {
   [statement ::= (*) WHILE LPAREN exp RPAREN statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
@@ -823,40 +1066,50 @@ transition on IF to state [28]
 transition on WHILE to state [27]
 transition on MEGGYSETPIXEL to state [26]
 transition on MEGGYDELAY to state [25]
-transition on statement to state [64]
+transition on statement to state [73]
 transition on LBRACE to state [20]
 transition on block_statement to state [22]
 
 -------------------
-lalr_state [64]: {
+lalr_state [73]: {
   [statement ::= WHILE LPAREN exp RPAREN statement (*) , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
 
 -------------------
-lalr_state [65]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [statement ::= MEGGYSETPIXEL LPAREN (*) exp COMMA exp COMMA exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+lalr_state [74]: {
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [statement ::= MEGGYSETPIXEL LPAREN (*) exp COMMA exp COMMA exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES EQUAL AND COMMA }]
 }
-transition on exp to state [66]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [75]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
 
 -------------------
-lalr_state [66]: {
+lalr_state [75]: {
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
   [statement ::= MEGGYSETPIXEL LPAREN exp (*) COMMA exp COMMA exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
@@ -864,38 +1117,48 @@ lalr_state [66]: {
   [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
 }
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-transition on COMMA to state [67]
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+transition on COMMA to state [76]
 
 -------------------
-lalr_state [67]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA (*) exp COMMA exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
-  [exp ::= (*) , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+lalr_state [76]: {
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA (*) exp COMMA exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES EQUAL AND COMMA }]
 }
-transition on exp to state [68]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [77]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
 
 -------------------
-lalr_state [68]: {
+lalr_state [77]: {
   [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp (*) COMMA exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
@@ -903,38 +1166,48 @@ lalr_state [68]: {
   [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES EQUAL AND COMMA }]
 }
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-transition on COMMA to state [69]
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+transition on COMMA to state [78]
 
 -------------------
-lalr_state [69]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA (*) exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+lalr_state [78]: {
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA (*) exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
 }
-transition on exp to state [70]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [79]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
 
 -------------------
-lalr_state [70]: {
+lalr_state [79]: {
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
@@ -942,49 +1215,59 @@ lalr_state [70]: {
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp (*) RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-transition on RPAREN to state [71]
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+transition on RPAREN to state [80]
 
 -------------------
-lalr_state [71]: {
+lalr_state [80]: {
   [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN (*) SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
-transition on SEMI to state [72]
+transition on SEMI to state [81]
 
 -------------------
-lalr_state [72]: {
+lalr_state [81]: {
   [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI (*) , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
 
 -------------------
-lalr_state [73]: {
-  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [statement ::= MEGGYDELAY LPAREN (*) exp RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
-  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+lalr_state [82]: {
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
+  [statement ::= MEGGYDELAY LPAREN (*) exp RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
-transition on exp to state [74]
-transition on LPAREN to state [34]
-transition on MINUS to state [33]
-transition on INT_LITERAL to state [32]
-transition on MEGGYGETPIXEL to state [31]
-transition on COLOR_LITERAL to state [30]
+transition on BUTTON_LITERAL to state [40]
+transition on LPAREN to state [39]
+transition on NOT to state [38]
+transition on COLOR_LITERAL to state [37]
+transition on MEGGYGETPIXEL to state [36]
+transition on FALSE to state [35]
+transition on INT_LITERAL to state [34]
+transition on TRUE to state [33]
+transition on exp to state [83]
+transition on MEGGYCHECKBUTTON to state [31]
+transition on MINUS to state [30]
 
 -------------------
-lalr_state [74]: {
+lalr_state [83]: {
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
@@ -992,31 +1275,31 @@ lalr_state [74]: {
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [statement ::= MEGGYDELAY LPAREN exp (*) RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
-transition on TIMES to state [41]
-transition on MINUS to state [40]
-transition on EQUAL to state [39]
-transition on PLUS to state [38]
-transition on AND to state [37]
-transition on RPAREN to state [75]
+transition on TIMES to state [49]
+transition on MINUS to state [48]
+transition on EQUAL to state [47]
+transition on PLUS to state [46]
+transition on AND to state [45]
+transition on RPAREN to state [84]
 
 -------------------
-lalr_state [75]: {
+lalr_state [84]: {
   [statement ::= MEGGYDELAY LPAREN exp RPAREN (*) , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
 
 -------------------
-lalr_state [76]: {
+lalr_state [85]: {
   [main_class ::= CLASS ID LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN block_statement NT$0 (*) RBRACE , {EOF }]
 }
-transition on RBRACE to state [77]
+transition on RBRACE to state [86]
 
 -------------------
-lalr_state [77]: {
+lalr_state [86]: {
   [main_class ::= CLASS ID LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN block_statement NT$0 RBRACE (*) , {EOF }]
 }
 
 -------------------
-lalr_state [78]: {
+lalr_state [87]: {
   [$START ::= program EOF (*) , {EOF }]
 }
 
@@ -1025,7 +1308,7 @@ lalr_state [78]: {
 From state #0
  [term 13:SHIFT(to state 2)]
 From state #1
- [term 0:SHIFT(to state 78)]
+ [term 0:SHIFT(to state 87)]
 From state #2
  [term 36:SHIFT(to state 3)]
 From state #3
@@ -1085,256 +1368,345 @@ From state #24
  [term 14:REDUCE(with prod 10)] [term 20:REDUCE(with prod 10)]
  [term 40:REDUCE(with prod 10)] [term 43:REDUCE(with prod 10)]
 From state #25
- [term 5:SHIFT(to state 73)]
+ [term 5:SHIFT(to state 82)]
 From state #26
- [term 5:SHIFT(to state 65)]
+ [term 5:SHIFT(to state 74)]
 From state #27
- [term 5:SHIFT(to state 61)]
+ [term 5:SHIFT(to state 70)]
 From state #28
  [term 5:SHIFT(to state 29)]
 From state #29
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
  [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 44:SHIFT(to state 31)]
- [term 46:SHIFT(to state 32)] [term 50:SHIFT(to state 30)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 44:SHIFT(to state 36)] [term 45:SHIFT(to state 31)]
+ [term 46:SHIFT(to state 34)] [term 48:SHIFT(to state 33)]
+ [term 49:SHIFT(to state 35)] [term 50:SHIFT(to state 37)]
+ [term 51:SHIFT(to state 40)]
 From state #30
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
+ [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 21:REDUCE(with prod 13)] [term 44:SHIFT(to state 36)]
+ [term 45:SHIFT(to state 31)] [term 46:SHIFT(to state 34)]
+ [term 48:SHIFT(to state 33)] [term 49:SHIFT(to state 35)]
+ [term 50:SHIFT(to state 37)] [term 51:SHIFT(to state 40)]
+From state #31
+ [term 5:SHIFT(to state 66)]
+From state #32
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 6:SHIFT(to state 62)]
+ [term 17:SHIFT(to state 47)] [term 18:SHIFT(to state 45)]
+From state #33
+ [term 2:REDUCE(with prod 26)] [term 3:REDUCE(with prod 26)]
+ [term 4:REDUCE(with prod 26)] [term 6:REDUCE(with prod 26)]
+ [term 17:REDUCE(with prod 26)] [term 18:REDUCE(with prod 26)]
+ [term 21:REDUCE(with prod 26)]
+From state #34
  [term 2:REDUCE(with prod 23)] [term 3:REDUCE(with prod 23)]
  [term 4:REDUCE(with prod 23)] [term 6:REDUCE(with prod 23)]
  [term 17:REDUCE(with prod 23)] [term 18:REDUCE(with prod 23)]
  [term 21:REDUCE(with prod 23)]
-From state #31
- [term 5:SHIFT(to state 56)]
-From state #32
- [term 2:REDUCE(with prod 22)] [term 3:REDUCE(with prod 22)]
- [term 4:REDUCE(with prod 22)] [term 6:REDUCE(with prod 22)]
- [term 17:REDUCE(with prod 22)] [term 18:REDUCE(with prod 22)]
- [term 21:REDUCE(with prod 22)]
-From state #33
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
- [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 21:REDUCE(with prod 13)]
- [term 44:SHIFT(to state 31)] [term 46:SHIFT(to state 32)]
- [term 50:SHIFT(to state 30)]
-From state #34
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
- [term 6:REDUCE(with prod 13)] [term 11:SHIFT(to state 50)]
- [term 17:REDUCE(with prod 13)] [term 18:REDUCE(with prod 13)]
- [term 44:SHIFT(to state 31)] [term 46:SHIFT(to state 32)]
- [term 50:SHIFT(to state 30)]
 From state #35
- [term 2:SHIFT(to state 38)] [term 3:SHIFT(to state 40)]
- [term 4:SHIFT(to state 41)] [term 6:SHIFT(to state 36)]
- [term 17:SHIFT(to state 39)] [term 18:SHIFT(to state 37)]
+ [term 2:REDUCE(with prod 27)] [term 3:REDUCE(with prod 27)]
+ [term 4:REDUCE(with prod 27)] [term 6:REDUCE(with prod 27)]
+ [term 17:REDUCE(with prod 27)] [term 18:REDUCE(with prod 27)]
+ [term 21:REDUCE(with prod 27)]
 From state #36
- [term 7:SHIFT(to state 20)] [term 14:SHIFT(to state 28)]
- [term 20:SHIFT(to state 27)] [term 40:SHIFT(to state 26)]
- [term 43:SHIFT(to state 25)]
+ [term 5:SHIFT(to state 57)]
 From state #37
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
- [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 21:REDUCE(with prod 13)]
- [term 44:SHIFT(to state 31)] [term 46:SHIFT(to state 32)]
- [term 50:SHIFT(to state 30)]
-From state #38
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
- [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 21:REDUCE(with prod 13)]
- [term 44:SHIFT(to state 31)] [term 46:SHIFT(to state 32)]
- [term 50:SHIFT(to state 30)]
-From state #39
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
- [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 21:REDUCE(with prod 13)]
- [term 44:SHIFT(to state 31)] [term 46:SHIFT(to state 32)]
- [term 50:SHIFT(to state 30)]
-From state #40
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
- [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 21:REDUCE(with prod 13)]
- [term 44:SHIFT(to state 31)] [term 46:SHIFT(to state 32)]
- [term 50:SHIFT(to state 30)]
-From state #41
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
- [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 21:REDUCE(with prod 13)]
- [term 44:SHIFT(to state 31)] [term 46:SHIFT(to state 32)]
- [term 50:SHIFT(to state 30)]
-From state #42
- [term 2:REDUCE(with prod 18)] [term 3:REDUCE(with prod 18)]
- [term 4:REDUCE(with prod 18)] [term 6:REDUCE(with prod 18)]
- [term 17:REDUCE(with prod 18)] [term 18:REDUCE(with prod 18)]
- [term 21:REDUCE(with prod 18)]
-From state #43
- [term 2:REDUCE(with prod 17)] [term 3:REDUCE(with prod 17)]
- [term 4:SHIFT(to state 41)] [term 6:REDUCE(with prod 17)]
- [term 17:REDUCE(with prod 17)] [term 18:REDUCE(with prod 17)]
- [term 21:REDUCE(with prod 17)]
-From state #44
- [term 2:SHIFT(to state 38)] [term 3:SHIFT(to state 40)]
- [term 4:SHIFT(to state 41)] [term 6:REDUCE(with prod 14)]
- [term 17:REDUCE(with prod 14)] [term 18:REDUCE(with prod 14)]
- [term 21:REDUCE(with prod 14)]
-From state #45
- [term 2:REDUCE(with prod 16)] [term 3:REDUCE(with prod 16)]
- [term 4:SHIFT(to state 41)] [term 6:REDUCE(with prod 16)]
- [term 17:REDUCE(with prod 16)] [term 18:REDUCE(with prod 16)]
- [term 21:REDUCE(with prod 16)]
-From state #46
- [term 2:SHIFT(to state 38)] [term 3:SHIFT(to state 40)]
- [term 4:SHIFT(to state 41)] [term 6:REDUCE(with prod 15)]
- [term 17:SHIFT(to state 39)] [term 18:REDUCE(with prod 15)]
- [term 21:REDUCE(with prod 15)]
-From state #47
- [term 7:REDUCE(with prod 6)] [term 8:REDUCE(with prod 6)]
- [term 14:REDUCE(with prod 6)] [term 15:SHIFT(to state 48)]
- [term 20:REDUCE(with prod 6)] [term 40:REDUCE(with prod 6)]
- [term 43:REDUCE(with prod 6)]
-From state #48
- [term 7:SHIFT(to state 20)] [term 14:SHIFT(to state 28)]
- [term 20:SHIFT(to state 27)] [term 40:SHIFT(to state 26)]
- [term 43:SHIFT(to state 25)]
-From state #49
- [term 7:REDUCE(with prod 7)] [term 8:REDUCE(with prod 7)]
- [term 14:REDUCE(with prod 7)] [term 15:REDUCE(with prod 7)]
- [term 20:REDUCE(with prod 7)] [term 40:REDUCE(with prod 7)]
- [term 43:REDUCE(with prod 7)]
-From state #50
- [term 6:SHIFT(to state 53)]
-From state #51
- [term 2:SHIFT(to state 38)] [term 3:SHIFT(to state 40)]
- [term 4:SHIFT(to state 41)] [term 6:SHIFT(to state 52)]
- [term 17:SHIFT(to state 39)] [term 18:SHIFT(to state 37)]
-From state #52
  [term 2:REDUCE(with prod 24)] [term 3:REDUCE(with prod 24)]
  [term 4:REDUCE(with prod 24)] [term 6:REDUCE(with prod 24)]
  [term 17:REDUCE(with prod 24)] [term 18:REDUCE(with prod 24)]
  [term 21:REDUCE(with prod 24)]
-From state #53
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
+From state #38
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
  [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 21:REDUCE(with prod 13)]
- [term 44:SHIFT(to state 31)] [term 46:SHIFT(to state 32)]
- [term 50:SHIFT(to state 30)]
-From state #54
- [term 2:REDUCE(with prod 21)] [term 3:REDUCE(with prod 21)]
- [term 4:REDUCE(with prod 21)] [term 6:REDUCE(with prod 21)]
- [term 17:REDUCE(with prod 21)] [term 18:REDUCE(with prod 21)]
- [term 21:REDUCE(with prod 21)]
-From state #55
- [term 2:REDUCE(with prod 19)] [term 3:REDUCE(with prod 19)]
- [term 4:SHIFT(to state 41)] [term 6:REDUCE(with prod 19)]
- [term 17:REDUCE(with prod 19)] [term 18:REDUCE(with prod 19)]
- [term 21:REDUCE(with prod 19)]
-From state #56
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 21:REDUCE(with prod 13)] [term 44:SHIFT(to state 36)]
+ [term 45:SHIFT(to state 31)] [term 46:SHIFT(to state 34)]
+ [term 48:SHIFT(to state 33)] [term 49:SHIFT(to state 35)]
+ [term 50:SHIFT(to state 37)] [term 51:SHIFT(to state 40)]
+From state #39
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
+ [term 6:REDUCE(with prod 13)] [term 11:SHIFT(to state 42)]
  [term 17:REDUCE(with prod 13)] [term 18:REDUCE(with prod 13)]
- [term 21:REDUCE(with prod 13)] [term 44:SHIFT(to state 31)]
- [term 46:SHIFT(to state 32)] [term 50:SHIFT(to state 30)]
-From state #57
- [term 2:SHIFT(to state 38)] [term 3:SHIFT(to state 40)]
- [term 4:SHIFT(to state 41)] [term 17:SHIFT(to state 39)]
- [term 18:SHIFT(to state 37)] [term 21:SHIFT(to state 58)]
-From state #58
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
+ [term 19:SHIFT(to state 38)] [term 44:SHIFT(to state 36)]
+ [term 45:SHIFT(to state 31)] [term 46:SHIFT(to state 34)]
+ [term 48:SHIFT(to state 33)] [term 49:SHIFT(to state 35)]
+ [term 50:SHIFT(to state 37)] [term 51:SHIFT(to state 40)]
+From state #40
+ [term 2:REDUCE(with prod 25)] [term 3:REDUCE(with prod 25)]
+ [term 4:REDUCE(with prod 25)] [term 6:REDUCE(with prod 25)]
+ [term 17:REDUCE(with prod 25)] [term 18:REDUCE(with prod 25)]
+ [term 21:REDUCE(with prod 25)]
+From state #41
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 6:SHIFT(to state 55)]
+ [term 17:SHIFT(to state 47)] [term 18:SHIFT(to state 45)]
+From state #42
+ [term 6:SHIFT(to state 43)]
+From state #43
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
  [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 44:SHIFT(to state 31)]
- [term 46:SHIFT(to state 32)] [term 50:SHIFT(to state 30)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 21:REDUCE(with prod 13)] [term 44:SHIFT(to state 36)]
+ [term 45:SHIFT(to state 31)] [term 46:SHIFT(to state 34)]
+ [term 48:SHIFT(to state 33)] [term 49:SHIFT(to state 35)]
+ [term 50:SHIFT(to state 37)] [term 51:SHIFT(to state 40)]
+From state #44
+ [term 2:REDUCE(with prod 22)] [term 3:REDUCE(with prod 22)]
+ [term 4:REDUCE(with prod 22)] [term 6:REDUCE(with prod 22)]
+ [term 17:REDUCE(with prod 22)] [term 18:REDUCE(with prod 22)]
+ [term 21:REDUCE(with prod 22)]
+From state #45
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
+ [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 21:REDUCE(with prod 13)] [term 44:SHIFT(to state 36)]
+ [term 45:SHIFT(to state 31)] [term 46:SHIFT(to state 34)]
+ [term 48:SHIFT(to state 33)] [term 49:SHIFT(to state 35)]
+ [term 50:SHIFT(to state 37)] [term 51:SHIFT(to state 40)]
+From state #46
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
+ [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 21:REDUCE(with prod 13)] [term 44:SHIFT(to state 36)]
+ [term 45:SHIFT(to state 31)] [term 46:SHIFT(to state 34)]
+ [term 48:SHIFT(to state 33)] [term 49:SHIFT(to state 35)]
+ [term 50:SHIFT(to state 37)] [term 51:SHIFT(to state 40)]
+From state #47
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
+ [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 21:REDUCE(with prod 13)] [term 44:SHIFT(to state 36)]
+ [term 45:SHIFT(to state 31)] [term 46:SHIFT(to state 34)]
+ [term 48:SHIFT(to state 33)] [term 49:SHIFT(to state 35)]
+ [term 50:SHIFT(to state 37)] [term 51:SHIFT(to state 40)]
+From state #48
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
+ [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 21:REDUCE(with prod 13)] [term 44:SHIFT(to state 36)]
+ [term 45:SHIFT(to state 31)] [term 46:SHIFT(to state 34)]
+ [term 48:SHIFT(to state 33)] [term 49:SHIFT(to state 35)]
+ [term 50:SHIFT(to state 37)] [term 51:SHIFT(to state 40)]
+From state #49
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
+ [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 21:REDUCE(with prod 13)] [term 44:SHIFT(to state 36)]
+ [term 45:SHIFT(to state 31)] [term 46:SHIFT(to state 34)]
+ [term 48:SHIFT(to state 33)] [term 49:SHIFT(to state 35)]
+ [term 50:SHIFT(to state 37)] [term 51:SHIFT(to state 40)]
+From state #50
+ [term 2:REDUCE(with prod 18)] [term 3:REDUCE(with prod 18)]
+ [term 4:REDUCE(with prod 18)] [term 6:REDUCE(with prod 18)]
+ [term 17:REDUCE(with prod 18)] [term 18:REDUCE(with prod 18)]
+ [term 21:REDUCE(with prod 18)]
+From state #51
+ [term 2:REDUCE(with prod 17)] [term 3:REDUCE(with prod 17)]
+ [term 4:SHIFT(to state 49)] [term 6:REDUCE(with prod 17)]
+ [term 17:REDUCE(with prod 17)] [term 18:REDUCE(with prod 17)]
+ [term 21:REDUCE(with prod 17)]
+From state #52
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 6:REDUCE(with prod 14)]
+ [term 17:REDUCE(with prod 14)] [term 18:REDUCE(with prod 14)]
+ [term 21:REDUCE(with prod 14)]
+From state #53
+ [term 2:REDUCE(with prod 16)] [term 3:REDUCE(with prod 16)]
+ [term 4:SHIFT(to state 49)] [term 6:REDUCE(with prod 16)]
+ [term 17:REDUCE(with prod 16)] [term 18:REDUCE(with prod 16)]
+ [term 21:REDUCE(with prod 16)]
+From state #54
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 6:REDUCE(with prod 15)]
+ [term 17:SHIFT(to state 47)] [term 18:REDUCE(with prod 15)]
+ [term 21:REDUCE(with prod 15)]
+From state #55
+ [term 2:REDUCE(with prod 29)] [term 3:REDUCE(with prod 29)]
+ [term 4:REDUCE(with prod 29)] [term 6:REDUCE(with prod 29)]
+ [term 17:REDUCE(with prod 29)] [term 18:REDUCE(with prod 29)]
+ [term 21:REDUCE(with prod 29)]
+From state #56
+ [term 2:REDUCE(with prod 28)] [term 3:REDUCE(with prod 28)]
+ [term 4:REDUCE(with prod 28)] [term 6:REDUCE(with prod 28)]
+ [term 17:REDUCE(with prod 28)] [term 18:REDUCE(with prod 28)]
+ [term 21:REDUCE(with prod 28)]
+From state #57
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
+ [term 17:REDUCE(with prod 13)] [term 18:REDUCE(with prod 13)]
+ [term 19:SHIFT(to state 38)] [term 21:REDUCE(with prod 13)]
+ [term 44:SHIFT(to state 36)] [term 45:SHIFT(to state 31)]
+ [term 46:SHIFT(to state 34)] [term 48:SHIFT(to state 33)]
+ [term 49:SHIFT(to state 35)] [term 50:SHIFT(to state 37)]
+ [term 51:SHIFT(to state 40)]
+From state #58
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 17:SHIFT(to state 47)]
+ [term 18:SHIFT(to state 45)] [term 21:SHIFT(to state 59)]
 From state #59
- [term 2:SHIFT(to state 38)] [term 3:SHIFT(to state 40)]
- [term 4:SHIFT(to state 41)] [term 6:SHIFT(to state 60)]
- [term 17:SHIFT(to state 39)] [term 18:SHIFT(to state 37)]
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
+ [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 44:SHIFT(to state 36)] [term 45:SHIFT(to state 31)]
+ [term 46:SHIFT(to state 34)] [term 48:SHIFT(to state 33)]
+ [term 49:SHIFT(to state 35)] [term 50:SHIFT(to state 37)]
+ [term 51:SHIFT(to state 40)]
 From state #60
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 6:SHIFT(to state 61)]
+ [term 17:SHIFT(to state 47)] [term 18:SHIFT(to state 45)]
+From state #61
  [term 2:REDUCE(with prod 20)] [term 3:REDUCE(with prod 20)]
  [term 4:REDUCE(with prod 20)] [term 6:REDUCE(with prod 20)]
  [term 17:REDUCE(with prod 20)] [term 18:REDUCE(with prod 20)]
  [term 21:REDUCE(with prod 20)]
-From state #61
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
- [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 44:SHIFT(to state 31)]
- [term 46:SHIFT(to state 32)] [term 50:SHIFT(to state 30)]
 From state #62
- [term 2:SHIFT(to state 38)] [term 3:SHIFT(to state 40)]
- [term 4:SHIFT(to state 41)] [term 6:SHIFT(to state 63)]
- [term 17:SHIFT(to state 39)] [term 18:SHIFT(to state 37)]
-From state #63
  [term 7:SHIFT(to state 20)] [term 14:SHIFT(to state 28)]
  [term 20:SHIFT(to state 27)] [term 40:SHIFT(to state 26)]
  [term 43:SHIFT(to state 25)]
+From state #63
+ [term 7:REDUCE(with prod 6)] [term 8:REDUCE(with prod 6)]
+ [term 14:REDUCE(with prod 6)] [term 15:SHIFT(to state 64)]
+ [term 20:REDUCE(with prod 6)] [term 40:REDUCE(with prod 6)]
+ [term 43:REDUCE(with prod 6)]
 From state #64
+ [term 7:SHIFT(to state 20)] [term 14:SHIFT(to state 28)]
+ [term 20:SHIFT(to state 27)] [term 40:SHIFT(to state 26)]
+ [term 43:SHIFT(to state 25)]
+From state #65
+ [term 7:REDUCE(with prod 7)] [term 8:REDUCE(with prod 7)]
+ [term 14:REDUCE(with prod 7)] [term 15:REDUCE(with prod 7)]
+ [term 20:REDUCE(with prod 7)] [term 40:REDUCE(with prod 7)]
+ [term 43:REDUCE(with prod 7)]
+From state #66
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
+ [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 44:SHIFT(to state 36)] [term 45:SHIFT(to state 31)]
+ [term 46:SHIFT(to state 34)] [term 48:SHIFT(to state 33)]
+ [term 49:SHIFT(to state 35)] [term 50:SHIFT(to state 37)]
+ [term 51:SHIFT(to state 40)]
+From state #67
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 6:SHIFT(to state 68)]
+ [term 17:SHIFT(to state 47)] [term 18:SHIFT(to state 45)]
+From state #68
+ [term 2:REDUCE(with prod 21)] [term 3:REDUCE(with prod 21)]
+ [term 4:REDUCE(with prod 21)] [term 6:REDUCE(with prod 21)]
+ [term 17:REDUCE(with prod 21)] [term 18:REDUCE(with prod 21)]
+ [term 21:REDUCE(with prod 21)]
+From state #69
+ [term 2:REDUCE(with prod 19)] [term 3:REDUCE(with prod 19)]
+ [term 4:SHIFT(to state 49)] [term 6:REDUCE(with prod 19)]
+ [term 17:REDUCE(with prod 19)] [term 18:REDUCE(with prod 19)]
+ [term 21:REDUCE(with prod 19)]
+From state #70
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
+ [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 44:SHIFT(to state 36)] [term 45:SHIFT(to state 31)]
+ [term 46:SHIFT(to state 34)] [term 48:SHIFT(to state 33)]
+ [term 49:SHIFT(to state 35)] [term 50:SHIFT(to state 37)]
+ [term 51:SHIFT(to state 40)]
+From state #71
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 6:SHIFT(to state 72)]
+ [term 17:SHIFT(to state 47)] [term 18:SHIFT(to state 45)]
+From state #72
+ [term 7:SHIFT(to state 20)] [term 14:SHIFT(to state 28)]
+ [term 20:SHIFT(to state 27)] [term 40:SHIFT(to state 26)]
+ [term 43:SHIFT(to state 25)]
+From state #73
  [term 7:REDUCE(with prod 8)] [term 8:REDUCE(with prod 8)]
  [term 14:REDUCE(with prod 8)] [term 15:REDUCE(with prod 8)]
  [term 20:REDUCE(with prod 8)] [term 40:REDUCE(with prod 8)]
  [term 43:REDUCE(with prod 8)]
-From state #65
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
+From state #74
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
  [term 17:REDUCE(with prod 13)] [term 18:REDUCE(with prod 13)]
- [term 21:REDUCE(with prod 13)] [term 44:SHIFT(to state 31)]
- [term 46:SHIFT(to state 32)] [term 50:SHIFT(to state 30)]
-From state #66
- [term 2:SHIFT(to state 38)] [term 3:SHIFT(to state 40)]
- [term 4:SHIFT(to state 41)] [term 17:SHIFT(to state 39)]
- [term 18:SHIFT(to state 37)] [term 21:SHIFT(to state 67)]
-From state #67
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
+ [term 19:SHIFT(to state 38)] [term 21:REDUCE(with prod 13)]
+ [term 44:SHIFT(to state 36)] [term 45:SHIFT(to state 31)]
+ [term 46:SHIFT(to state 34)] [term 48:SHIFT(to state 33)]
+ [term 49:SHIFT(to state 35)] [term 50:SHIFT(to state 37)]
+ [term 51:SHIFT(to state 40)]
+From state #75
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 17:SHIFT(to state 47)]
+ [term 18:SHIFT(to state 45)] [term 21:SHIFT(to state 76)]
+From state #76
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
  [term 17:REDUCE(with prod 13)] [term 18:REDUCE(with prod 13)]
- [term 21:REDUCE(with prod 13)] [term 44:SHIFT(to state 31)]
- [term 46:SHIFT(to state 32)] [term 50:SHIFT(to state 30)]
-From state #68
- [term 2:SHIFT(to state 38)] [term 3:SHIFT(to state 40)]
- [term 4:SHIFT(to state 41)] [term 17:SHIFT(to state 39)]
- [term 18:SHIFT(to state 37)] [term 21:SHIFT(to state 69)]
-From state #69
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
+ [term 19:SHIFT(to state 38)] [term 21:REDUCE(with prod 13)]
+ [term 44:SHIFT(to state 36)] [term 45:SHIFT(to state 31)]
+ [term 46:SHIFT(to state 34)] [term 48:SHIFT(to state 33)]
+ [term 49:SHIFT(to state 35)] [term 50:SHIFT(to state 37)]
+ [term 51:SHIFT(to state 40)]
+From state #77
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 17:SHIFT(to state 47)]
+ [term 18:SHIFT(to state 45)] [term 21:SHIFT(to state 78)]
+From state #78
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
  [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 44:SHIFT(to state 31)]
- [term 46:SHIFT(to state 32)] [term 50:SHIFT(to state 30)]
-From state #70
- [term 2:SHIFT(to state 38)] [term 3:SHIFT(to state 40)]
- [term 4:SHIFT(to state 41)] [term 6:SHIFT(to state 71)]
- [term 17:SHIFT(to state 39)] [term 18:SHIFT(to state 37)]
-From state #71
- [term 34:SHIFT(to state 72)]
-From state #72
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 44:SHIFT(to state 36)] [term 45:SHIFT(to state 31)]
+ [term 46:SHIFT(to state 34)] [term 48:SHIFT(to state 33)]
+ [term 49:SHIFT(to state 35)] [term 50:SHIFT(to state 37)]
+ [term 51:SHIFT(to state 40)]
+From state #79
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 6:SHIFT(to state 80)]
+ [term 17:SHIFT(to state 47)] [term 18:SHIFT(to state 45)]
+From state #80
+ [term 34:SHIFT(to state 81)]
+From state #81
  [term 7:REDUCE(with prod 4)] [term 8:REDUCE(with prod 4)]
  [term 14:REDUCE(with prod 4)] [term 15:REDUCE(with prod 4)]
  [term 20:REDUCE(with prod 4)] [term 40:REDUCE(with prod 4)]
  [term 43:REDUCE(with prod 4)]
-From state #73
- [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 33)]
- [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 34)]
+From state #82
+ [term 2:REDUCE(with prod 13)] [term 3:SHIFT(to state 30)]
+ [term 4:REDUCE(with prod 13)] [term 5:SHIFT(to state 39)]
  [term 6:REDUCE(with prod 13)] [term 17:REDUCE(with prod 13)]
- [term 18:REDUCE(with prod 13)] [term 44:SHIFT(to state 31)]
- [term 46:SHIFT(to state 32)] [term 50:SHIFT(to state 30)]
-From state #74
- [term 2:SHIFT(to state 38)] [term 3:SHIFT(to state 40)]
- [term 4:SHIFT(to state 41)] [term 6:SHIFT(to state 75)]
- [term 17:SHIFT(to state 39)] [term 18:SHIFT(to state 37)]
-From state #75
+ [term 18:REDUCE(with prod 13)] [term 19:SHIFT(to state 38)]
+ [term 44:SHIFT(to state 36)] [term 45:SHIFT(to state 31)]
+ [term 46:SHIFT(to state 34)] [term 48:SHIFT(to state 33)]
+ [term 49:SHIFT(to state 35)] [term 50:SHIFT(to state 37)]
+ [term 51:SHIFT(to state 40)]
+From state #83
+ [term 2:SHIFT(to state 46)] [term 3:SHIFT(to state 48)]
+ [term 4:SHIFT(to state 49)] [term 6:SHIFT(to state 84)]
+ [term 17:SHIFT(to state 47)] [term 18:SHIFT(to state 45)]
+From state #84
  [term 7:REDUCE(with prod 5)] [term 8:REDUCE(with prod 5)]
  [term 14:REDUCE(with prod 5)] [term 15:REDUCE(with prod 5)]
  [term 20:REDUCE(with prod 5)] [term 40:REDUCE(with prod 5)]
  [term 43:REDUCE(with prod 5)]
-From state #76
- [term 8:SHIFT(to state 77)]
-From state #77
+From state #85
+ [term 8:SHIFT(to state 86)]
+From state #86
  [term 0:REDUCE(with prod 3)]
-From state #78
+From state #87
  [term 0:REDUCE(with prod 0)]
 ------------------------------
 -------- REDUCE_TABLE --------
@@ -1361,7 +1733,7 @@ From state #17
 From state #18
  [non term 4->state 19]
 From state #19
- [non term 6->state 76]
+ [non term 6->state 85]
 From state #20
  [non term 3->state 21]
 From state #21
@@ -1374,80 +1746,91 @@ From state #26
 From state #27
 From state #28
 From state #29
- [non term 1->state 35]
+ [non term 1->state 32]
 From state #30
+ [non term 1->state 69]
 From state #31
 From state #32
 From state #33
- [non term 1->state 55]
 From state #34
- [non term 1->state 51]
 From state #35
 From state #36
- [non term 2->state 47] [non term 4->state 22]
 From state #37
- [non term 1->state 46]
 From state #38
- [non term 1->state 45]
+ [non term 1->state 56]
 From state #39
- [non term 1->state 44]
+ [non term 1->state 41]
 From state #40
- [non term 1->state 43]
 From state #41
- [non term 1->state 42]
 From state #42
 From state #43
+ [non term 1->state 44]
 From state #44
 From state #45
+ [non term 1->state 54]
 From state #46
+ [non term 1->state 53]
 From state #47
+ [non term 1->state 52]
 From state #48
- [non term 2->state 49] [non term 4->state 22]
+ [non term 1->state 51]
 From state #49
+ [non term 1->state 50]
 From state #50
 From state #51
 From state #52
 From state #53
- [non term 1->state 54]
 From state #54
 From state #55
 From state #56
- [non term 1->state 57]
 From state #57
+ [non term 1->state 58]
 From state #58
- [non term 1->state 59]
 From state #59
+ [non term 1->state 60]
 From state #60
 From state #61
- [non term 1->state 62]
 From state #62
+ [non term 2->state 63] [non term 4->state 22]
 From state #63
- [non term 2->state 64] [non term 4->state 22]
 From state #64
+ [non term 2->state 65] [non term 4->state 22]
 From state #65
- [non term 1->state 66]
 From state #66
+ [non term 1->state 67]
 From state #67
- [non term 1->state 68]
 From state #68
 From state #69
- [non term 1->state 70]
 From state #70
+ [non term 1->state 71]
 From state #71
 From state #72
+ [non term 2->state 73] [non term 4->state 22]
 From state #73
- [non term 1->state 74]
 From state #74
+ [non term 1->state 75]
 From state #75
 From state #76
+ [non term 1->state 77]
 From state #77
 From state #78
+ [non term 1->state 79]
+From state #79
+From state #80
+From state #81
+From state #82
+ [non term 1->state 83]
+From state #83
+From state #84
+From state #85
+From state #86
+From state #87
 -----------------------------
 ------- CUP v0.11a beta 20060608 Parser Generation Summary -------
-  0 errors and 22 warnings
-  55 terminals, 7 non-terminals, and 25 productions declared, 
-  producing 79 unique parse states.
-  22 terminals declared but not used.
+  0 errors and 17 warnings
+  55 terminals, 7 non-terminals, and 30 productions declared, 
+  producing 88 unique parse states.
+  17 terminals declared but not used.
   0 non-terminals declared but not used.
   0 productions never reduced.
   0 conflicts detected (0 expected).

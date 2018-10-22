@@ -117,12 +117,12 @@ program ::=
     ;
     
 main_class ::=
-        CLASS ID
-        LBRACE PUBLIC STATIC VOID MAIN:m 
+        CLASS ID:class_name
+        LBRACE PUBLIC STATIC VOID MAIN
         LPAREN STRING LBRACKET RBRACKET ID:param RPAREN
         block_statement:blk
           {:
-            RESULT = new MainClass(m.line, m.pos, m.lexeme, param.lexeme, blk);
+            RESULT = new MainClass(m.line, m.pos, class_name, param.lexeme, blk);
           :}
         RBRACE
     ;
@@ -174,13 +174,13 @@ block_statement ::=
     ;
 
 exp ::= 
+    exp:e1 AND:op exp:e2
+    {:
+        RESULT = new AndExp(op.line, op.pos, e1, e2);
+    :}
     | exp:e1 EQUAL:eq exp:e2
     {:
         RESULT = new EqualExp(eq.line, eq.pos, e1, e2);
-    :}
-    | exp:e1 AND:op exp:e2
-    {:
-        RESULT = new AndExp(op.line, op.pos, e1, e2);
     :}
     | exp:e1 PLUS:op exp:e2
     {:
