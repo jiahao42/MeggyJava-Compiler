@@ -22,41 +22,39 @@ main:
 
 #### if statement
 
-	# start equality check
 
+	# start equality check
 
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
-
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
-	pop r24 # lower bits
-	pop r25 # higher bits
-	push r24
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
 
 
 	# Load constant int 2
 	ldi r24,lo8(2)
 	ldi r25,hi8(2)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
-
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
-	pop r24 # lower bits
-	pop r25 # higher bits
-	push r24
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
 
 
 	### Meggy.getPixel(x,y) call
@@ -109,34 +107,32 @@ MJ_L3: # then branch
 	ldi r24,lo8(7)
 	ldi r25,hi8(7)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
-
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
-	pop r24 # lower bits
-	pop r25 # higher bits
-	push r24
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
 
 
 	# Load constant int 7
 	ldi r24,lo8(7)
 	ldi r25,hi8(7)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
-
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
-	pop r24 # lower bits
-	pop r25 # higher bits
-	push r24
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
 
 
 	# Color expression Meggy.Color.DARK
@@ -156,6 +152,7 @@ MJ_L3: # then branch
 	call   _Z12DisplaySlatev
 
 
+	jmp MJ_L5 # jump over the else branch
 
 MJ_L4: # else branch
 
@@ -163,34 +160,32 @@ MJ_L4: # else branch
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
-
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
-	pop r24 # lower bits
-	pop r25 # higher bits
-	push r24
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
 
 
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
-
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
-	pop r24 # lower bits
-	pop r25 # higher bits
-	push r24
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
 
 
 	# Color expression Meggy.Color.YELLOW
@@ -209,6 +204,8 @@ MJ_L4: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
+
+MJ_L5: 
 
 
 /* epilogue start */

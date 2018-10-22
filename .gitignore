@@ -3,6 +3,8 @@
 
 # Generated Graphviz file
 *.dot
+*.png
+*.ppm
 
 # Log file
 *.log

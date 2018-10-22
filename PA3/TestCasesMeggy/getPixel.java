@@ -2,7 +2,7 @@
 */
 import meggy.Meggy;
 
-class PA3Test1
+class GetPixel
 {
 	public static void main (String[] args){
 		if (Meggy.getPixel((byte)1, (byte)2) == Meggy.Color.RED) {
