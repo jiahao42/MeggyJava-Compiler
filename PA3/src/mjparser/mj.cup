@@ -117,12 +117,12 @@ program ::=
     ;
     
 main_class ::=
-        CLASS ID:class_name
-        LBRACE PUBLIC STATIC VOID MAIN
+        CLASS ID:c
+        LBRACE PUBLIC STATIC VOID MAIN:m
         LPAREN STRING LBRACKET RBRACKET ID:param RPAREN
         block_statement:blk
           {:
-            RESULT = new MainClass(m.line, m.pos, class_name, param.lexeme, blk);
+            RESULT = new MainClass(m.line, m.pos, c.lexeme, param.lexeme, blk);
           :}
         RBRACE
     ;

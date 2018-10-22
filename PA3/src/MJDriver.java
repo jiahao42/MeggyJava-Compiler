@@ -16,6 +16,7 @@ import mjparser.*;
 import ast_visitors.*;
 import ast.visitor.*;
 import ast.node.*;
+import ast.node.Program;
 
 public class MJDriver {
 
@@ -50,7 +51,17 @@ public class MJDriver {
           // and parse
 					// parser.parse();
 					// parser.debug_parse();
-					Node ast_root = (Node)parser.parse().value; 
+					Program ast_root = (Program)parser.parse().value;
+					lastInPath = parser.programName.lastIndexOf('.');
+					String baseFileName = parser.programName.substring(0, lastInPath);
+					if (!ast_root.getMainClass().getName().equals(baseFileName)) {
+						System.out.println(
+							"The name of main class doesn't match the name of the source file" + 
+							"\n\t[name of main class]: " + ast_root.getMainClass().getName() + 
+							"\n\t[name of source file]: " + baseFileName);
+							System.exit(1);
+					}
+
 
           // print ast to file
           java.io.PrintStream astout =
@@ -102,8 +113,9 @@ public class MJDriver {
               new java.io.PrintStream(
 											new java.io.FileOutputStream(filename + ".s"));
 					// ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout), globalST));
+
 					ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout)));
-          System.out.println("Printing Atmel assembly to " + filename + ".s");
+					System.out.println("Printing Atmel assembly to " + filename + ".s");
 
         } catch(exceptions.SemanticException e) {
             System.err.println(e.getMessage());
