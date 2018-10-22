@@ -26,13 +26,55 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void inAndExp(AndExp node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outAndExp(AndExp node) {
-    defaultOut(node);
+  public void visitAndExp(AndExp node) {
+    write2File(
+      "\n\t#### short-circuited && operation" +
+      "\n\t# &&: left operand"
+    );
+    // inAndExp(node);
+    if (node.getLExp() != null) {
+      node.getLExp().accept(this);
+    }
+    // if the first expr is false, no need to eval the second expr
+    String trueBranch = new Label().toString();
+    String falseBranch = new Label().toString();
+    String compareBranch = new Label().toString();
+    String rightExprBranch = new Label().toString();
+    String nextBlockBranch = new Label().toString();
+    write2File(
+      "\n\t# load a one byte expression off stack" +
+      "\n\tpop r18" +
+      "\n\t# load a one byte expression off stack" +
+      "\n\tpop r24" +
+      "\n\tcp r24, r18 # examine the result of left expr" +
+      "\n\tbreq " + trueBranch +
+      "\n" + falseBranch + ": # if left expr is false" + 
+      "\n\tldi r24, 0" + 
+      "\n\tjmp " + compareBranch +
+      "\n" + trueBranch + ": # if left expr is true" +
+      "\n\tldi r24, 1" + 
+      "\n" + compareBranch + ": # get comparison result" +
+      "\n\t# push one byte expression onto stack" +
+      "\n\tpush r24 # store result of left expr" +
+      "\n\t# &&: if left operand is false do not eval right" +
+      "\n\t# load a one byte expression off stack" +
+      "\n\tpop r24" +
+      "\n\t# push one byte expression onto stack" +
+      "\n\tpush r24" +
+      "\n\t# compare left exp with zero" +
+      "\n\tldi r25, 0" +
+      "\n\tcp r24, r25" +
+      "\n\tbrne " + rightExprBranch + " # if the left expr is true, jump to right expr" +
+      "\n\tjmp " + nextBlockBranch + 
+      "\n" + rightExprBranch + ": # right expr"
+    );
+    if (node.getRExp() != null) {
+      node.getRExp().accept(this);
+    }
+    write2File(
+      "\n" + nextBlockBranch + ": "
+    );
+    // outAndExp(node);
   }
 
   @Override
@@ -113,7 +155,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outByteCast(ByteCast node) {
      write2File(
-        "\n\t# Casting int to byte by popping\n" +
+        "\n\t# Casting int to byte by popping" +
         "\n\t# 2 bytes off stack and only pushing low order bits" +
         "\n\t# back on.  Low order bits are on top of stack." +
         "\n\tpop r24 # lower bits" +
