@@ -25,15 +25,15 @@ main:
 
 	#### short-circuited && operation
 	# &&: left operand
-	# start equality check
 
+	# start equality check
 
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
@@ -41,15 +41,15 @@ main:
 	# back on.  Low order bits are on top of stack.
 	pop r24 # lower bits
 	pop r25 # higher bits
-	push r24
+	push r24 # push lower bits back 
 
 
 	# Load constant int 2
 	ldi r24,lo8(2)
 	ldi r25,hi8(2)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
@@ -57,7 +57,7 @@ main:
 	# back on.  Low order bits are on top of stack.
 	pop r24 # lower bits
 	pop r25 # higher bits
-	push r24
+	push r24 # push lower bits back 
 
 
 	### Meggy.getPixel(x,y) call
@@ -82,12 +82,7 @@ main:
 	# compare the operands
 	cp r24, r18
 
-	# load a one byte expression off stack
-	pop r18
-	# load a one byte expression off stack
-	pop r24
-	cp r24, r18 # examine the result of left expr
-	breq MJ_L5
+	breq MJ_L5# if the left expr is true
 MJ_L6: # if left expr is false
 	ldi r24, 0
 	jmp MJ_L7
@@ -107,15 +102,15 @@ MJ_L7: # get comparison result
 	brne MJ_L8 # if the left expr is true, jump to right expr
 	jmp MJ_L9
 MJ_L8: # right expr
-	# start equality check
 
+	# start equality check
 
 	# Load constant int 2
 	ldi r24,lo8(2)
 	ldi r25,hi8(2)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
@@ -123,15 +118,15 @@ MJ_L8: # right expr
 	# back on.  Low order bits are on top of stack.
 	pop r24 # lower bits
 	pop r25 # higher bits
-	push r24
+	push r24 # push lower bits back 
 
 
 	# Load constant int 3
 	ldi r24,lo8(3)
 	ldi r25,hi8(3)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
@@ -139,7 +134,7 @@ MJ_L8: # right expr
 	# back on.  Low order bits are on top of stack.
 	pop r24 # lower bits
 	pop r25 # higher bits
-	push r24
+	push r24 # push lower bits back 
 
 
 	### Meggy.getPixel(x,y) call
@@ -194,8 +189,8 @@ MJ_L3: # then branch
 	ldi r24,lo8(6)
 	ldi r25,hi8(6)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
@@ -203,15 +198,15 @@ MJ_L3: # then branch
 	# back on.  Low order bits are on top of stack.
 	pop r24 # lower bits
 	pop r25 # higher bits
-	push r24
+	push r24 # push lower bits back 
 
 
 	# Load constant int 5
 	ldi r24,lo8(5)
 	ldi r25,hi8(5)
 	# push two byte expression onto stack
-	push r25
-	push r24
+	push r25 # higher bits
+	push r24 # lower bits
 
 
 	# Casting int to byte by popping
@@ -219,7 +214,7 @@ MJ_L3: # then branch
 	# back on.  Low order bits are on top of stack.
 	pop r24 # lower bits
 	pop r25 # higher bits
-	push r24
+	push r24 # push lower bits back 
 
 
 	# Color expression Meggy.Color.GREEN

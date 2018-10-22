@@ -42,12 +42,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     String rightExprBranch = new Label().toString();
     String nextBlockBranch = new Label().toString();
     write2File(
-      "\n\t# load a one byte expression off stack" +
-      "\n\tpop r18" +
-      "\n\t# load a one byte expression off stack" +
-      "\n\tpop r24" +
-      "\n\tcp r24, r18 # examine the result of left expr" +
-      "\n\tbreq " + trueBranch +
+      // "\n\t# load a one byte expression off stack" +
+      // "\n\tpop r18" +
+      // "\n\t# load a one byte expression off stack" +
+      // "\n\tpop r24" +
+      // "\n\tcp r24, r18 # examine the result of left expr" +
+      "\n\tbreq " + trueBranch + "# if the left expr is true" + 
       "\n" + falseBranch + ": # if left expr is false" + 
       "\n\tldi r24, 0" + 
       "\n\tjmp " + compareBranch +
@@ -160,7 +160,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         "\n\t# back on.  Low order bits are on top of stack." +
         "\n\tpop r24 # lower bits" +
         "\n\tpop r25 # higher bits" +
-        "\n\tpush r24\n");
+        "\n\tpush r24 # push lower bits back \n");
   }
 
   @Override
@@ -250,7 +250,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void inEqualExp(EqualExp node) {
     defaultIn(node);
-     write2File("\t# start equality check\n");
+     write2File("\n\t# start equality check");
   }
 
   @Override
@@ -364,8 +364,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         "\n\tldi r24,lo8(" + node.getIntValue() + ")" + 
         "\n\tldi r25,hi8(" + node.getIntValue() + ")" + 
         "\n\t# push two byte expression onto stack" +
-        "\n\tpush r25" +
-        "\n\tpush r24\n");
+        "\n\tpush r25 # higher bits" +
+        "\n\tpush r24 # lower bits\n");
   }
 
   @Override
