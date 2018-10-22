@@ -202,6 +202,10 @@ exp ::=
     {:
         RESULT = new MeggyGetPixel(m.line, m.pos, e1, e2);
     :}
+    | MEGGYCHECKBUTTON:m LPAREN exp:e RPAREN
+    {:
+        RESULT = new MeggyCheckButton(m.line, m.pos, e);
+    :}
     | LPAREN:lp BYTE RPAREN exp:e
     {:
         RESULT = new ByteCast(lp.line, lp.pos, e);
@@ -213,6 +217,22 @@ exp ::=
     | COLOR_LITERAL:c
     {:
         RESULT = new ColorLiteral(c.line, c.pos, c.lexeme, c.value);
+    :}
+    | BUTTON_LITERAL:b
+    {:
+        RESULT = new ButtonLiteral(b.line, b.pos, b.lexeme, b.value);
+    :}
+    | TRUE:t
+    {:
+        RESULT = new TrueLiteral(t.line, t.pos, t.lexeme, t.value);
+    :}
+    | FALSE:f
+    {:
+        RESULT = new FalseLiteral(f.line, f.pos, f.lexeme, f.value);
+    :}
+    | NOT:n exp:e
+    {:
+        RESULT = new NotExp(n.line, n.pos, e);
     :}
     | LPAREN exp:e RPAREN 
     {:
