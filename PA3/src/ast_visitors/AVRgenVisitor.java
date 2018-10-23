@@ -26,19 +26,27 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void visitAndExp(AndExp node) {
+  public void inAndExp(AndExp node) {
     write2File(
       "\n\t#### short-circuited && operation" +
       "\n\t# &&: left operand"
     );
-    // inAndExp(node);
+  }
+
+  @Override
+  public void visitAndExp(AndExp node) {
+    inAndExp(node);
     if (node.getLExp() != null) {
       node.getLExp().accept(this);
     }
     // if the first expr is false, no need to eval the second expr
     String trueBranch = new Label().toString();
     String falseBranch = new Label().toString();
+    String nextBlock = new Label().toString();
     write2File(
+      "\n\tldi r24, 1" + 
+      "\n\tpop r25" + 
+      "\n\tcp r24, r25" +
       "\n\tbrne " + falseBranch + " # if the left expr is false" + 
       "\n\n" + trueBranch + ": # if left expr is true"
     );
@@ -46,8 +54,13 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       node.getRExp().accept(this);
     }
     write2File(
-      "\n\n" + falseBranch + ": "
+      "\n\tjmp " + nextBlock +
+      "\n\n" + falseBranch + ": # false branch" + 
+      "\n\tldi r24, 0" + 
+      "\n\tpush r24 # push false on stack" +
+      "\n\n" + nextBlock + ": "
     );
+    outAndExp(node);
   }
 
   @Override
@@ -233,13 +246,26 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outEqualExp(EqualExp node) {
     // TODO: only support byte comparison
-     write2File(
-        "\n\t# load a one byte expression off stack" +
-        "\n\tpop r18" + 
-        "\n\t# load a one byte expression off stack" +
-        "\n\tpop r24" + 
-        "\n\t# compare the operands" +
-        "\n\tcp r24, r18");
+    String trueBranch = new Label().toString();
+    String falseBranch = new Label().toString();
+    String nextBlock = new Label().toString();
+    write2File(
+      "\n\t# load a one byte expression off stack" +
+      "\n\tpop r18" + 
+      "\n\t# load a one byte expression off stack" +
+      "\n\tpop r24" + 
+      "\n\t# compare the operands" +
+      "\n\tcp r24, r18" +
+      "\n\tbreq " + trueBranch + " # goto true branch" + 
+      "\n" + falseBranch + ": # false branch" + 
+      "\n\tldi r24, 0" + 
+      "\n\tjmp " + nextBlock + 
+      "\n" + trueBranch + ": # true branch" + 
+      "\n\tldi r24, 1" +
+      "\n" + nextBlock + ": " +
+      "\n\tpush r24 # push the result on stack"
+    );
+
   }
 
   @Override
@@ -296,26 +322,29 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       node.getExp().accept(this);
     }
     write2File(
-        "\n\tbreq " + trueBranch +
-        "\n\n" + falseBranch + ": # false branch" +
-        "\n\tldi r24, 0" +
-        "\n\tjmp " + compareBranch +
-        "\n\n" + trueBranch + ": # true branch" +
-        "\n\tldi r24, 1" +
-        "\n\n" + compareBranch + ": # get comparison result" +
-        "\n\t# push comparison result onto stack" +
-        "\n\tpush r24" +
-        "\n\t# load condition and branch if false" +
-        "\n\t# load a one byte expression off stack" +
-        "\n\tpop r24" +
-        "\n\t# load zero into reg" +
-        "\n\tldi r25, 1" +
-        "\n\t# use cp to set SREG" +
-        "\n\tcp r24, r25" +
-        "\n\tbreq " + thenBranch +
-        "\n\tjmp " + elseBranch +
-        "\n\n" + thenBranch + ": # then branch"
-        );
+      "\n\tldi r24, 1" +
+      "\n\tpop r25" +
+      "\n\tcp r24, r25" + 
+      "\n\tbreq " + trueBranch +
+      "\n\n" + falseBranch + ": # false branch" +
+      "\n\tldi r24, 0" +
+      "\n\tjmp " + compareBranch +
+      "\n\n" + trueBranch + ": # true branch" +
+      "\n\tldi r24, 1" +
+      "\n\n" + compareBranch + ": # get comparison result" +
+      "\n\t# push comparison result onto stack" +
+      "\n\tpush r24" +
+      "\n\t# load condition and branch if false" +
+      "\n\t# load a one byte expression off stack" +
+      "\n\tpop r24" +
+      "\n\t# load zero into reg" +
+      "\n\tldi r25, 1" +
+      "\n\t# use cp to set SREG" +
+      "\n\tcp r24, r25" +
+      "\n\tbreq " + thenBranch +
+      "\n\tjmp " + elseBranch +
+      "\n\n" + thenBranch + ": # then branch"
+      );
     if (node.getThenStatement() != null) {
       node.getThenStatement().accept(this);
     }
@@ -603,8 +632,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\t# load a one byte expression off stack" +
       "\n\tpop r24" +
       "\n\tldi r22, 1" +
-      "\n\teor r24,r22" +
-      "\n\t# push one byte expression onto stack" +
+      "\n\teor r24,r22 # xor" +
+      "\n\t# push the result onto stack" +
       "\n\tpush r24"
     );
   }
@@ -784,11 +813,11 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       node.getExp().accept(this);
     }
     write2File(
-      // "\n\t# examine condition" +
-      // "\n\t# load a one byte expression off stack" +
-      // "\n\tpop r24" +
-      // "\n\tldi r25,1" +
-      // "\n\tcp r24, r25" +
+      "\n\t# examine condition" +
+      "\n\t# load a one byte expression off stack" +
+      "\n\tpop r24" +
+      "\n\tldi r25,1" +
+      "\n\tcp r24, r25" +
       "\n\tbreq " + body + " # if true, go to body" +
       "\n\tjmp " + nextBlock + " # if false, go to next block" +
       "\n" + body + ": # while loop body"
