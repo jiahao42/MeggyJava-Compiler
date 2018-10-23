@@ -598,7 +598,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outNotExp(NotExp node) {
-    defaultOut(node);
+    write2File(
+      "\n\t# not operation" +
+      "\n\t# load a one byte expression off stack" +
+      "\n\tpop r24" +
+      "\n\tldi r22, 1" +
+      "\n\teor r24,r22" +
+      "\n\t# push one byte expression onto stack" +
+      "\n\tpush r24"
+    );
   }
 
   @Override
