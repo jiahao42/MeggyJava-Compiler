@@ -132,7 +132,7 @@ statement ::=
     {:
         RESULT = new MeggySetPixel(msp.line, msp.pos, e1, e2, e3);
     :}
-    | MEGGYDELAY:md LPAREN exp:e RPAREN
+    | MEGGYDELAY:md LPAREN exp:e RPAREN SEMI
     {:
         RESULT = new MeggyDelay(md.line, md.pos, e);
     :}

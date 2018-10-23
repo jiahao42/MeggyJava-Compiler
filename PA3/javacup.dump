@@ -39,7 +39,7 @@ Warning : Terminal "LENGTH" was declared but never used
 [2] NT$0 ::= 
 [3] main_class ::= CLASS ID LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN block_statement NT$0 RBRACE 
 [4] statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI 
-[5] statement ::= MEGGYDELAY LPAREN exp RPAREN 
+[5] statement ::= MEGGYDELAY LPAREN exp RPAREN SEMI 
 [6] statement ::= IF LPAREN exp RPAREN statement 
 [7] statement ::= IF LPAREN exp RPAREN statement ELSE statement 
 [8] statement ::= WHILE LPAREN exp RPAREN statement 
@@ -76,7 +76,7 @@ transition on program to state [1]
 lalr_state [1]: {
   [$START ::= program (*) EOF , {EOF }]
 }
-transition on EOF to state [87]
+transition on EOF to state [88]
 
 -------------------
 lalr_state [2]: {
@@ -188,7 +188,7 @@ lalr_state [19]: {
   [NT$0 ::= (*) , {RBRACE }]
   [main_class ::= CLASS ID LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN block_statement (*) NT$0 RBRACE , {EOF }]
 }
-transition on NT$0 to state [85]
+transition on NT$0 to state [86]
 
 -------------------
 lalr_state [20]: {
@@ -201,7 +201,7 @@ transition on statement_list to state [21]
 -------------------
 lalr_state [21]: {
   [statement ::= (*) WHILE LPAREN exp RPAREN statement , {LBRACE RBRACE IF WHILE MEGGYSETPIXEL MEGGYDELAY }]
-  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN , {LBRACE RBRACE IF WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {LBRACE RBRACE IF WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement_list ::= statement_list (*) statement , {LBRACE RBRACE IF WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {LBRACE RBRACE IF WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {LBRACE RBRACE IF WHILE MEGGYSETPIXEL MEGGYDELAY }]
@@ -236,7 +236,7 @@ lalr_state [24]: {
 
 -------------------
 lalr_state [25]: {
-  [statement ::= MEGGYDELAY (*) LPAREN exp RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [statement ::= MEGGYDELAY (*) LPAREN exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
 transition on LPAREN to state [82]
 
@@ -872,7 +872,7 @@ lalr_state [61]: {
 -------------------
 lalr_state [62]: {
   [statement ::= (*) WHILE LPAREN exp RPAREN statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
-  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= IF LPAREN exp RPAREN (*) statement ELSE statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
@@ -899,7 +899,7 @@ transition on ELSE to state [64]
 -------------------
 lalr_state [64]: {
   [statement ::= (*) WHILE LPAREN exp RPAREN statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
-  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [block_statement ::= (*) LBRACE statement_list RBRACE , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
@@ -1039,7 +1039,7 @@ transition on RPAREN to state [72]
 -------------------
 lalr_state [72]: {
   [statement ::= (*) WHILE LPAREN exp RPAREN statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
-  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [block_statement ::= (*) LBRACE statement_list RBRACE , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
@@ -1220,7 +1220,7 @@ lalr_state [82]: {
   [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [statement ::= MEGGYDELAY LPAREN (*) exp RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [statement ::= MEGGYDELAY LPAREN (*) exp RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
   [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN EQUAL AND }]
@@ -1254,7 +1254,7 @@ lalr_state [83]: {
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN EQUAL AND }]
-  [statement ::= MEGGYDELAY LPAREN exp (*) RPAREN , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [statement ::= MEGGYDELAY LPAREN exp (*) RPAREN SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
 transition on TIMES to state [49]
 transition on MINUS to state [48]
@@ -1265,22 +1265,28 @@ transition on RPAREN to state [84]
 
 -------------------
 lalr_state [84]: {
-  [statement ::= MEGGYDELAY LPAREN exp RPAREN (*) , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
+  [statement ::= MEGGYDELAY LPAREN exp RPAREN (*) SEMI , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
+transition on SEMI to state [85]
 
 -------------------
 lalr_state [85]: {
-  [main_class ::= CLASS ID LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN block_statement NT$0 (*) RBRACE , {EOF }]
+  [statement ::= MEGGYDELAY LPAREN exp RPAREN SEMI (*) , {LBRACE RBRACE IF ELSE WHILE MEGGYSETPIXEL MEGGYDELAY }]
 }
-transition on RBRACE to state [86]
 
 -------------------
 lalr_state [86]: {
+  [main_class ::= CLASS ID LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN block_statement NT$0 (*) RBRACE , {EOF }]
+}
+transition on RBRACE to state [87]
+
+-------------------
+lalr_state [87]: {
   [main_class ::= CLASS ID LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN block_statement NT$0 RBRACE (*) , {EOF }]
 }
 
 -------------------
-lalr_state [87]: {
+lalr_state [88]: {
   [$START ::= program EOF (*) , {EOF }]
 }
 
@@ -1289,7 +1295,7 @@ lalr_state [87]: {
 From state #0
  [term 13:SHIFT(to state 2)]
 From state #1
- [term 0:SHIFT(to state 87)]
+ [term 0:SHIFT(to state 88)]
 From state #2
  [term 36:SHIFT(to state 3)]
 From state #3
@@ -1626,15 +1632,17 @@ From state #83
  [term 4:SHIFT(to state 49)] [term 6:SHIFT(to state 84)]
  [term 17:SHIFT(to state 47)] [term 18:SHIFT(to state 45)]
 From state #84
+ [term 34:SHIFT(to state 85)]
+From state #85
  [term 7:REDUCE(with prod 5)] [term 8:REDUCE(with prod 5)]
  [term 14:REDUCE(with prod 5)] [term 15:REDUCE(with prod 5)]
  [term 20:REDUCE(with prod 5)] [term 40:REDUCE(with prod 5)]
  [term 43:REDUCE(with prod 5)]
-From state #85
- [term 8:SHIFT(to state 86)]
 From state #86
- [term 0:REDUCE(with prod 3)]
+ [term 8:SHIFT(to state 87)]
 From state #87
+ [term 0:REDUCE(with prod 3)]
+From state #88
  [term 0:REDUCE(with prod 0)]
 ------------------------------
 -------- REDUCE_TABLE --------
@@ -1661,7 +1669,7 @@ From state #17
 From state #18
  [non term 4->state 19]
 From state #19
- [non term 6->state 85]
+ [non term 6->state 86]
 From state #20
  [non term 3->state 21]
 From state #21
@@ -1753,11 +1761,12 @@ From state #84
 From state #85
 From state #86
 From state #87
+From state #88
 -----------------------------
 ------- CUP v0.11a beta 20060608 Parser Generation Summary -------
   0 errors and 17 warnings
   55 terminals, 7 non-terminals, and 29 productions declared, 
-  producing 88 unique parse states.
+  producing 89 unique parse states.
   17 terminals declared but not used.
   0 non-terminals declared but not used.
   0 productions never reduced.
