@@ -757,11 +757,47 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inWhileStatement(WhileStatement node) {
-    defaultIn(node);
+    write2File(
+      "\n\n\t### start of while loop"
+    );
+    
+  }
+
+  @Override
+  public void visitWhileStatement(WhileStatement node) {
+    String cond = new Label().toString();
+    String body = new Label().toString();
+    String nextBlock = new Label().toString();
+    inWhileStatement(node);
+    write2File(
+      "\n" + cond + ": # while loop condition"
+    );
+    if (node.getExp() != null) {
+      node.getExp().accept(this);
+    }
+    write2File(
+      "\n\t# examine condition" +
+      "\n\t# load a one byte expression off stack" +
+      "\n\tpop r24" +
+      "\n\tldi r25,1" +
+      "\n\tcp r24, r25" +
+      "\n\tbreq " + body + " # if true, go to body" +
+      "\n\tjmp " + nextBlock + " if false, go to next block" +
+      "\n" + body + ": # while loop body"
+    );
+    if (node.getStatement() != null) {
+      node.getStatement().accept(this);
+    }
+    write2File(
+      "\n\tjmp " + cond + " # go back to condition"
+    );
+    outWhileStatement(node);
   }
 
   @Override
   public void outWhileStatement(WhileStatement node) {
-    defaultOut(node);
+    write2File(
+      "\n\n\t### end of while loop"
+    );
   }
 }
