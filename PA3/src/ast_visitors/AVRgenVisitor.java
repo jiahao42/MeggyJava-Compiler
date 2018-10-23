@@ -434,7 +434,14 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outMeggyDelay(MeggyDelay node) {
-    defaultOut(node);
+    write2File(
+      "\n\t### Meggy.delay() call" +
+      "\n\t# load delay parameter" +
+      "\n\t# load a two byte expression off stack" +
+      "\n\tpop    r24" +
+      "\n\tpop    r25" +
+      "\n\tcall   _Z8delay_msj"
+    );
   }
 
   @Override
