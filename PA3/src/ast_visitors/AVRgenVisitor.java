@@ -107,7 +107,11 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outButtonExp(ButtonLiteral node) {
-    defaultOut(node);
+    write2File(
+      "\n\t#push " + node.getLexeme() + 
+      "\n\tldi r24, " + node.getIntValue() +
+      "\n\tpush r24"
+    );
   }
 
   @Override
@@ -399,7 +403,28 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outMeggyCheckButton(MeggyCheckButton node) {
-    defaultOut(node);
+    String trueBranch = new Label().toString();
+    String falseBranch = new Label().toString();
+    String resultBranch = new Label().toString();
+    ButtonLiteral b = (ButtonLiteral) node.getExp(); 
+    String lexeme = b.getLexeme(); // e.g. Meggy.Button.Down
+    int idx = lexeme.lastIndexOf('.') + 1;
+    // desired format: Button_Left
+    String avrButton = "Button_" + lexeme.substring(idx);
+    write2File(
+      "\n\tpop r25 # get button literal" + 
+      "\n\t### MeggyCheckButton" +
+      "\n\tcall    _Z16CheckButtonsDownv" +
+      "\n\tlds    r24, " + avrButton +
+      "\n\t# if button value is zero, push 0 else push 1" +
+      "\n\ttst    r24" + 
+      "\n" + trueBranch + ": # if true" + 
+      "\n\tldi r24, 1" + 
+      "\n\tjmp " + resultBranch + 
+      "\n" + falseBranch + ": # false branch, r24 is already 0, do nothing" +  
+      "\n" + resultBranch + ": " + 
+      "\n" + "push r24"
+    );
   }
 
   @Override
