@@ -1,5 +1,11 @@
-/* Tests Meggy.getPixel
-*/
+/** 
+ *
+ * @File:      If
+ * @Brief:     Test syntax for Meggy.getPixel
+ * @Created:   Oct/21/2018
+ * @Author:    Jiahao Cai
+ *
+ */
 import meggy.Meggy;
 
 class GetPixel
