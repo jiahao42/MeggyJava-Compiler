@@ -244,7 +244,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inFalseExp(FalseLiteral node) {
-    defaultIn(node);
+    write2File(
+      "\n\t# False/0 expression" +
+      "\n\tldi    r22, 0" +
+      "\n\t# push one byte expression onto stack" +
+      "\n\tpush   r22"
+    );
   }
 
   @Override
@@ -717,7 +722,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inTrueExp(TrueLiteral node) {
-    defaultIn(node);
+    write2File(
+      "\n\t# True/1 expression" +
+      "\n\tldi    r22, 1" +
+      "\n\t# push one byte expression onto stack" +
+      "\n\tpush   r22"
+    );
   }
 
   @Override
