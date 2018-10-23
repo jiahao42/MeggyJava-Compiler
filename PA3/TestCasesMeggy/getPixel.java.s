@@ -22,7 +22,6 @@ main:
 
 #### if statement
 
-
 	# start equality check
 
 	# Load constant int 1
@@ -105,7 +104,7 @@ MJ_L2: # get comparison result
 	# load condition and branch if false
 	# load a one byte expression off stack
 	pop r24
-	# load zero into reg
+	# load one into reg
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25

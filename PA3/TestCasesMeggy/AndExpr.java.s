@@ -22,7 +22,6 @@ main:
 
 #### if statement
 
-
 	#### short-circuited && operation
 	# &&: left operand
 
@@ -157,7 +156,7 @@ MJ_L2: # get comparison result
 	# load condition and branch if false
 	# load a one byte expression off stack
 	pop r24
-	# load zero into reg
+	# load one into reg
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
@@ -271,7 +270,6 @@ MJ_L4: # else branch
 MJ_L5: 
 
 #### if statement
-
 
 	#### short-circuited && operation
 	# &&: left operand
@@ -407,7 +405,7 @@ MJ_L17: # get comparison result
 	# load condition and branch if false
 	# load a one byte expression off stack
 	pop r24
-	# load zero into reg
+	# load one into reg
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
@@ -521,7 +519,6 @@ MJ_L19: # else branch
 MJ_L20: 
 
 #### if statement
-
 
 	#### short-circuited && operation
 	# &&: left operand
@@ -687,7 +684,7 @@ MJ_L32: # get comparison result
 	# load condition and branch if false
 	# load a one byte expression off stack
 	pop r24
-	# load zero into reg
+	# load one into reg
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
@@ -801,7 +798,6 @@ MJ_L34: # else branch
 MJ_L35: 
 
 #### if statement
-
 
 	#### short-circuited && operation
 	# &&: left operand
@@ -967,7 +963,7 @@ MJ_L47: # get comparison result
 	# load condition and branch if false
 	# load a one byte expression off stack
 	pop r24
-	# load zero into reg
+	# load one into reg
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25

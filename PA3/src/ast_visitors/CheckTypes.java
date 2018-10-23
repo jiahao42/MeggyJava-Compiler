@@ -72,8 +72,5 @@ public class CheckTypes extends DepthFirstVisitor
                    node.getLExp().getLine(),
                    node.getLExp().getPos());
        }
-
    }
-  
-
 }

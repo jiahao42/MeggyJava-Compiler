@@ -52,6 +52,7 @@ public class MJDriver {
 					// parser.parse();
 					// parser.debug_parse();
 					Program ast_root = (Program)parser.parse().value;
+					/* Test if the name of main class matches the name of file */
 					lastInPath = parser.programName.lastIndexOf('.');
 					String baseFileName = parser.programName.substring(0, lastInPath);
 					if (!ast_root.getMainClass().getName().equals(baseFileName)) {
@@ -76,7 +77,7 @@ public class MJDriver {
           // ast_root.accept(stVisitor);
 					// symtable.SymTable globalST = stVisitor.getSymTable();
           
-					// print ast to file
+					// print Symbol table to file
 					// TODO: Not implemented Symbol Table yet
           // java.io.PrintStream STout =
           //   new java.io.PrintStream(

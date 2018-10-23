@@ -22,7 +22,6 @@ main:
 
 #### if statement
 
-
 	# start equality check
 
 	#push Meggy.Button.Down
@@ -34,13 +33,14 @@ main:
 	call    _Z16CheckButtonsDownv
 	lds    r24, Button_Down
 	# if button value is zero, push 0 else push 1
-	tst    r24
+	tst    r24 # Test for Zero or Minus
+	breq MJ_L7 # goto false branch
 MJ_L6: # if true
 	ldi r24, 1
 	jmp MJ_L8
 MJ_L7: # false branch, r24 is already 0, do nothing
 MJ_L8: 
-push r24
+	push r24
 
 	#push Meggy.Button.Down
 	ldi r24, 8
@@ -51,13 +51,14 @@ push r24
 	call    _Z16CheckButtonsDownv
 	lds    r24, Button_Down
 	# if button value is zero, push 0 else push 1
-	tst    r24
+	tst    r24 # Test for Zero or Minus
+	breq MJ_L10 # goto false branch
 MJ_L9: # if true
 	ldi r24, 1
 	jmp MJ_L11
 MJ_L10: # false branch, r24 is already 0, do nothing
 MJ_L11: 
-push r24
+	push r24
 
 	# load a one byte expression off stack
 	pop r18
@@ -92,7 +93,7 @@ MJ_L2: # get comparison result
 	# load condition and branch if false
 	# load a one byte expression off stack
 	pop r24
-	# load zero into reg
+	# load one into reg
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
@@ -207,7 +208,6 @@ MJ_L5:
 
 #### if statement
 
-
 	# start equality check
 
 	#push Meggy.Button.Left
@@ -219,13 +219,14 @@ MJ_L5:
 	call    _Z16CheckButtonsDownv
 	lds    r24, Button_Left
 	# if button value is zero, push 0 else push 1
-	tst    r24
+	tst    r24 # Test for Zero or Minus
+	breq MJ_L22 # goto false branch
 MJ_L21: # if true
 	ldi r24, 1
 	jmp MJ_L23
 MJ_L22: # false branch, r24 is already 0, do nothing
 MJ_L23: 
-push r24
+	push r24
 
 	#push Meggy.Button.Up
 	ldi r24, 4
@@ -236,13 +237,14 @@ push r24
 	call    _Z16CheckButtonsDownv
 	lds    r24, Button_Up
 	# if button value is zero, push 0 else push 1
-	tst    r24
+	tst    r24 # Test for Zero or Minus
+	breq MJ_L25 # goto false branch
 MJ_L24: # if true
 	ldi r24, 1
 	jmp MJ_L26
 MJ_L25: # false branch, r24 is already 0, do nothing
 MJ_L26: 
-push r24
+	push r24
 
 	# load a one byte expression off stack
 	pop r18
@@ -277,7 +279,7 @@ MJ_L17: # get comparison result
 	# load condition and branch if false
 	# load a one byte expression off stack
 	pop r24
-	# load zero into reg
+	# load one into reg
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25

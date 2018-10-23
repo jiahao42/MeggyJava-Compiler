@@ -306,7 +306,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void inIfStatement(IfStatement node) {
     defaultIn(node);
-     write2File("\n#### if statement\n");
+     write2File("\n#### if statement");
   }
 
   @Override
@@ -337,7 +337,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\t# load condition and branch if false" +
       "\n\t# load a one byte expression off stack" +
       "\n\tpop r24" +
-      "\n\t# load zero into reg" +
+      "\n\t# load one into reg" +
       "\n\tldi r25, 1" +
       "\n\t# use cp to set SREG" +
       "\n\tcp r24, r25" +
@@ -451,13 +451,14 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tcall    _Z16CheckButtonsDownv" +
       "\n\tlds    r24, " + avrButton +
       "\n\t# if button value is zero, push 0 else push 1" +
-      "\n\ttst    r24" + 
+      "\n\ttst    r24 # Test for Zero or Minus" + 
+      "\n\tbreq " + falseBranch + " # goto false branch" + 
       "\n" + trueBranch + ": # if true" + 
       "\n\tldi r24, 1" + 
       "\n\tjmp " + resultBranch + 
-      "\n" + falseBranch + ": # false branch, r24 is already 0, do nothing" +  
+      "\n" + falseBranch+ ": # false branch, r24 is already 0, do nothing" +  
       "\n" + resultBranch + ": " + 
-      "\n" + "push r24"
+      "\n\t" + "push r24"
     );
   }
 

@@ -15,10 +15,14 @@ import meggy.Meggy;
 
 class PA4Test3 {
   public static void main(String[] parameters) {
+    while (!(Meggy.getPixel((byte)1, (byte)2) == Meggy.Color.RED)) {
+      Meggy.delay(100);
+    }
+    Meggy.delay(10);
     // Meggy.setPixel((byte)(1 + -2), (byte)3, Meggy.Color.RED);
     // Meggy.setPixel((byte)(2 - 3), (byte)3, Meggy.Color.RED);
     if (Meggy.getPixel((byte)1, (byte)2) == Meggy.Color.RED && Meggy.getPixel((byte)2, (byte)3) == Meggy.Color.GREEN) {
-      
+
     }
     if (Meggy.getPixel((byte)1, (byte)2) == Meggy.Color.RED) {
       if (Meggy.checkButton(Meggy.Button.Left) == true) {
