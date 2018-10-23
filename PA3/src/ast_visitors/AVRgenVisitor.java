@@ -776,20 +776,21 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       node.getExp().accept(this);
     }
     write2File(
-      "\n\t# examine condition" +
-      "\n\t# load a one byte expression off stack" +
-      "\n\tpop r24" +
-      "\n\tldi r25,1" +
-      "\n\tcp r24, r25" +
+      // "\n\t# examine condition" +
+      // "\n\t# load a one byte expression off stack" +
+      // "\n\tpop r24" +
+      // "\n\tldi r25,1" +
+      // "\n\tcp r24, r25" +
       "\n\tbreq " + body + " # if true, go to body" +
-      "\n\tjmp " + nextBlock + " if false, go to next block" +
+      "\n\tjmp " + nextBlock + " # if false, go to next block" +
       "\n" + body + ": # while loop body"
     );
     if (node.getStatement() != null) {
       node.getStatement().accept(this);
     }
     write2File(
-      "\n\tjmp " + cond + " # go back to condition"
+      "\n\tjmp " + cond + " # go back to condition" + 
+      "\n" + nextBlock + ": "
     );
     outWhileStatement(node);
   }
@@ -797,7 +798,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outWhileStatement(WhileStatement node) {
     write2File(
-      "\n\n\t### end of while loop"
+      "\n\t### end of while loop"
     );
   }
 }
