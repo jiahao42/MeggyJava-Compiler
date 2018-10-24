@@ -54,6 +54,10 @@ public class CheckTypes extends DepthFirstVisitor {
 		return t == Type.VOID;
 	}
 
+	private boolean isColor(Type t) {
+		return t == Type.COLOR;
+	}
+
 	private Type getType(Node node) {
 		return this.mCurrentST.getExpType(node);
 	}
@@ -69,7 +73,7 @@ public class CheckTypes extends DepthFirstVisitor {
 		System.err.println("Node not implemented in CheckTypes, " + node.getClass());
 	}
 
-	/** Experssions **/
+	/** Type check for Experssions **/
 	/* Literals */
 	@Override
 	public void outIntegerExp(IntLiteral node) {
@@ -103,7 +107,7 @@ public class CheckTypes extends DepthFirstVisitor {
 		if (isButton(getType(node.getExp()))) {
 			setType(node, Type.BOOL);
 		} else {
-			throw new SemanticException("Invalid parameters for Meggy.checkButton, expect Meggy.Button", node.getExp().getLine(),
+			throw new SemanticException("Invalid parameter type for Meggy.checkButton, expect Meggy.Button", node.getExp().getLine(),
 			node.getPos());
 		}
 	}
@@ -115,7 +119,7 @@ public class CheckTypes extends DepthFirstVisitor {
 		if (isIntOrByte(x) && isIntOrByte(y)) {
 			setType(node, Type.COLOR);
 		} else {
-			throw new SemanticException("Invalid parameters for Meggy.getPixel, expect INT or BYTE", node.getXExp().getLine(),
+			throw new SemanticException("Invalid parameter types for Meggy.getPixel, expect (BYTE, BYTE)", node.getXExp().getLine(),
 					node.getPos());
 		}
 	}
@@ -221,5 +225,66 @@ public class CheckTypes extends DepthFirstVisitor {
 			throw new SemanticException("Invalid operand type for !, expect BOOL", node.getLine(),
 					node.getPos());
 		}
+	}
+	
+	/** Type check for statement **/
+
+	@Override
+  public void outMeggySetPixel(MeggySetPixel node) {
+		Type xExpType = getType(node.getXExp());
+		Type yExpType = getType(node.getYExp());
+		Type colorType = getType(node.getColor());
+		if (isIntOrByte(xExpType) && 
+				isIntOrByte(xExpType) &&
+				isColor(colorType)) {
+					setType(node, Type.VOID);
+				} else {
+					throw new SemanticException("Invalid parameter types for Meggy.setPixel, expect (BYTE, BYTE, Meggy.Color)", node.getLine(),
+					node.getPos());
+				}
+	}
+	
+	@Override
+  public void outMeggyDelay(MeggyDelay node) {
+		if (isIntOrByte(getType(node.getExp()))) {
+			setType(node, Type.VOID);
+		} else {
+			throw new SemanticException("Invalid parameter types for Meggy.delay, expect INT", node.getLine(),
+			node.getPos());
+		}
+	}
+	
+	@Override
+  public void visitIfStatement(IfStatement node) {
+    inIfStatement(node);
+    if (node.getExp() != null) {
+      node.getExp().accept(this);
+		}
+		if (!isBoolean(getType(node.getExp()))) {
+			throw new SemanticException("Invalid condition types for if statement, expect BOOL", node.getLine(),
+			node.getPos());
+		}
+    if (node.getThenStatement() != null) {
+      node.getThenStatement().accept(this);
+    }
+    if (node.getElseStatement() != null) {
+      node.getElseStatement().accept(this);
+    }
+	}
+	
+	@Override
+  public void visitWhileStatement(WhileStatement node) {
+    inWhileStatement(node);
+    if (node.getExp() != null) {
+      node.getExp().accept(this);
+		}
+		if (!isBoolean(getType(node.getExp()))) {
+			throw new SemanticException("Invalid condition types for while statement, expect BOOL", node.getLine(),
+			node.getPos());
+		}
+    if (node.getStatement() != null) {
+      node.getStatement().accept(this);
+    }
   }
 }
+
