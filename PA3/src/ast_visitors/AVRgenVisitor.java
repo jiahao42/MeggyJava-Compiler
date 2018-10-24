@@ -188,14 +188,17 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outByteCast(ByteCast node) {
-    write2File(
-      "\n\t# Casting int to byte by popping" +
-      "\n\t# 2 bytes off stack and only pushing low order bits" +
-      "\n\t# back on.  Low order bits are on top of stack." +
-      "\n\tpop r24 # pop lower bits" +
-      "\n\tpop r25 # pop higher bits" +
-      "\n\tpush r24 # push lower bits back \n"
-    );
+    // if it's already byte, do nothing
+    if (!isByte(getType(node.getExp()))) {
+      write2File(
+        "\n\t# Casting int to byte by popping" +
+        "\n\t# 2 bytes off stack and only pushing low order bits" +
+        "\n\t# back on.  Low order bits are on top of stack." +
+        "\n\tpop r24 # pop lower bits" +
+        "\n\tpop r25 # pop higher bits" +
+        "\n\tpush r24 # push lower bits back \n"
+      );
+    }
   }
 
   @Override
@@ -682,11 +685,11 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   public void outMulExp(MulExp node) {
     write2File(
       "\n\t# Do Mul Operation" +
-      "\n\tpop r24" +
+      "\n\tpop r24 "+
       "\n\tpop r25" +
       "\n\tmuls r24, r25" +
-      "\n\tpush r24" +
-      "\n\tpush r25"
+      "\n\tpush r24 # lower bits" +
+      "\n\tpush r24 # higher bits"
     );
   }
 
@@ -761,7 +764,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inPlusExp(PlusExp node) {
-     write2File("# start a add operation");
+     write2File("\n\t# start a add operation");
   }
 
   @Override

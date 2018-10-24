@@ -21,7 +21,8 @@ main:
 
 
 #### if statement
-	# start equality check# start a add operation
+	# start equality check
+	# start a add operation
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
@@ -315,11 +316,11 @@ MJ_L12: # then branch
 	push r24 # push lower bits back 
 
 	# Do Mul Operation
-	pop r24
+	pop r24 
 	pop r25
 	muls r24, r25
-	push r24
-	push r25
+	push r24 # lower bits
+	push r24 # higher bits
 	# Load constant int 6
 	ldi r24,lo8(6)
 	ldi r25,hi8(6)
@@ -536,11 +537,11 @@ MJ_L30: # then branch
 	push r24 # push lower bits back 
 
 	# Do Mul Operation
-	pop r24
+	pop r24 
 	pop r25
 	muls r24, r25
-	push r24
-	push r25
+	push r24 # lower bits
+	push r24 # higher bits
 	# Load constant int 7
 	ldi r24,lo8(7)
 	ldi r25,hi8(7)
@@ -701,7 +702,8 @@ MJ_L32:
 	sbc r23, r25
 	# push two byte expression back to stack
 	push r23
-	push r22# start a add operation
+	push r22
+	# start a add operation
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
@@ -799,11 +801,11 @@ MJ_L48: # then branch
 	push r24 # push lower bits back 
 
 	# Do Mul Operation
-	pop r24
+	pop r24 
 	pop r25
 	muls r24, r25
-	push r24
-	push r25
+	push r24 # lower bits
+	push r24 # higher bits
 	# Load constant int 6
 	ldi r24,lo8(6)
 	ldi r25,hi8(6)
@@ -1106,11 +1108,11 @@ MJ_L66: # then branch
 	push r24 # push lower bits back 
 
 	# Do Mul Operation
-	pop r24
+	pop r24 
 	pop r25
 	muls r24, r25
-	push r24
-	push r25
+	push r24 # lower bits
+	push r24 # higher bits
 	# Load constant int 7
 	ldi r24,lo8(7)
 	ldi r25,hi8(7)

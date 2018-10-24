@@ -52,8 +52,8 @@ main:
 	pop r24 
 	pop r25
 	muls r24, r25
-	push r24 # lower bits
 	push r24 # higher bits
+	push r24 # lower bits
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.

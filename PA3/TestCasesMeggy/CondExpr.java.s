@@ -212,7 +212,8 @@ MJ_L5:
 	pop r24 # pop lower bits
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
-# start a add operation
+
+	# start a add operation
 	# Load constant int 10
 	ldi r24,lo8(10)
 	ldi r25,hi8(10)
@@ -261,13 +262,6 @@ MJ_L5:
 	# push two byte expression back to stack
 	push r23
 	push r22
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
 	## This is a auto typecast: promote Byte to Int
 	pop r24 # pop byte as the lower bits
 	ldi r25, 0
@@ -823,7 +817,8 @@ MJ_L31: # else branch
 
 MJ_L32: 
 #### if statement
-	# start equality check# start a add operation
+	# start equality check
+	# start a add operation
 	# Load constant int 512
 	ldi r24,lo8(512)
 	ldi r25,hi8(512)
@@ -988,7 +983,8 @@ MJ_L40: # else branch
 
 MJ_L41: 
 #### if statement
-	# start equality check# start a add operation
+	# start equality check
+	# start a add operation
 	# Load constant int 3
 	ldi r24,lo8(3)
 	ldi r25,hi8(3)
@@ -1165,7 +1161,8 @@ MJ_L49: # else branch
 
 MJ_L50: 
 #### if statement
-	# start equality check# start a add operation
+	# start equality check
+	# start a add operation
 	# Load constant int 3
 	ldi r24,lo8(3)
 	ldi r25,hi8(3)
@@ -1342,7 +1339,8 @@ MJ_L58: # else branch
 
 MJ_L59: 
 #### if statement
-	# start equality check# start a add operation
+	# start equality check
+	# start a add operation
 	# Load constant int 3
 	ldi r24,lo8(3)
 	ldi r25,hi8(3)
