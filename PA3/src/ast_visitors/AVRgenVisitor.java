@@ -684,7 +684,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\t# Do Mul Operation" +
       "\n\tpop r24" +
       "\n\tpop r25" +
-      "\n\tmul r24, r25" +
+      "\n\tmuls r24, r25" +
       "\n\tpush r24" +
       "\n\tpush r25"
     );
@@ -716,19 +716,29 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
+  public void visitNegExp(NegExp node) {
+    inNegExp(node);
+    if (node.getExp() != null) {
+      node.getExp().accept(this);
+      promoteByte2Int(node.getExp());
+    }
+    outNegExp(node);
+  }
+
+  @Override
   public void outNegExp(NegExp node) {
     write2File(
     "\n\t# neg int" +
     "\n\t# load a two byte expression off stack" +
-    "\n\tpop    r24" +
-    "\n\tpop    r25" +
-    "\n\tldi     r22, 0" +
-    "\n\tldi     r23, 0" +
-    "\n\tsub     r22, r24" +
-    "\n\tsbc     r23, r25" +
+    "\n\tpop r24" +
+    "\n\tpop r25" +
+    "\n\tldi r22, 0" +
+    "\n\tldi r23, 0" +
+    "\n\tsub r22, r24" +
+    "\n\tsbc r23, r25" +
     "\n\t# push two byte expression back to stack" +
-    "\n\tpush   r23" +
-    "\n\tpush   r22");
+    "\n\tpush r23" +
+    "\n\tpush r22");
   }
 
   @Override
