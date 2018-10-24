@@ -27,14 +27,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	### Meggy.delay() call
 	# load delay parameter
 	# load a two byte expression off stack
 	pop    r24
 	pop    r25
 	call   _Z8delay_msj
-
 	# Load constant int 10
 	ldi r24,lo8(10)
 	ldi r25,hi8(10)
@@ -42,14 +40,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	### Meggy.delay() call
 	# load delay parameter
 	# load a two byte expression off stack
 	pop    r24
 	pop    r25
 	call   _Z8delay_msj
-
 	# Load constant int 100
 	ldi r24,lo8(100)
 	ldi r25,hi8(100)
@@ -57,14 +53,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	### Meggy.delay() call
 	# load delay parameter
 	# load a two byte expression off stack
 	pop    r24
 	pop    r25
 	call   _Z8delay_msj
-
 	# Load constant int 1000
 	ldi r24,lo8(1000)
 	ldi r25,hi8(1000)
@@ -72,14 +66,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	### Meggy.delay() call
 	# load delay parameter
 	# load a two byte expression off stack
 	pop    r24
 	pop    r25
 	call   _Z8delay_msj
-
 	# Load constant int 10000
 	ldi r24,lo8(10000)
 	ldi r25,hi8(10000)
@@ -87,14 +79,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	### Meggy.delay() call
 	# load delay parameter
 	# load a two byte expression off stack
 	pop    r24
 	pop    r25
 	call   _Z8delay_msj
-
 	# Load constant int 99
 	ldi r24,lo8(99)
 	ldi r25,hi8(99)
@@ -102,14 +92,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	### Meggy.delay() call
 	# load delay parameter
 	# load a two byte expression off stack
 	pop    r24
 	pop    r25
 	call   _Z8delay_msj
-
 
 /* epilogue start */
     endLabel:

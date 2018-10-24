@@ -21,13 +21,10 @@ main:
 
 
 #### if statement
-
 	# start equality check
-
 	#push Meggy.Button.Down
 	ldi r24, 8
 	push r24
-
 	pop r25 # get button literal
 	### MeggyCheckButton
 	call    _Z16CheckButtonsDownv
@@ -41,11 +38,9 @@ MJ_L6: # if true
 MJ_L7: # false branch, r24 is already 0, do nothing
 MJ_L8: 
 	push r24
-
 	#push Meggy.Button.Down
 	ldi r24, 8
 	push r24
-
 	pop r25 # get button literal
 	### MeggyCheckButton
 	call    _Z16CheckButtonsDownv
@@ -59,7 +54,6 @@ MJ_L9: # if true
 MJ_L10: # false branch, r24 is already 0, do nothing
 MJ_L11: 
 	push r24
-
 	# load a one byte expression off stack
 	pop r18
 	# load a one byte expression off stack
@@ -74,7 +68,6 @@ MJ_L12: # true branch
 	ldi r24, 1
 MJ_L14: 
 	push r24 # push the result on stack
-
 	ldi r24, 1
 	pop r25
 	cp r24, r25
@@ -101,7 +94,6 @@ MJ_L2: # get comparison result
 	jmp MJ_L4
 
 MJ_L3: # then branch
-
 	# Load constant int 6
 	ldi r24,lo8(6)
 	ldi r25,hi8(6)
@@ -109,14 +101,12 @@ MJ_L3: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
 	pop r24 # pop lower bits
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
-
 
 	# Load constant int 5
 	ldi r24,lo8(5)
@@ -125,21 +115,18 @@ MJ_L3: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
 	pop r24 # pop lower bits
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
-
 
 	# Color expression Meggy.Color.GREEN
 	ldi r22,4
 	# push one byte expression onto stack
 	push r22
 
-
 	### Meggy.setPixel(x,y,color) call
 	# load a one byte expression off stack
 	pop r20
@@ -150,11 +137,9 @@ MJ_L3: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-
 	jmp MJ_L5 # jump over the else branch
 
 MJ_L4: # else branch
-
 	# Load constant int 6
 	ldi r24,lo8(6)
 	ldi r25,hi8(6)
@@ -162,14 +147,12 @@ MJ_L4: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
 	pop r24 # pop lower bits
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
-
 
 	# Load constant int 5
 	ldi r24,lo8(5)
@@ -178,7 +161,6 @@ MJ_L4: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -186,12 +168,10 @@ MJ_L4: # else branch
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-
 	# Color expression Meggy.Color.RED
 	ldi r22,1
 	# push one byte expression onto stack
 	push r22
-
 
 	### Meggy.setPixel(x,y,color) call
 	# load a one byte expression off stack
@@ -203,17 +183,12 @@ MJ_L4: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-
 MJ_L5: 
-
 #### if statement
-
 	# start equality check
-
 	#push Meggy.Button.Left
 	ldi r24, 16
 	push r24
-
 	pop r25 # get button literal
 	### MeggyCheckButton
 	call    _Z16CheckButtonsDownv
@@ -227,11 +202,9 @@ MJ_L21: # if true
 MJ_L22: # false branch, r24 is already 0, do nothing
 MJ_L23: 
 	push r24
-
 	#push Meggy.Button.Up
 	ldi r24, 4
 	push r24
-
 	pop r25 # get button literal
 	### MeggyCheckButton
 	call    _Z16CheckButtonsDownv
@@ -245,7 +218,6 @@ MJ_L24: # if true
 MJ_L25: # false branch, r24 is already 0, do nothing
 MJ_L26: 
 	push r24
-
 	# load a one byte expression off stack
 	pop r18
 	# load a one byte expression off stack
@@ -260,7 +232,6 @@ MJ_L27: # true branch
 	ldi r24, 1
 MJ_L29: 
 	push r24 # push the result on stack
-
 	ldi r24, 1
 	pop r25
 	cp r24, r25
@@ -287,7 +258,6 @@ MJ_L17: # get comparison result
 	jmp MJ_L19
 
 MJ_L18: # then branch
-
 	# Load constant int 6
 	ldi r24,lo8(6)
 	ldi r25,hi8(6)
@@ -295,14 +265,12 @@ MJ_L18: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
 	pop r24 # pop lower bits
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
-
 
 	# Load constant int 5
 	ldi r24,lo8(5)
@@ -311,21 +279,18 @@ MJ_L18: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
 	pop r24 # pop lower bits
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
-
 
 	# Color expression Meggy.Color.GREEN
 	ldi r22,4
 	# push one byte expression onto stack
 	push r22
 
-
 	### Meggy.setPixel(x,y,color) call
 	# load a one byte expression off stack
 	pop r20
@@ -336,11 +301,9 @@ MJ_L18: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-
 	jmp MJ_L20 # jump over the else branch
 
 MJ_L19: # else branch
-
 	# Load constant int 6
 	ldi r24,lo8(6)
 	ldi r25,hi8(6)
@@ -348,14 +311,12 @@ MJ_L19: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
 	pop r24 # pop lower bits
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
-
 
 	# Load constant int 5
 	ldi r24,lo8(5)
@@ -364,7 +325,6 @@ MJ_L19: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -372,12 +332,10 @@ MJ_L19: # else branch
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-
 	# Color expression Meggy.Color.RED
 	ldi r22,1
 	# push one byte expression onto stack
 	push r22
-
 
 	### Meggy.setPixel(x,y,color) call
 	# load a one byte expression off stack
@@ -389,9 +347,7 @@ MJ_L19: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-
 MJ_L20: 
-
 
 /* epilogue start */
     endLabel:
