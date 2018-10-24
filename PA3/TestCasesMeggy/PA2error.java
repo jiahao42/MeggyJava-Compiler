@@ -1,3 +1,4 @@
+
 /**
  * PA2error
  * 
@@ -7,7 +8,8 @@
 import meggy.Meggy;
 
 class PA2bluedot {
-       public static void main(String[] whatever){
-               Meggy.setPixel( (byte)84me, (byte)2, Meggy.Color.BLUE );
-        }
+  public static void main(String[] whatever) {
+    Meggy.setPixel(3, (byte)2, Meggy.Color.BLUE);
+    // Meggy.setPixel((byte)84me, (byte)2, Meggy.Color.BLUE);
+  }
 }

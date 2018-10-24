@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 
 import mjparser.*;
+import symtable.SymTable;
 import ast_visitors.*;
 import ast.visitor.*;
 import ast.node.*;
@@ -88,6 +89,8 @@ public class MJDriver {
 					// perform type checking 
 					// TODO: Not implemented Type check yet
 					// ast_root.accept(new CheckTypes(globalST));
+					SymTable globalST = new SymTable();
+					ast_root.accept(new CheckTypes(globalST));
           
 					// Determine whether to do register allocation or not.
 					/* TODO: Not implemented Register Allocation yet
@@ -113,9 +116,9 @@ public class MJDriver {
           java.io.PrintStream avrsout =
               new java.io.PrintStream(
 											new java.io.FileOutputStream(filename + ".s"));
-					// ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout), globalST));
+					ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout), globalST));
 
-					ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout)));
+					// ast_root.accept(new AVRgenVisitor(new PrintWriter(avrsout)));
 					System.out.println("Printing Atmel assembly to " + filename + ".s");
 
         } catch(exceptions.SemanticException e) {

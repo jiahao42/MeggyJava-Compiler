@@ -12,13 +12,17 @@ import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import label.Label;
+import symtable.SymTable;
+import symtable.Type;
 
 public class AVRgenVisitor extends DepthFirstVisitor {
   private PrintWriter out;
+  private SymTable ST;
 
   /** Constructor takes a PrintWriter, and stores in instance var. */
-  public AVRgenVisitor(PrintWriter out) {
+  public AVRgenVisitor(PrintWriter out, SymTable ST) {
     this.out = out;
+    this.ST = ST;
   }
 
   private void write2File(String s) {
@@ -135,11 +139,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outButtonType(ButtonType node) {
     defaultOut(node);
-  }
-
-  @Override
-  public void inByteCast(ByteCast node) {
-    defaultIn(node);
   }
 
   @Override
@@ -376,18 +375,14 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inIntegerExp(IntLiteral node) {
-     write2File(
-        "\n\t# Load constant int " + node.getIntValue() + 
-        "\n\tldi r24,lo8(" + node.getIntValue() + ")" + 
-        "\n\tldi r25,hi8(" + node.getIntValue() + ")" + 
-        "\n\t# push two byte expression onto stack" +
-        "\n\tpush r25 # higher bits" +
-        "\n\tpush r24 # lower bits\n");
-  }
-
-  @Override
-  public void outIntegerExp(IntLiteral node) {
-    defaultOut(node);
+    write2File(
+      "\n\t# Load constant int " + node.getIntValue() + 
+      "\n\tldi r24,lo8(" + node.getIntValue() + ")" + 
+      "\n\tldi r25,hi8(" + node.getIntValue() + ")" + 
+      "\n\t# push two byte expression onto stack" +
+      "\n\tpush r25 # higher bits" +
+      "\n\tpush r24 # lower bits\n"
+    );
   }
 
   @Override
@@ -428,11 +423,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outMainClass(MainClass node) {
     defaultOut(node);
-  }
-
-  @Override
-  public void inMeggyCheckButton(MeggyCheckButton node) {
-    defaultIn(node);
   }
 
   @Override
@@ -477,11 +467,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tpop    r25" +
       "\n\tcall   _Z8delay_msj"
     );
-  }
-
-  @Override
-  public void inMeggyGetPixel(MeggyGetPixel node) {
-    defaultIn(node);
   }
 
   @Override
