@@ -15,7 +15,8 @@ class TypeConversion
 			Meggy.setPixel((byte)7, 4, Meggy.Color.DARK);
 		} else {
 			Meggy.delay((byte)100);
-			Meggy.setPixel((byte)0 ,(byte)0, Meggy.Color.YELLOW);
+			Meggy.setPixel((byte)0 ,(byte)0, Meggy.Color.GREEN);
 		}
+		Meggy.setPixel((byte)7, 2, Meggy.Color.GREEN);
 	}
 }

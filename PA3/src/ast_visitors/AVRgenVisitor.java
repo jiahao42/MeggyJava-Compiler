@@ -26,7 +26,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   private void write2File(String s) {
-    this.out.println(s);
+    this.out.print(s);
   }
 
   private boolean isByte(Type t) {
@@ -52,7 +52,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
        * | higher bits |
        */
       write2File(
-        "\n\t# promote Byte to Int" + 
+        "\n\t## This is a auto typecast: promote Byte to Int" + 
         "\n\tpop r24 # pop byte as the lower bits" + 
         "\n\tldi r25, 0" + 
         "\n\tpush r25" + 
@@ -64,6 +64,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   private void demoteInt2Byte(Node n) {
     if (isInt(getType(n))) {
       dumpWarning(n.getLine(), n.getPos(), "Demoting a INT to BYTE...");
+      write2File("\n\t## This is a auto typecast: demote Int to Byte");
       outByteCast(null);
     }
   }
@@ -749,9 +750,9 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       reader = new BufferedReader(new InputStreamReader(mainPrologue));
       String line = null;
       while ((line = reader.readLine()) != null) {
-         write2File(line);
+        this.out.println(line);
       }
-       write2File("\n");
+      this.out.println("\n");
     } catch (Exception e2) {
       e2.printStackTrace();
     } finally {
@@ -776,7 +777,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       reader = new BufferedReader(new InputStreamReader(mainPrologue));
       String line = null;
       while ((line = reader.readLine()) != null) {
-         write2File(line);
+         this.out.println(line);
       }
     } catch (Exception e2) {
       e2.printStackTrace();

@@ -18,12 +18,8 @@ main:
     call _Z18MeggyJrSimpleSetupv 
     /* Need to call this so that the meggy library gets set up */
 
-
-
 #### if statement
-
 	# start equality check
-
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
@@ -31,14 +27,13 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-
+	## This is a auto typecast: demote Int to Byte
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
 	pop r24 # pop lower bits
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
-
 
 	# Load constant int 2
 	ldi r24,lo8(2)
@@ -47,14 +42,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
 	pop r24 # pop lower bits
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
-
 
 	### Meggy.getPixel(x,y) call
 	# load a one byte expression off stack
@@ -64,12 +57,10 @@ main:
 	call   _Z6ReadPxhh
 	# push one byte expression onto stack
 	push   r24
-
 	# Color expression Meggy.Color.RED
 	ldi r22,1
 	# push one byte expression onto stack
 	push r22
-
 
 	# load a one byte expression off stack
 	pop r18
@@ -85,7 +76,6 @@ MJ_L6: # true branch
 	ldi r24, 1
 MJ_L8: 
 	push r24 # push the result on stack
-
 	ldi r24, 1
 	pop r25
 	cp r24, r25
@@ -112,7 +102,6 @@ MJ_L2: # get comparison result
 	jmp MJ_L4
 
 MJ_L3: # then branch
-
 	# Load constant int 7
 	ldi r24,lo8(7)
 	ldi r25,hi8(7)
@@ -120,14 +109,12 @@ MJ_L3: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
 	pop r24 # pop lower bits
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
-
 
 	# Load constant int 4
 	ldi r24,lo8(4)
@@ -136,7 +123,7 @@ MJ_L3: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-
+	## This is a auto typecast: demote Int to Byte
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -144,12 +131,10 @@ MJ_L3: # then branch
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-
 	# Color expression Meggy.Color.DARK
 	ldi r22,0
 	# push one byte expression onto stack
 	push r22
-
 
 	### Meggy.setPixel(x,y,color) call
 	# load a one byte expression off stack
@@ -161,11 +146,9 @@ MJ_L3: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-
 	jmp MJ_L5 # jump over the else branch
 
 MJ_L4: # else branch
-
 	# Load constant int 100
 	ldi r24,lo8(100)
 	ldi r25,hi8(100)
@@ -173,7 +156,6 @@ MJ_L4: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -181,27 +163,23 @@ MJ_L4: # else branch
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-
-	# promote Byte to Int
+	## This is a auto typecast: promote Byte to Int
 	pop r24 # pop byte as the lower bits
 	ldi r25, 0
 	push r25
 	push r24
-
 	### Meggy.delay() call
 	# load delay parameter
 	# load a two byte expression off stack
 	pop    r24
 	pop    r25
 	call   _Z8delay_msj
-
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
-
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -210,14 +188,12 @@ MJ_L4: # else branch
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
-
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -226,12 +202,10 @@ MJ_L4: # else branch
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-
-	# Color expression Meggy.Color.YELLOW
-	ldi r22,3
+	# Color expression Meggy.Color.GREEN
+	ldi r22,4
 	# push one byte expression onto stack
 	push r22
-
 
 	### Meggy.setPixel(x,y,color) call
 	# load a one byte expression off stack
@@ -243,8 +217,50 @@ MJ_L4: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-
 MJ_L5: 
+	# Load constant int 7
+	ldi r24,lo8(7)
+	ldi r25,hi8(7)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 2
+	ldi r24,lo8(2)
+	ldi r25,hi8(2)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+	## This is a auto typecast: demote Int to Byte
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.GREEN
+	ldi r22,4
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
 
 
 /* epilogue start */
