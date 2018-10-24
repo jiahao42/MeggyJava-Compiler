@@ -29,6 +29,20 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     this.out.println(s);
   }
 
+  private promoteByte2Int() {
+    /**
+     * | lower bits  | 
+     * | higher bits |
+     */
+    write2File(
+      "\n\t# promote Byte to Int" + 
+      "\n\tpop r24 # pop byte as the lower bits" + 
+      "\n\tldi r25, 0" + 
+      "\n\tpush r25" + 
+      "\n\tpush r24"
+    );
+  }
+
   @Override
   public void inAndExp(AndExp node) {
     write2File(
@@ -52,7 +66,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tpop r25" + 
       "\n\tcp r24, r25" +
       "\n\tbrne " + falseBranch + " # if the left expr is false" + 
-      "\n\n" + trueBranch + ": # if left expr is true"
+      "\n\n" + trueBranch + ": # if left expr is true" + 
+      "\n\t# &&: right operand"
     );
     if (node.getRExp() != null) {
       node.getRExp().accept(this);
@@ -143,13 +158,14 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outByteCast(ByteCast node) {
-     write2File(
-        "\n\t# Casting int to byte by popping" +
-        "\n\t# 2 bytes off stack and only pushing low order bits" +
-        "\n\t# back on.  Low order bits are on top of stack." +
-        "\n\tpop r24 # pop lower bits" +
-        "\n\tpop r25 # pop higher bits" +
-        "\n\tpush r24 # push lower bits back \n");
+    write2File(
+      "\n\t# Casting int to byte by popping" +
+      "\n\t# 2 bytes off stack and only pushing low order bits" +
+      "\n\t# back on.  Low order bits are on top of stack." +
+      "\n\tpop r24 # pop lower bits" +
+      "\n\tpop r25 # pop higher bits" +
+      "\n\tpush r24 # push lower bits back \n"
+    );
   }
 
   @Override

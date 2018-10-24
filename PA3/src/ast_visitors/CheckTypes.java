@@ -261,7 +261,7 @@ public class CheckTypes extends DepthFirstVisitor {
       node.getExp().accept(this);
 		}
 		if (!isBoolean(getType(node.getExp()))) {
-			throw new SemanticException("Invalid condition types for if statement, expect BOOL", node.getLine(),
+			throw new SemanticException("Invalid condition type for if statement, expect BOOL", node.getLine(),
 			node.getPos());
 		}
     if (node.getThenStatement() != null) {
@@ -279,7 +279,7 @@ public class CheckTypes extends DepthFirstVisitor {
       node.getExp().accept(this);
 		}
 		if (!isBoolean(getType(node.getExp()))) {
-			throw new SemanticException("Invalid condition types for while statement, expect BOOL", node.getLine(),
+			throw new SemanticException("Invalid condition type for while statement, expect BOOL", node.getLine(),
 			node.getPos());
 		}
     if (node.getStatement() != null) {
