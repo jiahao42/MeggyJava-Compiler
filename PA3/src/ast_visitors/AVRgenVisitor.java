@@ -29,19 +29,40 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     this.out.println(s);
   }
 
-  private promoteByte2Int() {
-    /**
-     * | lower bits  | 
-     * | higher bits |
-     */
-    write2File(
-      "\n\t# promote Byte to Int" + 
-      "\n\tpop r24 # pop byte as the lower bits" + 
-      "\n\tldi r25, 0" + 
-      "\n\tpush r25" + 
-      "\n\tpush r24"
-    );
+  private boolean isByte(Type t) {
+		return t == Type.BYTE;
   }
+
+  private boolean isInt(Type t) {
+		return t == Type.INT;
+  }
+
+  // promote Byte to Int if possible
+  private void promoteByte2Int(Node n) {
+    if (isByte(getType(n))) {
+      /**
+       * | lower bits  | 
+       * | higher bits |
+       */
+      write2File(
+        "\n\t# promote Byte to Int" + 
+        "\n\tpop r24 # pop byte as the lower bits" + 
+        "\n\tldi r25, 0" + 
+        "\n\tpush r25" + 
+        "\n\tpush r24"
+      );
+    }
+  }
+
+  private void demoteInt2Byte(Node n) {
+    if (isInt(getType(n))) {
+      outByteCast(null);
+    }
+  }
+  
+  private Type getType(Node node) {
+		return this.ST.getExpType(node);
+	}
 
   @Override
   public void inAndExp(AndExp node) {
@@ -474,6 +495,16 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
+  public void visitMeggyDelay(MeggyDelay node) {
+    inMeggyDelay(node);
+    if (node.getExp() != null) {
+      node.getExp().accept(this);
+      promoteByte2Int(node.getExp());
+    }
+    outMeggyDelay(node);
+  }
+
+  @Override
   public void outMeggyDelay(MeggyDelay node) {
     write2File(
       "\n\t### Meggy.delay() call" +
@@ -483,6 +514,22 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tpop    r25" +
       "\n\tcall   _Z8delay_msj"
     );
+  }
+
+  @Override
+  public void visitMeggyGetPixel(MeggyGetPixel node) {
+    inMeggyGetPixel(node);
+    if (node.getXExp() != null) {
+      node.getXExp().accept(this);
+      demoteInt2Byte(node.getXExp());
+    }
+
+    if (node.getYExp() != null) {
+      node.getYExp().accept(this);
+      demoteInt2Byte(node.getYExp());
+    }
+
+    outMeggyGetPixel(node);
   }
 
   @Override
@@ -511,6 +558,25 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void inMeggySetPixel(MeggySetPixel node) {
     defaultIn(node);
+  }
+
+  @Override
+  public void visitMeggySetPixel(MeggySetPixel node) {
+    inMeggySetPixel(node);
+    if (node.getXExp() != null) {
+      node.getXExp().accept(this);
+      demoteInt2Byte(node.getXExp());
+    }
+    
+    if (node.getYExp() != null) {
+      node.getYExp().accept(this);
+      demoteInt2Byte(node.getYExp());
+    }
+    
+    if (node.getColor() != null) {
+      node.getColor().accept(this);
+    }
+    outMeggySetPixel(node);
   }
 
   @Override
