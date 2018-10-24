@@ -34,6 +34,18 @@ public class CheckTypes extends DepthFirstVisitor {
 		mCurrentST = st;
 	}
 
+	private boolean isIntOrByte(Type t) {
+		return (t == Type.INT || t == Type.BYTE);
+	}
+
+	private boolean isBoolean(Type t) {
+		return t == Type.BOOL;
+	}
+
+	private boolean isButton(Type t) {
+		return t == Type.BUTTON;
+	}
+
 	// ========================= Overriding the visitor interface
 
 	@Override
@@ -41,6 +53,7 @@ public class CheckTypes extends DepthFirstVisitor {
 		System.err.println("Node not implemented in CheckTypes, " + node.getClass());
 	}
 
+	/** Experssions **/
 	/* Literals */
 	@Override
 	public void inIntegerExp(IntLiteral node) {
@@ -72,21 +85,31 @@ public class CheckTypes extends DepthFirstVisitor {
 		this.mCurrentST.setExpType(node, Type.BOOL);
 	}
 
-	// @Override
-  // public void inMeggyCheckButton(MeggyCheckButton node) {
-  //   this.mCurrentST.setExpType(node, Type.BOOL);
-	// }
+	/* Functions */
+	@Override
+  public void inMeggyCheckButton(MeggyCheckButton node) {
+		if (isButton(node.getExp())) {
+			this.mCurrentST.setExpType(node, Type.BOOL);
+		} else {
+			throw new SemanticException("Invalid parameters of Meggy.checkButton, expect Meggy.Button", node.getExp().getLine(),
+			node.getExp().getPos());
+		}
+	}
 	
-	// @Override
-  // public void inMeggyGetPixel(MeggyGetPixel node) {
-  //   this.mCurrentST.setExpType(node, Type.COLOR);
-	// }
+	@Override
+  public void inMeggyGetPixel(MeggyGetPixel node) {
+		Type x = this.mCurrentST.getExpType(node.getLExp);
+		Type y = this.mCurrentST.getExpType(node.getRExp);
+		if (isIntOrByte(x) && isIntOrByte(y)) {
+			this.mCurrentST.setExpType(node, Type.COLOR);
+		} else {
+			throw new SemanticException("Invalid parameters of Meggy.getPixel, expect INT or BYTE", node.getLExp().getLine(),
+					node.getLExp().getPos());
+		}
+	}
 	
-	// @Override
-  // public void inByteCast(ByteCast node) {
-  //   this.mCurrentST.setExpType(node, Type.BYTE);
-	// }
-	
+	/* Operators */
+
 	@Override
 	public void outAndExp(AndExp node) {
 		if (this.mCurrentST.getExpType(node.getLExp()) != Type.BOOL) {
@@ -106,11 +129,21 @@ public class CheckTypes extends DepthFirstVisitor {
 	public void outPlusExp(PlusExp node) {
 		Type lexpType = this.mCurrentST.getExpType(node.getLExp());
 		Type rexpType = this.mCurrentST.getExpType(node.getRExp());
-		if ((lexpType == Type.INT || lexpType == Type.BYTE) && (rexpType == Type.INT || rexpType == Type.BYTE)) {
+		if (isIntOrByte(lexpType) && isIntOrByte(rexpType)) {
 			this.mCurrentST.setExpType(node, Type.INT);
 		} else {
-			throw new SemanticException("Operands to + operator must be INT or BYTE", node.getLExp().getLine(),
+			throw new SemanticException("Invalid operands of operator +, expect INT or BYTE", node.getLExp().getLine(),
 					node.getLExp().getPos());
+		}
+	}
+	
+	@Override
+	public void inByteCast(ByteCast node) {
+		if (isIntOrByte(node.getExp())) {
+			this.mCurrentST.setExpType(node, Type.BYTE);
+		} else {
+			throw new SemanticException("Invalid operand type for byte cast, expect INT", node.getExp().getLine(),
+					node.getExp().getPos());
 		}
 	}
 
