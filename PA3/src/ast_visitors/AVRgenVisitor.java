@@ -37,9 +37,16 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 		return t == Type.INT;
   }
 
+  private void dumpWarning(int line, int pos, String msg) {
+    if (msg != null) {
+      System.out.println("[" + line + "," + pos + "]: Warning: " + msg);
+    }
+  }
+
   // promote Byte to Int if possible
   private void promoteByte2Int(Node n) {
     if (isByte(getType(n))) {
+      dumpWarning(n.getLine(), n.getPos(), "Promoting a BYTE to INT...");
       /**
        * | lower bits  | 
        * | higher bits |
@@ -56,6 +63,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   private void demoteInt2Byte(Node n) {
     if (isInt(getType(n))) {
+      dumpWarning(n.getLine(), n.getPos(), "Demoting a INT to BYTE...");
       outByteCast(null);
     }
   }
