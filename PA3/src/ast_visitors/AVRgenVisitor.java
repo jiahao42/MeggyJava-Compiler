@@ -628,6 +628,20 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
+  public void visitMinusExp(MinusExp node) {
+    inMinusExp(node);
+    if (node.getLExp() != null) {
+      node.getLExp().accept(this);
+      promoteByte2Int(node.getLExp());
+    }
+    if (node.getRExp() != null) {
+      node.getRExp().accept(this);
+      promoteByte2Int(node.getRExp());
+    }
+    outMinusExp(node);
+  }
+
+  @Override
   public void outMinusExp(MinusExp node) {
     write2File(
       "\n\t# load a two byte expression off stack" +
@@ -651,9 +665,29 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
+  public void visitMulExp(MulExp node) {
+    inMulExp(node);
+    if (node.getLExp() != null) {
+      node.getLExp().accept(this);
+      demoteInt2Byte(node.getLExp());
+    }
+    if (node.getRExp() != null) {
+      node.getRExp().accept(this);
+      demoteInt2Byte(node.getRExp());
+    }
+    outMulExp(node);
+  }
+
+  @Override
   public void outMulExp(MulExp node) {
-    // TODO: don't know how to do it yet
-    defaultOut(node);
+    write2File(
+      "\n\t# Do Mul Operation" +
+      "\n\tpop r24" +
+      "\n\tpop r25" +
+      "\n\tmul r24, r25" +
+      "\n\tpush r24" +
+      "\n\tpush r25"
+    );
   }
 
   @Override
@@ -718,6 +752,20 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void inPlusExp(PlusExp node) {
      write2File("# start a add operation");
+  }
+
+  @Override
+  public void visitPlusExp(PlusExp node) {
+    inPlusExp(node);
+    if (node.getLExp() != null) {
+      node.getLExp().accept(this);
+      promoteByte2Int(node.getLExp());
+    }
+    if (node.getRExp() != null) {
+      node.getRExp().accept(this);
+      promoteByte2Int(node.getRExp());
+    }
+    outPlusExp(node);
   }
 
   @Override
