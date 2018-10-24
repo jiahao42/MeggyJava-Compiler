@@ -212,4 +212,14 @@ public class CheckTypes extends DepthFirstVisitor {
 					node.getPos());
 		}
 	}
+
+	@Override
+  public void outNotExp(NotExp node) {
+		if (isBoolean(getType(node.getExp()))) {
+			setType(node, Type.BOOL);
+		} else {
+			throw new SemanticException("Invalid operand type for !, expect BOOL", node.getLine(),
+					node.getPos());
+		}
+  }
 }
