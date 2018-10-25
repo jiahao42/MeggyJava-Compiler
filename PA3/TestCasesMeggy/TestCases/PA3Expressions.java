@@ -24,7 +24,7 @@ class PA3Expressions {
 	                        Meggy.Color.YELLOW);
 
                 // Unary Minus
-	        Meggy.setPixel( (byte)(-(2+1)+8), (byte)(10+-5), Meggy.Color.DARK);
+					Meggy.setPixel( (byte)(-(2+1)+8), (byte)(10+-5), Meggy.Color.DARK);
                 // watch it! spaces significant
 	        Meggy.setPixel( (byte)( (byte)(0 - - -6) * (byte)(-1)), (byte)(10+-5), Meggy.Color.ORANGE);
 	        

@@ -37,6 +37,14 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 		return t == Type.INT;
   }
 
+  private Type getType(Node node) {
+		return this.ST.getExpType(node);
+  }
+  
+  private void setType(Node node, Type t) {
+		this.ST.setExpType(node, t);
+  }
+  
   private void dumpWarning(int line, int pos, String msg) {
     if (msg != null) {
       System.out.println("[" + line + "," + pos + "]: Warning: " + msg);
@@ -46,6 +54,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   // promote Byte to Int if possible
   private void promoteByte2Int(Node n) {
     if (isByte(getType(n))) {
+      setType(n, Type.INT);
       dumpWarning(n.getLine(), n.getPos(), "Promoting a BYTE to INT...");
       /**
        * | lower bits  | 
@@ -63,15 +72,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   private void demoteInt2Byte(Node n) {
     if (isInt(getType(n))) {
+      setType(n, Type.BYTE);
       dumpWarning(n.getLine(), n.getPos(), "Demoting a INT to BYTE...");
       write2File("\n\t## This is a auto typecast: demote Int to Byte");
       outByteCast(null);
     }
   }
-  
-  private Type getType(Node node) {
-		return this.ST.getExpType(node);
-	}
 
   @Override
   public void inAndExp(AndExp node) {
@@ -189,7 +195,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outByteCast(ByteCast node) {
     // if it's already byte, do nothing
-    if (!isByte(getType(node.getExp()))) {
+    // if (!isByte(getType(node.getExp()))) {
       write2File(
         "\n\t# Casting int to byte by popping" +
         "\n\t# 2 bytes off stack and only pushing low order bits" +
@@ -198,7 +204,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         "\n\tpop r25 # pop higher bits" +
         "\n\tpush r24 # push lower bits back \n"
       );
-    }
+    // }
   }
 
   @Override
@@ -647,19 +653,17 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outMinusExp(MinusExp node) {
     write2File(
-      "\n\t# load a two byte expression off stack" +
-      "\n\tpop    r18" +
-      "\n\tpop    r19" +
-      "\n\t# load a two byte expression off stack" +
-      "\n\tpop    r24" +
-      "\n\tpop    r25" +
+      "\n\t# x = x - y" + 
+      "\n\tpop r18 # lower bits of y" +
+      "\n\tpop r19 # higher bits of y" +
+      "\n\tpop r24 # lower bits of x" +
+      "\n\tpop r25 # higher bits of x" +
       "\n\t# Do INT sub operation" +
       "\n\tsub    r24, r18" +
       "\n\tsbc    r25, r19" +
-      "\n\t# push hi order byte first" +
       "\n\t# push two byte expression onto stack" +
-      "\n\tpush   r25" +
-      "\n\tpush   r24");
+      "\n\tpush   r25 # higher bits" +
+      "\n\tpush   r24 # lower bits");
   }
 
   @Override
@@ -732,16 +736,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   public void outNegExp(NegExp node) {
     write2File(
     "\n\t# neg int" +
-    "\n\t# load a two byte expression off stack" +
     "\n\tpop r24" +
     "\n\tpop r25" +
-    "\n\tldi r22, 0" +
-    "\n\tldi r23, 0" +
-    "\n\tsub r22, r24" +
-    "\n\tsbc r23, r25" +
-    "\n\t# push two byte expression back to stack" +
-    "\n\tpush r23" +
-    "\n\tpush r22");
+    "\n\tldi r18, 0" + 
+    "\n\tpush r18" + 
+    "\n\tpush r18" + 
+    "\n\tpush r25" + 
+    "\n\tpush r24"
+    );
+    outMinusExp(null);
   }
 
   @Override
