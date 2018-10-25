@@ -195,16 +195,16 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outByteCast(ByteCast node) {
     // if it's already byte, do nothing
-    // if (!isByte(getType(node.getExp()))) {
+    if (node != null && !isByte(getType(node.getExp()))) {
       write2File(
-        "\n\t# Casting int to byte by popping" +
+        "\n\n\t# Casting int to byte by popping" +
         "\n\t# 2 bytes off stack and only pushing low order bits" +
         "\n\t# back on.  Low order bits are on top of stack." +
         "\n\tpop r24 # pop lower bits" +
         "\n\tpop r25 # pop higher bits" +
         "\n\tpush r24 # push lower bits back \n"
       );
-    // }
+    }
   }
 
   @Override

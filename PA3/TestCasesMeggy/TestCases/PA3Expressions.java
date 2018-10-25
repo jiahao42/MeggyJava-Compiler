@@ -25,7 +25,8 @@ class PA3Expressions {
 
                 // Unary Minus
 					Meggy.setPixel( (byte)(-(2+1)+8), (byte)(10+-5), Meggy.Color.DARK);
-                // watch it! spaces significant
+								// watch it! spaces significant
+								// The problem lies in the byte conversion of negative number 
 	        Meggy.setPixel( (byte)( (byte)(0 - - -6) * (byte)(-1)), (byte)(10+-5), Meggy.Color.ORANGE);
 	        
 	        // Mixed Integer and Byte

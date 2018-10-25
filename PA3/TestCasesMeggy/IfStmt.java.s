@@ -208,16 +208,24 @@ MJ_L5:
 	push r24 # lower bits
 
 	# neg int
-	# load a two byte expression off stack
 	pop r24
 	pop r25
-	ldi r22, 0
-	ldi r23, 0
-	sub r22, r24
-	sbc r23, r25
-	# push two byte expression back to stack
-	push r23
-	push r22
+	ldi r18, 0
+	push r18
+	push r18
+	push r25
+	push r24
+	# x = x - y
+	pop r18 # lower bits of y
+	pop r19 # higher bits of y
+	pop r24 # lower bits of x
+	pop r25 # higher bits of x
+	# Do INT sub operation
+	sub    r24, r18
+	sbc    r25, r19
+	# push two byte expression onto stack
+	push   r25 # higher bits
+	push   r24 # lower bits
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
@@ -232,19 +240,17 @@ MJ_L5:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
-	pop    r18
-	pop    r19
-	# load a two byte expression off stack
-	pop    r24
-	pop    r25
+	# x = x - y
+	pop r18 # lower bits of y
+	pop r19 # higher bits of y
+	pop r24 # lower bits of x
+	pop r25 # higher bits of x
 	# Do INT sub operation
 	sub    r24, r18
 	sbc    r25, r19
-	# push hi order byte first
 	# push two byte expression onto stack
-	push   r25
-	push   r24
+	push   r25 # higher bits
+	push   r24 # lower bits
 	# load a one byte expression off stack
 	pop r18
 	# load a one byte expression off stack
@@ -429,16 +435,24 @@ MJ_L14:
 	push r24 # lower bits
 
 	# neg int
-	# load a two byte expression off stack
 	pop r24
 	pop r25
-	ldi r22, 0
-	ldi r23, 0
-	sub r22, r24
-	sbc r23, r25
-	# push two byte expression back to stack
-	push r23
-	push r22
+	ldi r18, 0
+	push r18
+	push r18
+	push r25
+	push r24
+	# x = x - y
+	pop r18 # lower bits of y
+	pop r19 # higher bits of y
+	pop r24 # lower bits of x
+	pop r25 # higher bits of x
+	# Do INT sub operation
+	sub    r24, r18
+	sbc    r25, r19
+	# push two byte expression onto stack
+	push   r25 # higher bits
+	push   r24 # lower bits
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
@@ -453,19 +467,17 @@ MJ_L14:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
-	pop    r18
-	pop    r19
-	# load a two byte expression off stack
-	pop    r24
-	pop    r25
+	# x = x - y
+	pop r18 # lower bits of y
+	pop r19 # higher bits of y
+	pop r24 # lower bits of x
+	pop r25 # higher bits of x
 	# Do INT sub operation
 	sub    r24, r18
 	sbc    r25, r19
-	# push hi order byte first
 	# push two byte expression onto stack
-	push   r25
-	push   r24
+	push   r25 # higher bits
+	push   r24 # lower bits
 	# load a one byte expression off stack
 	pop r18
 	# load a one byte expression off stack
@@ -693,16 +705,24 @@ MJ_L32:
 	push r24 # lower bits
 
 	# neg int
-	# load a two byte expression off stack
 	pop r24
 	pop r25
-	ldi r22, 0
-	ldi r23, 0
-	sub r22, r24
-	sbc r23, r25
-	# push two byte expression back to stack
-	push r23
-	push r22
+	ldi r18, 0
+	push r18
+	push r18
+	push r25
+	push r24
+	# x = x - y
+	pop r18 # lower bits of y
+	pop r19 # higher bits of y
+	pop r24 # lower bits of x
+	pop r25 # higher bits of x
+	# Do INT sub operation
+	sub    r24, r18
+	sbc    r25, r19
+	# push two byte expression onto stack
+	push   r25 # higher bits
+	push   r24 # lower bits
 	# start a add operation
 	# Load constant int 1
 	ldi r24,lo8(1)
@@ -1000,16 +1020,24 @@ MJ_L50:
 	push r24 # lower bits
 
 	# neg int
-	# load a two byte expression off stack
 	pop r24
 	pop r25
-	ldi r22, 0
-	ldi r23, 0
-	sub r22, r24
-	sbc r23, r25
-	# push two byte expression back to stack
-	push r23
-	push r22
+	ldi r18, 0
+	push r18
+	push r18
+	push r25
+	push r24
+	# x = x - y
+	pop r18 # lower bits of y
+	pop r19 # higher bits of y
+	pop r24 # lower bits of x
+	pop r25 # higher bits of x
+	# Do INT sub operation
+	sub    r24, r18
+	sbc    r25, r19
+	# push two byte expression onto stack
+	push   r25 # higher bits
+	push   r24 # lower bits
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
@@ -1024,19 +1052,17 @@ MJ_L50:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
-	pop    r18
-	pop    r19
-	# load a two byte expression off stack
-	pop    r24
-	pop    r25
+	# x = x - y
+	pop r18 # lower bits of y
+	pop r19 # higher bits of y
+	pop r24 # lower bits of x
+	pop r25 # higher bits of x
 	# Do INT sub operation
 	sub    r24, r18
 	sbc    r25, r19
-	# push hi order byte first
 	# push two byte expression onto stack
-	push   r25
-	push   r24
+	push   r25 # higher bits
+	push   r24 # lower bits
 	# load a one byte expression off stack
 	pop r18
 	# load a one byte expression off stack
