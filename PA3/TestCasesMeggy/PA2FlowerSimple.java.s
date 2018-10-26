@@ -27,6 +27,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -40,6 +41,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -70,6 +72,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -83,6 +86,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -113,6 +117,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -126,6 +131,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -156,6 +162,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -169,6 +176,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -198,6 +206,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -212,6 +221,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -242,6 +252,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -255,6 +266,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -285,6 +297,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -298,6 +311,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -328,6 +342,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -341,6 +356,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -371,6 +387,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -384,6 +401,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -413,6 +431,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -427,6 +446,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -457,6 +477,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -470,6 +491,52 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.VIOLET
+	ldi r22,6
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -500,48 +567,6 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.VIOLET
-	ldi r22,6
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -557,6 +582,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -586,6 +612,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -599,6 +626,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -629,6 +657,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -642,6 +671,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -671,6 +701,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -686,6 +717,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -714,6 +746,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -729,6 +762,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -758,6 +792,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -771,6 +806,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -801,6 +837,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -814,6 +851,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -844,48 +882,6 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 4
-	ldi r24,lo8(4)
-	ldi r25,hi8(4)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.VIOLET
-	ldi r22,6
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-	# Load constant int 5
-	ldi r24,lo8(5)
-	ldi r25,hi8(5)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -901,91 +897,6 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.VIOLET
-	ldi r22,6
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-	# Load constant int 6
-	ldi r24,lo8(6)
-	ldi r25,hi8(6)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 5
-	ldi r24,lo8(5)
-	ldi r25,hi8(5)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.VIOLET
-	ldi r22,6
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-	# Load constant int 6
-	ldi r24,lo8(6)
-	ldi r25,hi8(6)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 6
-	ldi r24,lo8(6)
-	ldi r25,hi8(6)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1016,6 +927,97 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 4
+	ldi r24,lo8(4)
+	ldi r25,hi8(4)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.VIOLET
+	ldi r22,6
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+	# Load constant int 6
+	ldi r24,lo8(6)
+	ldi r25,hi8(6)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 5
+	ldi r24,lo8(5)
+	ldi r25,hi8(5)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.VIOLET
+	ldi r22,6
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+	# Load constant int 6
+	ldi r24,lo8(6)
+	ldi r25,hi8(6)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -1029,6 +1031,52 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.VIOLET
+	ldi r22,6
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+	# Load constant int 5
+	ldi r24,lo8(5)
+	ldi r25,hi8(5)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 6
+	ldi r24,lo8(6)
+	ldi r25,hi8(6)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1059,6 +1107,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -1072,6 +1121,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits

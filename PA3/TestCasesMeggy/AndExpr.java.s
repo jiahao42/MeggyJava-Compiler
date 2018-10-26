@@ -31,6 +31,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -44,6 +45,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -81,6 +83,7 @@ MJ_L9: # if left expr is true
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -94,6 +97,7 @@ MJ_L9: # if left expr is true
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -156,6 +160,7 @@ MJ_L3: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -169,6 +174,7 @@ MJ_L3: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -202,6 +208,7 @@ MJ_L4: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -215,6 +222,7 @@ MJ_L4: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -250,6 +258,7 @@ MJ_L5:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -263,6 +272,7 @@ MJ_L5:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -300,6 +310,7 @@ MJ_L24: # if left expr is true
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -313,6 +324,7 @@ MJ_L24: # if left expr is true
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -375,6 +387,7 @@ MJ_L18: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -388,6 +401,7 @@ MJ_L18: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -421,6 +435,7 @@ MJ_L19: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -434,6 +449,7 @@ MJ_L19: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -469,6 +485,7 @@ MJ_L20:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -482,6 +499,7 @@ MJ_L20:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -532,6 +550,7 @@ MJ_L39: # if left expr is true
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -545,6 +564,7 @@ MJ_L39: # if left expr is true
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -620,6 +640,7 @@ MJ_L33: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -633,6 +654,7 @@ MJ_L33: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -666,6 +688,7 @@ MJ_L34: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -679,6 +702,7 @@ MJ_L34: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -714,6 +738,7 @@ MJ_L35:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -727,6 +752,7 @@ MJ_L35:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -777,6 +803,7 @@ MJ_L54: # if left expr is true
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -790,6 +817,7 @@ MJ_L54: # if left expr is true
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -865,6 +893,7 @@ MJ_L48: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -878,6 +907,7 @@ MJ_L48: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -911,6 +941,7 @@ MJ_L49: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -924,6 +955,7 @@ MJ_L49: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits

@@ -690,14 +690,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outMulExp(MulExp node) {
     write2File(
-      "\n\t# Do Mul Operation" +
-      "\n\tpop r24 "+
-      "\n\tpop r25" +
-      "\n\tmuls r24, r25" +
-      "\n\tpush r24 # lower bits" +
-      "\n\tpush r24 # higher bits"
-    );
-    write2File(
       "\n\n\t# MulExp, only works for byte" + 
       "\n\t# load a one byte expression off stack" + 
       "\n\tpop    r18" + 

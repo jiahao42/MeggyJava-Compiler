@@ -910,12 +910,6 @@ main:
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-	# Do Mul Operation
-	pop r24 
-	pop r25
-	muls r24, r25
-	push r24 # lower bits
-	push r24 # higher bits
 
 	# MulExp, only works for byte
 	# load a one byte expression off stack
@@ -1146,12 +1140,6 @@ main:
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-	# Do Mul Operation
-	pop r24 
-	pop r25
-	muls r24, r25
-	push r24 # lower bits
-	push r24 # higher bits
 
 	# MulExp, only works for byte
 	# load a one byte expression off stack

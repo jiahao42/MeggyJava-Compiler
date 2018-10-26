@@ -27,6 +27,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -40,6 +41,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -78,10 +80,10 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -97,28 +99,24 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
 	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	push   r23
+	push   r22
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -134,9 +132,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -160,6 +161,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -173,6 +175,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -200,27 +203,27 @@ main:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L6 # goto true branch
-MJ_L7: # false branch
+	breq MJ_L8 # goto true branch
+MJ_L9: # false branch
 	ldi r24, 0
-	jmp MJ_L8
-MJ_L6: # true branch
+	jmp MJ_L10
+MJ_L8: # true branch
 	ldi r24, 1
-MJ_L8: 
+MJ_L10: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L0
+	breq MJ_L2
 
-MJ_L1: # false branch
+MJ_L3: # false branch
 	ldi r24, 0
-	jmp MJ_L2
+	jmp MJ_L4
 
-MJ_L0: # true branch
+MJ_L2: # true branch
 	ldi r24, 1
 
-MJ_L2: # get comparison result
+MJ_L4: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -230,16 +233,17 @@ MJ_L2: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L3
-	jmp MJ_L4
+	breq MJ_L5
+	jmp MJ_L6
 
-MJ_L3: # then branch
+MJ_L5: # then branch
 	# Load constant int 2
 	ldi r24,lo8(2)
 	ldi r25,hi8(2)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -254,6 +258,7 @@ MJ_L3: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -277,10 +282,10 @@ MJ_L3: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L5 # jump over the else branch
+	jmp MJ_L7 # jump over the else branch
 
-MJ_L4: # else branch
-MJ_L5: 
+MJ_L6: # else branch
+MJ_L7: 
 #### if statement
 	# start equality check
 	#push Meggy.Button.Up
@@ -292,12 +297,12 @@ MJ_L5:
 	lds    r24, Button_Up
 	# if button value is zero, push 0 else push 1
 	tst    r24 # Test for Zero or Minus
-	breq MJ_L16 # goto false branch
-MJ_L15: # if true
+	breq MJ_L18 # goto false branch
+MJ_L17: # if true
 	ldi r24, 1
-	jmp MJ_L17
-MJ_L16: # false branch, r24 is already 0, do nothing
-MJ_L17: 
+	jmp MJ_L19
+MJ_L18: # false branch, r24 is already 0, do nothing
+MJ_L19: 
 	push r24
 	# True/1 expression
 	ldi    r22, 1
@@ -309,27 +314,27 @@ MJ_L17:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L18 # goto true branch
-MJ_L19: # false branch
+	breq MJ_L20 # goto true branch
+MJ_L21: # false branch
 	ldi r24, 0
-	jmp MJ_L20
-MJ_L18: # true branch
+	jmp MJ_L22
+MJ_L20: # true branch
 	ldi r24, 1
-MJ_L20: 
+MJ_L22: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L9
+	breq MJ_L11
 
-MJ_L10: # false branch
+MJ_L12: # false branch
 	ldi r24, 0
-	jmp MJ_L11
+	jmp MJ_L13
 
-MJ_L9: # true branch
+MJ_L11: # true branch
 	ldi r24, 1
 
-MJ_L11: # get comparison result
+MJ_L13: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -339,14 +344,14 @@ MJ_L11: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L12
-	jmp MJ_L13
+	breq MJ_L14
+	jmp MJ_L15
 
-MJ_L12: # then branch
-	jmp MJ_L14 # jump over the else branch
+MJ_L14: # then branch
+	jmp MJ_L16 # jump over the else branch
 
-MJ_L13: # else branch
-MJ_L14: 
+MJ_L15: # else branch
+MJ_L16: 
 
 /* epilogue start */
     endLabel:

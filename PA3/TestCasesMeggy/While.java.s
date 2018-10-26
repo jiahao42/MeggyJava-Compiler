@@ -27,6 +27,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -40,6 +41,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -74,6 +76,7 @@ MJ_L0: # while loop condition
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -87,6 +90,7 @@ MJ_L0: # while loop condition
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -137,6 +141,7 @@ MJ_L1: # while loop body
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -150,6 +155,7 @@ MJ_L1: # while loop body
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -180,6 +186,7 @@ MJ_L1: # while loop body
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -193,6 +200,7 @@ MJ_L1: # while loop body
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -223,6 +231,7 @@ MJ_L1: # while loop body
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -236,6 +245,7 @@ MJ_L1: # while loop body
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -266,6 +276,7 @@ MJ_L1: # while loop body
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -279,6 +290,7 @@ MJ_L1: # while loop body
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -312,6 +324,7 @@ MJ_L2:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -325,6 +338,7 @@ MJ_L2:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits

@@ -33,6 +33,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -46,6 +47,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -158,10 +160,10 @@ MJ_L3: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -170,6 +172,7 @@ MJ_L3: # then branch
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -191,9 +194,12 @@ MJ_L3: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -202,6 +208,7 @@ MJ_L3: # then branch
 	# push two byte expression onto stack
 	push   r25 # higher bits
 	push   r24 # lower bits
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -234,6 +241,7 @@ MJ_L4: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -247,6 +255,7 @@ MJ_L4: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits

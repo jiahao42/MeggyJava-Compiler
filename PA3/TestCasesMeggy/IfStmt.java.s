@@ -30,6 +30,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -49,10 +50,10 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -115,6 +116,7 @@ MJ_L3: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -128,6 +130,7 @@ MJ_L3: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -161,6 +164,7 @@ MJ_L4: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -174,6 +178,7 @@ MJ_L4: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -207,25 +212,18 @@ MJ_L5:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
 	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	push   r23
+	push   r22
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
@@ -240,9 +238,12 @@ MJ_L5:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -257,13 +258,13 @@ MJ_L5:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L15 # goto true branch
-MJ_L16: # false branch
+	breq MJ_L17 # goto true branch
+MJ_L18: # false branch
 	ldi r24, 0
-	jmp MJ_L17
-MJ_L15: # true branch
+	jmp MJ_L19
+MJ_L17: # true branch
 	ldi r24, 1
-MJ_L17: 
+MJ_L19: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
@@ -300,6 +301,7 @@ MJ_L12: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -314,6 +316,7 @@ MJ_L12: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -327,6 +330,24 @@ MJ_L12: # then branch
 	muls r24, r25
 	push r24 # lower bits
 	push r24 # higher bits
+
+	# MulExp, only works for byte
+	# load a one byte expression off stack
+	pop    r18
+	# load a one byte expression off stack
+	pop    r22
+	# move low byte src into dest reg
+	mov    r24, r18
+	# move low byte src into dest reg
+	mov    r26, r22
+	# Do mul operation of two input bytes
+	muls   r24, r26
+	# push two byte expression onto stack
+	push   r1
+	push   r0
+	# clear r0 and r1
+	eor    r0,r0
+	eor    r1,r1
 	# Load constant int 6
 	ldi r24,lo8(6)
 	ldi r25,hi8(6)
@@ -340,27 +361,27 @@ MJ_L12: # then branch
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L24 # goto true branch
-MJ_L25: # false branch
+	breq MJ_L26 # goto true branch
+MJ_L27: # false branch
 	ldi r24, 0
-	jmp MJ_L26
-MJ_L24: # true branch
+	jmp MJ_L28
+MJ_L26: # true branch
 	ldi r24, 1
-MJ_L26: 
+MJ_L28: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L18
+	breq MJ_L20
 
-MJ_L19: # false branch
+MJ_L21: # false branch
 	ldi r24, 0
-	jmp MJ_L20
+	jmp MJ_L22
 
-MJ_L18: # true branch
+MJ_L20: # true branch
 	ldi r24, 1
 
-MJ_L20: # get comparison result
+MJ_L22: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -370,16 +391,17 @@ MJ_L20: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L21
-	jmp MJ_L22
+	breq MJ_L23
+	jmp MJ_L24
 
-MJ_L21: # then branch
+MJ_L23: # then branch
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -394,6 +416,7 @@ MJ_L21: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -417,10 +440,10 @@ MJ_L21: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L23 # jump over the else branch
+	jmp MJ_L25 # jump over the else branch
 
-MJ_L22: # else branch
-MJ_L23: 
+MJ_L24: # else branch
+MJ_L25: 
 	jmp MJ_L14 # jump over the else branch
 
 MJ_L13: # else branch
@@ -434,25 +457,18 @@ MJ_L14:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
 	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	push   r23
+	push   r22
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
@@ -467,9 +483,12 @@ MJ_L14:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -484,27 +503,27 @@ MJ_L14:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L33 # goto true branch
-MJ_L34: # false branch
+	breq MJ_L37 # goto true branch
+MJ_L38: # false branch
 	ldi r24, 0
-	jmp MJ_L35
-MJ_L33: # true branch
+	jmp MJ_L39
+MJ_L37: # true branch
 	ldi r24, 1
-MJ_L35: 
+MJ_L39: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L27
+	breq MJ_L29
 
-MJ_L28: # false branch
+MJ_L30: # false branch
 	ldi r24, 0
-	jmp MJ_L29
+	jmp MJ_L31
 
-MJ_L27: # true branch
+MJ_L29: # true branch
 	ldi r24, 1
 
-MJ_L29: # get comparison result
+MJ_L31: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -514,10 +533,10 @@ MJ_L29: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L30
-	jmp MJ_L31
+	breq MJ_L32
+	jmp MJ_L33
 
-MJ_L30: # then branch
+MJ_L32: # then branch
 #### if statement
 	# start equality check
 	# Load constant int 2
@@ -526,6 +545,7 @@ MJ_L30: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -540,6 +560,7 @@ MJ_L30: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -554,6 +575,24 @@ MJ_L30: # then branch
 	muls r24, r25
 	push r24 # lower bits
 	push r24 # higher bits
+
+	# MulExp, only works for byte
+	# load a one byte expression off stack
+	pop    r18
+	# load a one byte expression off stack
+	pop    r22
+	# move low byte src into dest reg
+	mov    r24, r18
+	# move low byte src into dest reg
+	mov    r26, r22
+	# Do mul operation of two input bytes
+	muls   r24, r26
+	# push two byte expression onto stack
+	push   r1
+	push   r0
+	# clear r0 and r1
+	eor    r0,r0
+	eor    r1,r1
 	# Load constant int 7
 	ldi r24,lo8(7)
 	ldi r25,hi8(7)
@@ -567,27 +606,27 @@ MJ_L30: # then branch
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L42 # goto true branch
-MJ_L43: # false branch
+	breq MJ_L46 # goto true branch
+MJ_L47: # false branch
 	ldi r24, 0
-	jmp MJ_L44
-MJ_L42: # true branch
+	jmp MJ_L48
+MJ_L46: # true branch
 	ldi r24, 1
-MJ_L44: 
+MJ_L48: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L36
+	breq MJ_L40
 
-MJ_L37: # false branch
+MJ_L41: # false branch
 	ldi r24, 0
-	jmp MJ_L38
+	jmp MJ_L42
 
-MJ_L36: # true branch
+MJ_L40: # true branch
 	ldi r24, 1
 
-MJ_L38: # get comparison result
+MJ_L42: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -597,16 +636,17 @@ MJ_L38: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L39
-	jmp MJ_L40
+	breq MJ_L43
+	jmp MJ_L44
 
-MJ_L39: # then branch
+MJ_L43: # then branch
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -621,6 +661,7 @@ MJ_L39: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -644,15 +685,16 @@ MJ_L39: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L41 # jump over the else branch
+	jmp MJ_L45 # jump over the else branch
 
-MJ_L40: # else branch
+MJ_L44: # else branch
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -667,6 +709,7 @@ MJ_L40: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -690,11 +733,11 @@ MJ_L40: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L41: 
-	jmp MJ_L32 # jump over the else branch
+MJ_L45: 
+	jmp MJ_L34 # jump over the else branch
 
-MJ_L31: # else branch
-MJ_L32: 
+MJ_L33: # else branch
+MJ_L34: 
 #### if statement
 	# start equality check
 	# Load constant int 2
@@ -704,25 +747,18 @@ MJ_L32:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
 	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	push   r23
+	push   r22
 	# start a add operation
 	# Load constant int 1
 	ldi r24,lo8(1)
@@ -738,10 +774,10 @@ MJ_L32:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -756,27 +792,27 @@ MJ_L32:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L51 # goto true branch
-MJ_L52: # false branch
+	breq MJ_L57 # goto true branch
+MJ_L58: # false branch
 	ldi r24, 0
-	jmp MJ_L53
-MJ_L51: # true branch
+	jmp MJ_L59
+MJ_L57: # true branch
 	ldi r24, 1
-MJ_L53: 
+MJ_L59: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L45
+	breq MJ_L49
 
-MJ_L46: # false branch
+MJ_L50: # false branch
 	ldi r24, 0
-	jmp MJ_L47
+	jmp MJ_L51
 
-MJ_L45: # true branch
+MJ_L49: # true branch
 	ldi r24, 1
 
-MJ_L47: # get comparison result
+MJ_L51: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -786,10 +822,10 @@ MJ_L47: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L48
-	jmp MJ_L49
+	breq MJ_L52
+	jmp MJ_L53
 
-MJ_L48: # then branch
+MJ_L52: # then branch
 #### if statement
 	# start equality check
 	# Load constant int 2
@@ -798,6 +834,7 @@ MJ_L48: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -813,6 +850,7 @@ MJ_L48: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -826,6 +864,24 @@ MJ_L48: # then branch
 	muls r24, r25
 	push r24 # lower bits
 	push r24 # higher bits
+
+	# MulExp, only works for byte
+	# load a one byte expression off stack
+	pop    r18
+	# load a one byte expression off stack
+	pop    r22
+	# move low byte src into dest reg
+	mov    r24, r18
+	# move low byte src into dest reg
+	mov    r26, r22
+	# Do mul operation of two input bytes
+	muls   r24, r26
+	# push two byte expression onto stack
+	push   r1
+	push   r0
+	# clear r0 and r1
+	eor    r0,r0
+	eor    r1,r1
 	# Load constant int 6
 	ldi r24,lo8(6)
 	ldi r25,hi8(6)
@@ -839,27 +895,27 @@ MJ_L48: # then branch
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L60 # goto true branch
-MJ_L61: # false branch
+	breq MJ_L66 # goto true branch
+MJ_L67: # false branch
 	ldi r24, 0
-	jmp MJ_L62
-MJ_L60: # true branch
+	jmp MJ_L68
+MJ_L66: # true branch
 	ldi r24, 1
-MJ_L62: 
+MJ_L68: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L54
+	breq MJ_L60
 
-MJ_L55: # false branch
+MJ_L61: # false branch
 	ldi r24, 0
-	jmp MJ_L56
+	jmp MJ_L62
 
-MJ_L54: # true branch
+MJ_L60: # true branch
 	ldi r24, 1
 
-MJ_L56: # get comparison result
+MJ_L62: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -869,16 +925,17 @@ MJ_L56: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L57
-	jmp MJ_L58
+	breq MJ_L63
+	jmp MJ_L64
 
-MJ_L57: # then branch
+MJ_L63: # then branch
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -893,6 +950,7 @@ MJ_L57: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -916,15 +974,16 @@ MJ_L57: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L59 # jump over the else branch
+	jmp MJ_L65 # jump over the else branch
 
-MJ_L58: # else branch
+MJ_L64: # else branch
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -939,6 +998,7 @@ MJ_L58: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -962,16 +1022,17 @@ MJ_L58: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L59: 
-	jmp MJ_L50 # jump over the else branch
+MJ_L65: 
+	jmp MJ_L54 # jump over the else branch
 
-MJ_L49: # else branch
+MJ_L53: # else branch
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -986,6 +1047,7 @@ MJ_L49: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1009,7 +1071,7 @@ MJ_L49: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L50: 
+MJ_L54: 
 #### if statement
 	# start equality check
 	# Load constant int 2
@@ -1019,25 +1081,18 @@ MJ_L50:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
 	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	push   r23
+	push   r22
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
@@ -1052,9 +1107,12 @@ MJ_L50:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -1069,27 +1127,27 @@ MJ_L50:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L69 # goto true branch
-MJ_L70: # false branch
+	breq MJ_L77 # goto true branch
+MJ_L78: # false branch
 	ldi r24, 0
-	jmp MJ_L71
-MJ_L69: # true branch
+	jmp MJ_L79
+MJ_L77: # true branch
 	ldi r24, 1
-MJ_L71: 
+MJ_L79: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L63
+	breq MJ_L69
 
-MJ_L64: # false branch
+MJ_L70: # false branch
 	ldi r24, 0
-	jmp MJ_L65
+	jmp MJ_L71
 
-MJ_L63: # true branch
+MJ_L69: # true branch
 	ldi r24, 1
 
-MJ_L65: # get comparison result
+MJ_L71: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -1099,10 +1157,10 @@ MJ_L65: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L66
-	jmp MJ_L67
+	breq MJ_L72
+	jmp MJ_L73
 
-MJ_L66: # then branch
+MJ_L72: # then branch
 #### if statement
 	# start equality check
 	# Load constant int 2
@@ -1111,6 +1169,7 @@ MJ_L66: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1126,6 +1185,7 @@ MJ_L66: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -1139,6 +1199,24 @@ MJ_L66: # then branch
 	muls r24, r25
 	push r24 # lower bits
 	push r24 # higher bits
+
+	# MulExp, only works for byte
+	# load a one byte expression off stack
+	pop    r18
+	# load a one byte expression off stack
+	pop    r22
+	# move low byte src into dest reg
+	mov    r24, r18
+	# move low byte src into dest reg
+	mov    r26, r22
+	# Do mul operation of two input bytes
+	muls   r24, r26
+	# push two byte expression onto stack
+	push   r1
+	push   r0
+	# clear r0 and r1
+	eor    r0,r0
+	eor    r1,r1
 	# Load constant int 7
 	ldi r24,lo8(7)
 	ldi r25,hi8(7)
@@ -1152,27 +1230,27 @@ MJ_L66: # then branch
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L78 # goto true branch
-MJ_L79: # false branch
+	breq MJ_L86 # goto true branch
+MJ_L87: # false branch
 	ldi r24, 0
-	jmp MJ_L80
-MJ_L78: # true branch
+	jmp MJ_L88
+MJ_L86: # true branch
 	ldi r24, 1
-MJ_L80: 
+MJ_L88: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L72
+	breq MJ_L80
 
-MJ_L73: # false branch
+MJ_L81: # false branch
 	ldi r24, 0
-	jmp MJ_L74
+	jmp MJ_L82
 
-MJ_L72: # true branch
+MJ_L80: # true branch
 	ldi r24, 1
 
-MJ_L74: # get comparison result
+MJ_L82: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -1182,16 +1260,17 @@ MJ_L74: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L75
-	jmp MJ_L76
+	breq MJ_L83
+	jmp MJ_L84
 
-MJ_L75: # then branch
+MJ_L83: # then branch
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1206,6 +1285,7 @@ MJ_L75: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1229,9 +1309,9 @@ MJ_L75: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L77 # jump over the else branch
+	jmp MJ_L85 # jump over the else branch
 
-MJ_L76: # else branch
+MJ_L84: # else branch
 #### if statement
 	# start equality check
 	# Load constant int 2
@@ -1254,27 +1334,27 @@ MJ_L76: # else branch
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L87 # goto true branch
-MJ_L88: # false branch
+	breq MJ_L95 # goto true branch
+MJ_L96: # false branch
 	ldi r24, 0
-	jmp MJ_L89
-MJ_L87: # true branch
+	jmp MJ_L97
+MJ_L95: # true branch
 	ldi r24, 1
-MJ_L89: 
+MJ_L97: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L81
+	breq MJ_L89
 
-MJ_L82: # false branch
+MJ_L90: # false branch
 	ldi r24, 0
-	jmp MJ_L83
+	jmp MJ_L91
 
-MJ_L81: # true branch
+MJ_L89: # true branch
 	ldi r24, 1
 
-MJ_L83: # get comparison result
+MJ_L91: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -1284,16 +1364,17 @@ MJ_L83: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L84
-	jmp MJ_L85
+	breq MJ_L92
+	jmp MJ_L93
 
-MJ_L84: # then branch
+MJ_L92: # then branch
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1308,6 +1389,7 @@ MJ_L84: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1331,15 +1413,16 @@ MJ_L84: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L86 # jump over the else branch
+	jmp MJ_L94 # jump over the else branch
 
-MJ_L85: # else branch
+MJ_L93: # else branch
 	# Load constant int 0
 	ldi r24,lo8(0)
 	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1354,6 +1437,7 @@ MJ_L85: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1377,12 +1461,12 @@ MJ_L85: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L86: 
-MJ_L77: 
-	jmp MJ_L68 # jump over the else branch
+MJ_L94: 
+MJ_L85: 
+	jmp MJ_L74 # jump over the else branch
 
-MJ_L67: # else branch
-MJ_L68: 
+MJ_L73: # else branch
+MJ_L74: 
 
 /* epilogue start */
     endLabel:

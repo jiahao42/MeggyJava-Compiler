@@ -27,6 +27,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -41,6 +42,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -54,6 +56,25 @@ main:
 	muls r24, r25
 	push r24 # lower bits
 	push r24 # higher bits
+
+	# MulExp, only works for byte
+	# load a one byte expression off stack
+	pop    r18
+	# load a one byte expression off stack
+	pop    r22
+	# move low byte src into dest reg
+	mov    r24, r18
+	# move low byte src into dest reg
+	mov    r26, r22
+	# Do mul operation of two input bytes
+	muls   r24, r26
+	# push two byte expression onto stack
+	push   r1
+	push   r0
+	# clear r0 and r1
+	eor    r0,r0
+	eor    r1,r1
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -68,6 +89,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -88,10 +110,10 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -100,6 +122,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.

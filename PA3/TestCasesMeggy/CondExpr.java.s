@@ -29,25 +29,18 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
 	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	push   r23
+	push   r22
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
@@ -62,9 +55,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -79,13 +75,13 @@ main:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L6 # goto true branch
-MJ_L7: # false branch
+	breq MJ_L8 # goto true branch
+MJ_L9: # false branch
 	ldi r24, 0
-	jmp MJ_L8
-MJ_L6: # true branch
+	jmp MJ_L10
+MJ_L8: # true branch
 	ldi r24, 1
-MJ_L8: 
+MJ_L10: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
@@ -120,6 +116,7 @@ MJ_L3: # then branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -133,6 +130,7 @@ MJ_L3: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -166,6 +164,7 @@ MJ_L4: # else branch
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -179,6 +178,7 @@ MJ_L4: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -212,6 +212,7 @@ MJ_L5:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -234,25 +235,19 @@ MJ_L5:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
 	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	push   r23
+	push   r22
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -260,63 +255,53 @@ MJ_L5:
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-	## This is a auto typecast: promote Byte to Int
-	pop r24 # pop byte as the lower bits
-	ldi r25, 0
-	push r25
-	push r24
-	# neg int
+
+	# neg byte
+	# load a one byte expression off stack
 	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
-	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
-	## This is a auto typecast: promote Byte to Int
-	pop r24 # pop byte as the lower bits
+	# promoting a byte to an int
+	tst r24
+	brlt MJ_L19
 	ldi r25, 0
-	push r25
-	push r24
-	# neg int
+	jmp MJ_L20
+MJ_L19: 
+	ldi r25, hi8(-1)
+MJ_L20: 
+	ldi r22, 0
+	ldi r23, 0
+	sub r22, r24
+	sbc r23, r25
+	# pushtwo byte expression onto stack
+	push r23
+	push r22
+
+	# neg byte
+	# load a one byte expression off stack
 	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
-	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	# promoting a byte to an int
+	tst r24
+	brlt MJ_L21
+	ldi r25, 0
+	jmp MJ_L22
+MJ_L21: 
+	ldi r25, hi8(-1)
+MJ_L22: 
+	ldi r22, 0
+	ldi r23, 0
+	sub r22, r24
+	sbc r23, r25
+	# pushtwo byte expression onto stack
+	push r23
+	push r22
 	## This is a auto typecast: promote Byte to Int
 	pop r24 # pop byte as the lower bits
 	ldi r25, 0
 	push r25
 	push r24
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -331,27 +316,27 @@ MJ_L5:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L15 # goto true branch
-MJ_L16: # false branch
+	breq MJ_L23 # goto true branch
+MJ_L24: # false branch
 	ldi r24, 0
-	jmp MJ_L17
-MJ_L15: # true branch
+	jmp MJ_L25
+MJ_L23: # true branch
 	ldi r24, 1
-MJ_L17: 
+MJ_L25: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L9
+	breq MJ_L11
 
-MJ_L10: # false branch
+MJ_L12: # false branch
 	ldi r24, 0
-	jmp MJ_L11
+	jmp MJ_L13
 
-MJ_L9: # true branch
+MJ_L11: # true branch
 	ldi r24, 1
 
-MJ_L11: # get comparison result
+MJ_L13: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -361,16 +346,17 @@ MJ_L11: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L12
-	jmp MJ_L13
+	breq MJ_L14
+	jmp MJ_L15
 
-MJ_L12: # then branch
+MJ_L14: # then branch
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -385,6 +371,7 @@ MJ_L12: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -408,15 +395,16 @@ MJ_L12: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L14 # jump over the else branch
+	jmp MJ_L16 # jump over the else branch
 
-MJ_L13: # else branch
+MJ_L15: # else branch
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -431,6 +419,7 @@ MJ_L13: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -454,7 +443,7 @@ MJ_L13: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L14: 
+MJ_L16: 
 #### if statement
 	# start equality check
 	# Load constant int 4
@@ -464,31 +453,25 @@ MJ_L14:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
 	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	push   r23
+	push   r22
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -509,9 +492,12 @@ MJ_L14:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -526,27 +512,27 @@ MJ_L14:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L24 # goto true branch
-MJ_L25: # false branch
+	breq MJ_L34 # goto true branch
+MJ_L35: # false branch
 	ldi r24, 0
-	jmp MJ_L26
-MJ_L24: # true branch
+	jmp MJ_L36
+MJ_L34: # true branch
 	ldi r24, 1
-MJ_L26: 
+MJ_L36: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L18
+	breq MJ_L26
 
-MJ_L19: # false branch
+MJ_L27: # false branch
 	ldi r24, 0
-	jmp MJ_L20
+	jmp MJ_L28
 
-MJ_L18: # true branch
+MJ_L26: # true branch
 	ldi r24, 1
 
-MJ_L20: # get comparison result
+MJ_L28: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -556,16 +542,17 @@ MJ_L20: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L21
-	jmp MJ_L22
+	breq MJ_L29
+	jmp MJ_L30
 
-MJ_L21: # then branch
+MJ_L29: # then branch
 	# Load constant int 2
 	ldi r24,lo8(2)
 	ldi r25,hi8(2)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -580,6 +567,7 @@ MJ_L21: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -603,15 +591,16 @@ MJ_L21: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L23 # jump over the else branch
+	jmp MJ_L31 # jump over the else branch
 
-MJ_L22: # else branch
+MJ_L30: # else branch
 	# Load constant int 2
 	ldi r24,lo8(2)
 	ldi r25,hi8(2)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -626,6 +615,7 @@ MJ_L22: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -649,7 +639,7 @@ MJ_L22: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L23: 
+MJ_L31: 
 #### if statement
 	# start equality check
 	# Load constant int 6
@@ -659,25 +649,19 @@ MJ_L23:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
 	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	push   r23
+	push   r22
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -692,25 +676,18 @@ MJ_L23:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
 	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	push   r23
+	push   r22
 	# Load constant int 5
 	ldi r24,lo8(5)
 	ldi r25,hi8(5)
@@ -718,9 +695,12 @@ MJ_L23:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -729,6 +709,7 @@ MJ_L23:
 	# push two byte expression onto stack
 	push   r25 # higher bits
 	push   r24 # lower bits
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -742,390 +723,47 @@ MJ_L23:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L33 # goto true branch
-MJ_L34: # false branch
+	breq MJ_L47 # goto true branch
+MJ_L48: # false branch
 	ldi r24, 0
-	jmp MJ_L35
-MJ_L33: # true branch
-	ldi r24, 1
-MJ_L35: 
-	push r24 # push the result on stack
-	ldi r24, 1
-	pop r25
-	cp r24, r25
-	breq MJ_L27
-
-MJ_L28: # false branch
-	ldi r24, 0
-	jmp MJ_L29
-
-MJ_L27: # true branch
-	ldi r24, 1
-
-MJ_L29: # get comparison result
-	# push comparison result onto stack
-	push r24
-	# load condition and branch if false
-	# load a one byte expression off stack
-	pop r24
-	# load one into reg
-	ldi r25, 1
-	# use cp to set SREG
-	cp r24, r25
-	breq MJ_L30
-	jmp MJ_L31
-
-MJ_L30: # then branch
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 1
-	ldi r24,lo8(1)
-	ldi r25,hi8(1)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.GREEN
-	ldi r22,4
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-	jmp MJ_L32 # jump over the else branch
-
-MJ_L31: # else branch
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 1
-	ldi r24,lo8(1)
-	ldi r25,hi8(1)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.RED
-	ldi r22,1
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-MJ_L32: 
-#### if statement
-	# start equality check
-	# start a add operation
-	# Load constant int 512
-	ldi r24,lo8(512)
-	ldi r25,hi8(512)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Load constant int 512
-	ldi r24,lo8(512)
-	ldi r25,hi8(512)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# load a two byte expression off stack
-	pop    r18
-	pop    r19
-	# load a two byte expression off stack
-	pop    r24
-	pop    r25
-	# Do add operation
-	add    r24, r18
-	adc    r25, r19
-	# push two byte expression onto stack
-	push   r25
-	push   r24
-	# Load constant int 1024
-	ldi r24,lo8(1024)
-	ldi r25,hi8(1024)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# load a one byte expression off stack
-	pop r18
-	# load a one byte expression off stack
-	pop r24
-	# compare the operands
-	cp r24, r18
-	breq MJ_L42 # goto true branch
-MJ_L43: # false branch
-	ldi r24, 0
-	jmp MJ_L44
-MJ_L42: # true branch
-	ldi r24, 1
-MJ_L44: 
-	push r24 # push the result on stack
-	ldi r24, 1
-	pop r25
-	cp r24, r25
-	breq MJ_L36
-
-MJ_L37: # false branch
-	ldi r24, 0
-	jmp MJ_L38
-
-MJ_L36: # true branch
-	ldi r24, 1
-
-MJ_L38: # get comparison result
-	# push comparison result onto stack
-	push r24
-	# load condition and branch if false
-	# load a one byte expression off stack
-	pop r24
-	# load one into reg
-	ldi r25, 1
-	# use cp to set SREG
-	cp r24, r25
-	breq MJ_L39
-	jmp MJ_L40
-
-MJ_L39: # then branch
-	# Load constant int 0
-	ldi r24,lo8(0)
-	ldi r25,hi8(0)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 2
-	ldi r24,lo8(2)
-	ldi r25,hi8(2)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.GREEN
-	ldi r22,4
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-	jmp MJ_L41 # jump over the else branch
-
-MJ_L40: # else branch
-	# Load constant int 0
-	ldi r24,lo8(0)
-	ldi r25,hi8(0)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 2
-	ldi r24,lo8(2)
-	ldi r25,hi8(2)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.RED
-	ldi r22,1
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-MJ_L41: 
-#### if statement
-	# start equality check
-	# start a add operation
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Load constant int 2
-	ldi r24,lo8(2)
-	ldi r25,hi8(2)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	## This is a auto typecast: promote Byte to Int
-	pop r24 # pop byte as the lower bits
-	ldi r25, 0
-	push r25
-	push r24
-	# load a two byte expression off stack
-	pop    r18
-	pop    r19
-	# load a two byte expression off stack
-	pop    r24
-	pop    r25
-	# Do add operation
-	add    r24, r18
-	adc    r25, r19
-	# push two byte expression onto stack
-	push   r25
-	push   r24
-	# Load constant int 5
-	ldi r24,lo8(5)
-	ldi r25,hi8(5)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# load a one byte expression off stack
-	pop r18
-	# load a one byte expression off stack
-	pop r24
-	# compare the operands
-	cp r24, r18
-	breq MJ_L51 # goto true branch
-MJ_L52: # false branch
-	ldi r24, 0
-	jmp MJ_L53
-MJ_L51: # true branch
-	ldi r24, 1
-MJ_L53: 
-	push r24 # push the result on stack
-	ldi r24, 1
-	pop r25
-	cp r24, r25
-	breq MJ_L45
-
-MJ_L46: # false branch
-	ldi r24, 0
-	jmp MJ_L47
-
-MJ_L45: # true branch
-	ldi r24, 1
-
-MJ_L47: # get comparison result
-	# push comparison result onto stack
-	push r24
-	# load condition and branch if false
-	# load a one byte expression off stack
-	pop r24
-	# load one into reg
-	ldi r25, 1
-	# use cp to set SREG
-	cp r24, r25
-	breq MJ_L48
 	jmp MJ_L49
+MJ_L47: # true branch
+	ldi r24, 1
+MJ_L49: 
+	push r24 # push the result on stack
+	ldi r24, 1
+	pop r25
+	cp r24, r25
+	breq MJ_L37
 
-MJ_L48: # then branch
-	# Load constant int 1
-	ldi r24,lo8(1)
-	ldi r25,hi8(1)
+MJ_L38: # false branch
+	ldi r24, 0
+	jmp MJ_L39
+
+MJ_L37: # true branch
+	ldi r24, 1
+
+MJ_L39: # get comparison result
+	# push comparison result onto stack
+	push r24
+	# load condition and branch if false
+	# load a one byte expression off stack
+	pop r24
+	# load one into reg
+	ldi r25, 1
+	# use cp to set SREG
+	cp r24, r25
+	breq MJ_L40
+	jmp MJ_L41
+
+MJ_L40: # then branch
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1134,12 +772,13 @@ MJ_L48: # then branch
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-	# Load constant int 2
-	ldi r24,lo8(2)
-	ldi r25,hi8(2)
+	# Load constant int 1
+	ldi r24,lo8(1)
+	ldi r25,hi8(1)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1163,15 +802,16 @@ MJ_L48: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L50 # jump over the else branch
+	jmp MJ_L42 # jump over the else branch
 
-MJ_L49: # else branch
-	# Load constant int 1
-	ldi r24,lo8(1)
-	ldi r25,hi8(1)
+MJ_L41: # else branch
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1180,12 +820,13 @@ MJ_L49: # else branch
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-	# Load constant int 2
-	ldi r24,lo8(2)
-	ldi r25,hi8(2)
+	# Load constant int 1
+	ldi r24,lo8(1)
+	ldi r25,hi8(1)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1209,7 +850,177 @@ MJ_L49: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L50: 
+MJ_L42: 
+#### if statement
+	# start equality check
+	# start a add operation
+	# Load constant int 512
+	ldi r24,lo8(512)
+	ldi r25,hi8(512)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+	# Load constant int 512
+	ldi r24,lo8(512)
+	ldi r25,hi8(512)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+	# left operand of +
+	pop    r18
+	pop    r19
+	# right operand of +
+	pop    r24
+	pop    r25
+	# Do add operation
+	add    r24, r18
+	adc    r25, r19
+	# push two byte expression onto stack
+	push   r25
+	push   r24
+	# Load constant int 1024
+	ldi r24,lo8(1024)
+	ldi r25,hi8(1024)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+	# load a one byte expression off stack
+	pop r18
+	# load a one byte expression off stack
+	pop r24
+	# compare the operands
+	cp r24, r18
+	breq MJ_L56 # goto true branch
+MJ_L57: # false branch
+	ldi r24, 0
+	jmp MJ_L58
+MJ_L56: # true branch
+	ldi r24, 1
+MJ_L58: 
+	push r24 # push the result on stack
+	ldi r24, 1
+	pop r25
+	cp r24, r25
+	breq MJ_L50
+
+MJ_L51: # false branch
+	ldi r24, 0
+	jmp MJ_L52
+
+MJ_L50: # true branch
+	ldi r24, 1
+
+MJ_L52: # get comparison result
+	# push comparison result onto stack
+	push r24
+	# load condition and branch if false
+	# load a one byte expression off stack
+	pop r24
+	# load one into reg
+	ldi r25, 1
+	# use cp to set SREG
+	cp r24, r25
+	breq MJ_L53
+	jmp MJ_L54
+
+MJ_L53: # then branch
+	# Load constant int 0
+	ldi r24,lo8(0)
+	ldi r25,hi8(0)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 2
+	ldi r24,lo8(2)
+	ldi r25,hi8(2)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.GREEN
+	ldi r22,4
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+	jmp MJ_L55 # jump over the else branch
+
+MJ_L54: # else branch
+	# Load constant int 0
+	ldi r24,lo8(0)
+	ldi r25,hi8(0)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 2
+	ldi r24,lo8(2)
+	ldi r25,hi8(2)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.RED
+	ldi r22,1
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+MJ_L55: 
 #### if statement
 	# start equality check
 	# start a add operation
@@ -1219,6 +1030,190 @@ MJ_L50:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
+	# Load constant int 2
+	ldi r24,lo8(2)
+	ldi r25,hi8(2)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	## This is a auto typecast: promote Byte to Int
+	pop r24 # pop byte as the lower bits
+	ldi r25, 0
+	push r25
+	push r24
+	# left operand of +
+	pop    r18
+	pop    r19
+	# right operand of +
+	pop    r24
+	pop    r25
+	# Do add operation
+	add    r24, r18
+	adc    r25, r19
+	# push two byte expression onto stack
+	push   r25
+	push   r24
+	# Load constant int 5
+	ldi r24,lo8(5)
+	ldi r25,hi8(5)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+	# load a one byte expression off stack
+	pop r18
+	# load a one byte expression off stack
+	pop r24
+	# compare the operands
+	cp r24, r18
+	breq MJ_L65 # goto true branch
+MJ_L66: # false branch
+	ldi r24, 0
+	jmp MJ_L67
+MJ_L65: # true branch
+	ldi r24, 1
+MJ_L67: 
+	push r24 # push the result on stack
+	ldi r24, 1
+	pop r25
+	cp r24, r25
+	breq MJ_L59
+
+MJ_L60: # false branch
+	ldi r24, 0
+	jmp MJ_L61
+
+MJ_L59: # true branch
+	ldi r24, 1
+
+MJ_L61: # get comparison result
+	# push comparison result onto stack
+	push r24
+	# load condition and branch if false
+	# load a one byte expression off stack
+	pop r24
+	# load one into reg
+	ldi r25, 1
+	# use cp to set SREG
+	cp r24, r25
+	breq MJ_L62
+	jmp MJ_L63
+
+MJ_L62: # then branch
+	# Load constant int 1
+	ldi r24,lo8(1)
+	ldi r25,hi8(1)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 2
+	ldi r24,lo8(2)
+	ldi r25,hi8(2)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.GREEN
+	ldi r22,4
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+	jmp MJ_L64 # jump over the else branch
+
+MJ_L63: # else branch
+	# Load constant int 1
+	ldi r24,lo8(1)
+	ldi r25,hi8(1)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 2
+	ldi r24,lo8(2)
+	ldi r25,hi8(2)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.RED
+	ldi r22,1
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+MJ_L64: 
+#### if statement
+	# start equality check
+	# start a add operation
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1239,10 +1234,10 @@ MJ_L50:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -1264,27 +1259,27 @@ MJ_L50:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L60 # goto true branch
-MJ_L61: # false branch
+	breq MJ_L74 # goto true branch
+MJ_L75: # false branch
 	ldi r24, 0
-	jmp MJ_L62
-MJ_L60: # true branch
+	jmp MJ_L76
+MJ_L74: # true branch
 	ldi r24, 1
-MJ_L62: 
+MJ_L76: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L54
+	breq MJ_L68
 
-MJ_L55: # false branch
+MJ_L69: # false branch
 	ldi r24, 0
-	jmp MJ_L56
+	jmp MJ_L70
 
-MJ_L54: # true branch
+MJ_L68: # true branch
 	ldi r24, 1
 
-MJ_L56: # get comparison result
+MJ_L70: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -1294,16 +1289,17 @@ MJ_L56: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L57
-	jmp MJ_L58
+	breq MJ_L71
+	jmp MJ_L72
 
-MJ_L57: # then branch
+MJ_L71: # then branch
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1318,6 +1314,7 @@ MJ_L57: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1341,15 +1338,16 @@ MJ_L57: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L59 # jump over the else branch
+	jmp MJ_L73 # jump over the else branch
 
-MJ_L58: # else branch
+MJ_L72: # else branch
 	# Load constant int 1
 	ldi r24,lo8(1)
 	ldi r25,hi8(1)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1364,6 +1362,7 @@ MJ_L58: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1387,7 +1386,7 @@ MJ_L58: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L59: 
+MJ_L73: 
 #### if statement
 	# start equality check
 	# start a add operation
@@ -1405,10 +1404,10 @@ MJ_L59:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -1417,6 +1416,7 @@ MJ_L59:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -1431,6 +1431,7 @@ MJ_L59:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -1444,27 +1445,27 @@ MJ_L59:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L69 # goto true branch
-MJ_L70: # false branch
+	breq MJ_L83 # goto true branch
+MJ_L84: # false branch
 	ldi r24, 0
-	jmp MJ_L71
-MJ_L69: # true branch
+	jmp MJ_L85
+MJ_L83: # true branch
 	ldi r24, 1
-MJ_L71: 
+MJ_L85: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L63
+	breq MJ_L77
 
-MJ_L64: # false branch
+MJ_L78: # false branch
 	ldi r24, 0
-	jmp MJ_L65
+	jmp MJ_L79
 
-MJ_L63: # true branch
+MJ_L77: # true branch
 	ldi r24, 1
 
-MJ_L65: # get comparison result
+MJ_L79: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -1474,16 +1475,17 @@ MJ_L65: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L66
-	jmp MJ_L67
+	breq MJ_L80
+	jmp MJ_L81
 
-MJ_L66: # then branch
+MJ_L80: # then branch
 	# Load constant int 3
 	ldi r24,lo8(3)
 	ldi r25,hi8(3)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1498,6 +1500,7 @@ MJ_L66: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1521,15 +1524,16 @@ MJ_L66: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L68 # jump over the else branch
+	jmp MJ_L82 # jump over the else branch
 
-MJ_L67: # else branch
+MJ_L81: # else branch
 	# Load constant int 3
 	ldi r24,lo8(3)
 	ldi r25,hi8(3)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1544,6 +1548,7 @@ MJ_L67: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1567,7 +1572,7 @@ MJ_L67: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L68: 
+MJ_L82: 
 #### if statement
 	# start equality check
 	# Load constant int 0
@@ -1584,9 +1589,12 @@ MJ_L68:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -1609,9 +1617,12 @@ MJ_L68:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -1626,434 +1637,47 @@ MJ_L68:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L78 # goto true branch
-MJ_L79: # false branch
+	breq MJ_L92 # goto true branch
+MJ_L93: # false branch
 	ldi r24, 0
-	jmp MJ_L80
-MJ_L78: # true branch
-	ldi r24, 1
-MJ_L80: 
-	push r24 # push the result on stack
-	ldi r24, 1
-	pop r25
-	cp r24, r25
-	breq MJ_L72
-
-MJ_L73: # false branch
-	ldi r24, 0
-	jmp MJ_L74
-
-MJ_L72: # true branch
-	ldi r24, 1
-
-MJ_L74: # get comparison result
-	# push comparison result onto stack
-	push r24
-	# load condition and branch if false
-	# load a one byte expression off stack
-	pop r24
-	# load one into reg
-	ldi r25, 1
-	# use cp to set SREG
-	cp r24, r25
-	breq MJ_L75
-	jmp MJ_L76
-
-MJ_L75: # then branch
-	# Load constant int 0
-	ldi r24,lo8(0)
-	ldi r25,hi8(0)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.GREEN
-	ldi r22,4
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-	jmp MJ_L77 # jump over the else branch
-
-MJ_L76: # else branch
-	# Load constant int 0
-	ldi r24,lo8(0)
-	ldi r25,hi8(0)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.RED
-	ldi r22,1
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-MJ_L77: 
-#### if statement
-	# start equality check
-	# Load constant int 0
-	ldi r24,lo8(0)
-	ldi r25,hi8(0)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	## This is a auto typecast: promote Byte to Int
-	pop r24 # pop byte as the lower bits
-	ldi r25, 0
-	push r25
-	push r24
-	# Load constant int 32
-	ldi r24,lo8(32)
-	ldi r25,hi8(32)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
-	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
-	# Load constant int 512
-	ldi r24,lo8(512)
-	ldi r25,hi8(512)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Load constant int 544
-	ldi r24,lo8(544)
-	ldi r25,hi8(544)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
-	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
-	# load a one byte expression off stack
-	pop r18
-	# load a one byte expression off stack
-	pop r24
-	# compare the operands
-	cp r24, r18
-	breq MJ_L87 # goto true branch
-MJ_L88: # false branch
-	ldi r24, 0
-	jmp MJ_L89
-MJ_L87: # true branch
-	ldi r24, 1
-MJ_L89: 
-	push r24 # push the result on stack
-	ldi r24, 1
-	pop r25
-	cp r24, r25
-	breq MJ_L81
-
-MJ_L82: # false branch
-	ldi r24, 0
-	jmp MJ_L83
-
-MJ_L81: # true branch
-	ldi r24, 1
-
-MJ_L83: # get comparison result
-	# push comparison result onto stack
-	push r24
-	# load condition and branch if false
-	# load a one byte expression off stack
-	pop r24
-	# load one into reg
-	ldi r25, 1
-	# use cp to set SREG
-	cp r24, r25
-	breq MJ_L84
-	jmp MJ_L85
-
-MJ_L84: # then branch
-	# Load constant int 1
-	ldi r24,lo8(1)
-	ldi r25,hi8(1)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.GREEN
-	ldi r22,4
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-	jmp MJ_L86 # jump over the else branch
-
-MJ_L85: # else branch
-	# Load constant int 1
-	ldi r24,lo8(1)
-	ldi r25,hi8(1)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.RED
-	ldi r22,1
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-MJ_L86: 
-#### if statement
-	# start equality check
-	# Load constant int 0
-	ldi r24,lo8(0)
-	ldi r25,hi8(0)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Load constant int 32
-	ldi r24,lo8(32)
-	ldi r25,hi8(32)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	## This is a auto typecast: promote Byte to Int
-	pop r24 # pop byte as the lower bits
-	ldi r25, 0
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
-	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
-	# Load constant int 512
-	ldi r24,lo8(512)
-	ldi r25,hi8(512)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Load constant int 544
-	ldi r24,lo8(544)
-	ldi r25,hi8(544)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
-	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
-	# load a one byte expression off stack
-	pop r18
-	# load a one byte expression off stack
-	pop r24
-	# compare the operands
-	cp r24, r18
-	breq MJ_L96 # goto true branch
-MJ_L97: # false branch
-	ldi r24, 0
-	jmp MJ_L98
-MJ_L96: # true branch
-	ldi r24, 1
-MJ_L98: 
-	push r24 # push the result on stack
-	ldi r24, 1
-	pop r25
-	cp r24, r25
-	breq MJ_L90
-
-MJ_L91: # false branch
-	ldi r24, 0
-	jmp MJ_L92
-
-MJ_L90: # true branch
-	ldi r24, 1
-
-MJ_L92: # get comparison result
-	# push comparison result onto stack
-	push r24
-	# load condition and branch if false
-	# load a one byte expression off stack
-	pop r24
-	# load one into reg
-	ldi r25, 1
-	# use cp to set SREG
-	cp r24, r25
-	breq MJ_L93
 	jmp MJ_L94
+MJ_L92: # true branch
+	ldi r24, 1
+MJ_L94: 
+	push r24 # push the result on stack
+	ldi r24, 1
+	pop r25
+	cp r24, r25
+	breq MJ_L86
 
-MJ_L93: # then branch
-	# Load constant int 2
-	ldi r24,lo8(2)
-	ldi r25,hi8(2)
+MJ_L87: # false branch
+	ldi r24, 0
+	jmp MJ_L88
+
+MJ_L86: # true branch
+	ldi r24, 1
+
+MJ_L88: # get comparison result
+	# push comparison result onto stack
+	push r24
+	# load condition and branch if false
+	# load a one byte expression off stack
+	pop r24
+	# load one into reg
+	ldi r25, 1
+	# use cp to set SREG
+	cp r24, r25
+	breq MJ_L89
+	jmp MJ_L90
+
+MJ_L89: # then branch
+	# Load constant int 0
+	ldi r24,lo8(0)
+	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2068,6 +1692,7 @@ MJ_L93: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2091,15 +1716,16 @@ MJ_L93: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L95 # jump over the else branch
+	jmp MJ_L91 # jump over the else branch
 
-MJ_L94: # else branch
-	# Load constant int 2
-	ldi r24,lo8(2)
-	ldi r25,hi8(2)
+MJ_L90: # else branch
+	# Load constant int 0
+	ldi r24,lo8(0)
+	ldi r25,hi8(0)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2114,6 +1740,7 @@ MJ_L94: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2137,7 +1764,7 @@ MJ_L94: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L95: 
+MJ_L91: 
 #### if statement
 	# start equality check
 	# Load constant int 0
@@ -2146,6 +1773,7 @@ MJ_L95:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2166,6 +1794,199 @@ MJ_L95:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
+	# x = x - y
+	# load y
+	pop r18 # lower bits of y
+	pop r19 # higher bits of y
+	# load x
+	pop r24 # lower bits of x
+	pop r25 # higher bits of x
+	# Do INT sub operation
+	sub    r24, r18
+	sbc    r25, r19
+	# push two byte expression onto stack
+	push   r25 # higher bits
+	push   r24 # lower bits
+	# Load constant int 512
+	ldi r24,lo8(512)
+	ldi r25,hi8(512)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+	# Load constant int 544
+	ldi r24,lo8(544)
+	ldi r25,hi8(544)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# x = x - y
+	# load y
+	pop r18 # lower bits of y
+	pop r19 # higher bits of y
+	# load x
+	pop r24 # lower bits of x
+	pop r25 # higher bits of x
+	# Do INT sub operation
+	sub    r24, r18
+	sbc    r25, r19
+	# push two byte expression onto stack
+	push   r25 # higher bits
+	push   r24 # lower bits
+	# load a one byte expression off stack
+	pop r18
+	# load a one byte expression off stack
+	pop r24
+	# compare the operands
+	cp r24, r18
+	breq MJ_L101 # goto true branch
+MJ_L102: # false branch
+	ldi r24, 0
+	jmp MJ_L103
+MJ_L101: # true branch
+	ldi r24, 1
+MJ_L103: 
+	push r24 # push the result on stack
+	ldi r24, 1
+	pop r25
+	cp r24, r25
+	breq MJ_L95
+
+MJ_L96: # false branch
+	ldi r24, 0
+	jmp MJ_L97
+
+MJ_L95: # true branch
+	ldi r24, 1
+
+MJ_L97: # get comparison result
+	# push comparison result onto stack
+	push r24
+	# load condition and branch if false
+	# load a one byte expression off stack
+	pop r24
+	# load one into reg
+	ldi r25, 1
+	# use cp to set SREG
+	cp r24, r25
+	breq MJ_L98
+	jmp MJ_L99
+
+MJ_L98: # then branch
+	# Load constant int 1
+	ldi r24,lo8(1)
+	ldi r25,hi8(1)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.GREEN
+	ldi r22,4
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+	jmp MJ_L100 # jump over the else branch
+
+MJ_L99: # else branch
+	# Load constant int 1
+	ldi r24,lo8(1)
+	ldi r25,hi8(1)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.RED
+	ldi r22,1
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+MJ_L100: 
+#### if statement
+	# start equality check
+	# Load constant int 0
+	ldi r24,lo8(0)
+	ldi r25,hi8(0)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+	# Load constant int 32
+	ldi r24,lo8(32)
+	ldi r25,hi8(32)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -2178,9 +1999,12 @@ MJ_L95:
 	ldi r25, 0
 	push r25
 	push r24
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -2189,6 +2013,225 @@ MJ_L95:
 	# push two byte expression onto stack
 	push   r25 # higher bits
 	push   r24 # lower bits
+	# Load constant int 512
+	ldi r24,lo8(512)
+	ldi r25,hi8(512)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+	# Load constant int 544
+	ldi r24,lo8(544)
+	ldi r25,hi8(544)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# x = x - y
+	# load y
+	pop r18 # lower bits of y
+	pop r19 # higher bits of y
+	# load x
+	pop r24 # lower bits of x
+	pop r25 # higher bits of x
+	# Do INT sub operation
+	sub    r24, r18
+	sbc    r25, r19
+	# push two byte expression onto stack
+	push   r25 # higher bits
+	push   r24 # lower bits
+	# load a one byte expression off stack
+	pop r18
+	# load a one byte expression off stack
+	pop r24
+	# compare the operands
+	cp r24, r18
+	breq MJ_L110 # goto true branch
+MJ_L111: # false branch
+	ldi r24, 0
+	jmp MJ_L112
+MJ_L110: # true branch
+	ldi r24, 1
+MJ_L112: 
+	push r24 # push the result on stack
+	ldi r24, 1
+	pop r25
+	cp r24, r25
+	breq MJ_L104
+
+MJ_L105: # false branch
+	ldi r24, 0
+	jmp MJ_L106
+
+MJ_L104: # true branch
+	ldi r24, 1
+
+MJ_L106: # get comparison result
+	# push comparison result onto stack
+	push r24
+	# load condition and branch if false
+	# load a one byte expression off stack
+	pop r24
+	# load one into reg
+	ldi r25, 1
+	# use cp to set SREG
+	cp r24, r25
+	breq MJ_L107
+	jmp MJ_L108
+
+MJ_L107: # then branch
+	# Load constant int 2
+	ldi r24,lo8(2)
+	ldi r25,hi8(2)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.GREEN
+	ldi r22,4
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+	jmp MJ_L109 # jump over the else branch
+
+MJ_L108: # else branch
+	# Load constant int 2
+	ldi r24,lo8(2)
+	ldi r25,hi8(2)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.RED
+	ldi r22,1
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+MJ_L109: 
+#### if statement
+	# start equality check
+	# Load constant int 0
+	ldi r24,lo8(0)
+	ldi r25,hi8(0)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	## This is a auto typecast: promote Byte to Int
+	pop r24 # pop byte as the lower bits
+	ldi r25, 0
+	push r25
+	push r24
+	# Load constant int 32
+	ldi r24,lo8(32)
+	ldi r25,hi8(32)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	## This is a auto typecast: promote Byte to Int
+	pop r24 # pop byte as the lower bits
+	ldi r25, 0
+	push r25
+	push r24
+
+	# x = x - y
+	# load y
+	pop r18 # lower bits of y
+	pop r19 # higher bits of y
+	# load x
+	pop r24 # lower bits of x
+	pop r25 # higher bits of x
+	# Do INT sub operation
+	sub    r24, r18
+	sbc    r25, r19
+	# push two byte expression onto stack
+	push   r25 # higher bits
+	push   r24 # lower bits
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -2210,9 +2253,12 @@ MJ_L95:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -2221,6 +2267,7 @@ MJ_L95:
 	# push two byte expression onto stack
 	push   r25 # higher bits
 	push   r24 # lower bits
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -2234,390 +2281,47 @@ MJ_L95:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L105 # goto true branch
-MJ_L106: # false branch
+	breq MJ_L119 # goto true branch
+MJ_L120: # false branch
 	ldi r24, 0
-	jmp MJ_L107
-MJ_L105: # true branch
-	ldi r24, 1
-MJ_L107: 
-	push r24 # push the result on stack
-	ldi r24, 1
-	pop r25
-	cp r24, r25
-	breq MJ_L99
-
-MJ_L100: # false branch
-	ldi r24, 0
-	jmp MJ_L101
-
-MJ_L99: # true branch
-	ldi r24, 1
-
-MJ_L101: # get comparison result
-	# push comparison result onto stack
-	push r24
-	# load condition and branch if false
-	# load a one byte expression off stack
-	pop r24
-	# load one into reg
-	ldi r25, 1
-	# use cp to set SREG
-	cp r24, r25
-	breq MJ_L102
-	jmp MJ_L103
-
-MJ_L102: # then branch
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.GREEN
-	ldi r22,4
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-	jmp MJ_L104 # jump over the else branch
-
-MJ_L103: # else branch
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 3
-	ldi r24,lo8(3)
-	ldi r25,hi8(3)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.RED
-	ldi r22,1
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-MJ_L104: 
-#### if statement
-	# start equality check
-	# Load constant int 32
-	ldi r24,lo8(32)
-	ldi r25,hi8(32)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 32
-	ldi r24,lo8(32)
-	ldi r25,hi8(32)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# load a one byte expression off stack
-	pop r18
-	# load a one byte expression off stack
-	pop r24
-	# compare the operands
-	cp r24, r18
-	breq MJ_L114 # goto true branch
-MJ_L115: # false branch
-	ldi r24, 0
-	jmp MJ_L116
-MJ_L114: # true branch
-	ldi r24, 1
-MJ_L116: 
-	push r24 # push the result on stack
-	ldi r24, 1
-	pop r25
-	cp r24, r25
-	breq MJ_L108
-
-MJ_L109: # false branch
-	ldi r24, 0
-	jmp MJ_L110
-
-MJ_L108: # true branch
-	ldi r24, 1
-
-MJ_L110: # get comparison result
-	# push comparison result onto stack
-	push r24
-	# load condition and branch if false
-	# load a one byte expression off stack
-	pop r24
-	# load one into reg
-	ldi r25, 1
-	# use cp to set SREG
-	cp r24, r25
-	breq MJ_L111
-	jmp MJ_L112
-
-MJ_L111: # then branch
-	# Load constant int 0
-	ldi r24,lo8(0)
-	ldi r25,hi8(0)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 4
-	ldi r24,lo8(4)
-	ldi r25,hi8(4)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.GREEN
-	ldi r22,4
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-	jmp MJ_L113 # jump over the else branch
-
-MJ_L112: # else branch
-	# Load constant int 0
-	ldi r24,lo8(0)
-	ldi r25,hi8(0)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Load constant int 4
-	ldi r24,lo8(4)
-	ldi r25,hi8(4)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# Color expression Meggy.Color.RED
-	ldi r22,1
-	# push one byte expression onto stack
-	push r22
-
-	### Meggy.setPixel(x,y,color) call
-	# load a one byte expression off stack
-	pop r20
-	# load a one byte expression off stack
-	pop r22
-	# load a one byte expression off stack
-	pop r24
-	call   _Z6DrawPxhhh
-	call   _Z12DisplaySlatev
-
-MJ_L113: 
-#### if statement
-	# start equality check
-	# Load constant int 32
-	ldi r24,lo8(32)
-	ldi r25,hi8(32)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
-	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
-	# Load constant int 32
-	ldi r24,lo8(32)
-	ldi r25,hi8(32)
-	# push two byte expression onto stack
-	push r25 # higher bits
-	push r24 # lower bits
-
-	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
-	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
-	# Casting int to byte by popping
-	# 2 bytes off stack and only pushing low order bits
-	# back on.  Low order bits are on top of stack.
-	pop r24 # pop lower bits
-	pop r25 # pop higher bits
-	push r24 # push lower bits back 
-
-	# load a one byte expression off stack
-	pop r18
-	# load a one byte expression off stack
-	pop r24
-	# compare the operands
-	cp r24, r18
-	breq MJ_L123 # goto true branch
-MJ_L124: # false branch
-	ldi r24, 0
-	jmp MJ_L125
-MJ_L123: # true branch
-	ldi r24, 1
-MJ_L125: 
-	push r24 # push the result on stack
-	ldi r24, 1
-	pop r25
-	cp r24, r25
-	breq MJ_L117
-
-MJ_L118: # false branch
-	ldi r24, 0
-	jmp MJ_L119
-
-MJ_L117: # true branch
-	ldi r24, 1
-
-MJ_L119: # get comparison result
-	# push comparison result onto stack
-	push r24
-	# load condition and branch if false
-	# load a one byte expression off stack
-	pop r24
-	# load one into reg
-	ldi r25, 1
-	# use cp to set SREG
-	cp r24, r25
-	breq MJ_L120
 	jmp MJ_L121
+MJ_L119: # true branch
+	ldi r24, 1
+MJ_L121: 
+	push r24 # push the result on stack
+	ldi r24, 1
+	pop r25
+	cp r24, r25
+	breq MJ_L113
 
-MJ_L120: # then branch
-	# Load constant int 1
-	ldi r24,lo8(1)
-	ldi r25,hi8(1)
+MJ_L114: # false branch
+	ldi r24, 0
+	jmp MJ_L115
+
+MJ_L113: # true branch
+	ldi r24, 1
+
+MJ_L115: # get comparison result
+	# push comparison result onto stack
+	push r24
+	# load condition and branch if false
+	# load a one byte expression off stack
+	pop r24
+	# load one into reg
+	ldi r25, 1
+	# use cp to set SREG
+	cp r24, r25
+	breq MJ_L116
+	jmp MJ_L117
+
+MJ_L116: # then branch
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2626,12 +2330,13 @@ MJ_L120: # then branch
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-	# Load constant int 4
-	ldi r24,lo8(4)
-	ldi r25,hi8(4)
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2655,15 +2360,16 @@ MJ_L120: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L122 # jump over the else branch
+	jmp MJ_L118 # jump over the else branch
 
-MJ_L121: # else branch
-	# Load constant int 1
-	ldi r24,lo8(1)
-	ldi r25,hi8(1)
+MJ_L117: # else branch
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2672,12 +2378,13 @@ MJ_L121: # else branch
 	pop r25 # pop higher bits
 	push r24 # push lower bits back 
 
-	# Load constant int 4
-	ldi r24,lo8(4)
-	ldi r25,hi8(4)
+	# Load constant int 3
+	ldi r24,lo8(3)
+	ldi r25,hi8(3)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2701,15 +2408,78 @@ MJ_L121: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L122: 
+MJ_L118: 
 #### if statement
 	# start equality check
-	# Load constant int 1
-	ldi r24,lo8(1)
-	ldi r25,hi8(1)
+	# Load constant int 32
+	ldi r24,lo8(32)
+	ldi r25,hi8(32)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 32
+	ldi r24,lo8(32)
+	ldi r25,hi8(32)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+	# load a one byte expression off stack
+	pop r18
+	# load a one byte expression off stack
+	pop r24
+	# compare the operands
+	cp r24, r18
+	breq MJ_L128 # goto true branch
+MJ_L129: # false branch
+	ldi r24, 0
+	jmp MJ_L130
+MJ_L128: # true branch
+	ldi r24, 1
+MJ_L130: 
+	push r24 # push the result on stack
+	ldi r24, 1
+	pop r25
+	cp r24, r25
+	breq MJ_L122
+
+MJ_L123: # false branch
+	ldi r24, 0
+	jmp MJ_L124
+
+MJ_L122: # true branch
+	ldi r24, 1
+
+MJ_L124: # get comparison result
+	# push comparison result onto stack
+	push r24
+	# load condition and branch if false
+	# load a one byte expression off stack
+	pop r24
+	# load one into reg
+	ldi r25, 1
+	# use cp to set SREG
+	cp r24, r25
+	breq MJ_L125
+	jmp MJ_L126
+
+MJ_L125: # then branch
+	# Load constant int 0
+	ldi r24,lo8(0)
+	ldi r25,hi8(0)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2724,6 +2494,285 @@ MJ_L122:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.GREEN
+	ldi r22,4
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+	jmp MJ_L127 # jump over the else branch
+
+MJ_L126: # else branch
+	# Load constant int 0
+	ldi r24,lo8(0)
+	ldi r25,hi8(0)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 4
+	ldi r24,lo8(4)
+	ldi r25,hi8(4)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.RED
+	ldi r22,1
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+MJ_L127: 
+#### if statement
+	# start equality check
+	# Load constant int 32
+	ldi r24,lo8(32)
+	ldi r25,hi8(32)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# neg int
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
+	# push two byte expression onto stack
+	push   r23
+	push   r22
+	# Load constant int 32
+	ldi r24,lo8(32)
+	ldi r25,hi8(32)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# neg int
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
+	# push two byte expression onto stack
+	push   r23
+	push   r22
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# load a one byte expression off stack
+	pop r18
+	# load a one byte expression off stack
+	pop r24
+	# compare the operands
+	cp r24, r18
+	breq MJ_L141 # goto true branch
+MJ_L142: # false branch
+	ldi r24, 0
+	jmp MJ_L143
+MJ_L141: # true branch
+	ldi r24, 1
+MJ_L143: 
+	push r24 # push the result on stack
+	ldi r24, 1
+	pop r25
+	cp r24, r25
+	breq MJ_L131
+
+MJ_L132: # false branch
+	ldi r24, 0
+	jmp MJ_L133
+
+MJ_L131: # true branch
+	ldi r24, 1
+
+MJ_L133: # get comparison result
+	# push comparison result onto stack
+	push r24
+	# load condition and branch if false
+	# load a one byte expression off stack
+	pop r24
+	# load one into reg
+	ldi r25, 1
+	# use cp to set SREG
+	cp r24, r25
+	breq MJ_L134
+	jmp MJ_L135
+
+MJ_L134: # then branch
+	# Load constant int 1
+	ldi r24,lo8(1)
+	ldi r25,hi8(1)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 4
+	ldi r24,lo8(4)
+	ldi r25,hi8(4)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.GREEN
+	ldi r22,4
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+	jmp MJ_L136 # jump over the else branch
+
+MJ_L135: # else branch
+	# Load constant int 1
+	ldi r24,lo8(1)
+	ldi r25,hi8(1)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 4
+	ldi r24,lo8(4)
+	ldi r25,hi8(4)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Color expression Meggy.Color.RED
+	ldi r22,1
+	# push one byte expression onto stack
+	push r22
+
+	### Meggy.setPixel(x,y,color) call
+	# load a one byte expression off stack
+	pop r20
+	# load a one byte expression off stack
+	pop r22
+	# load a one byte expression off stack
+	pop r24
+	call   _Z6DrawPxhhh
+	call   _Z12DisplaySlatev
+
+MJ_L136: 
+#### if statement
+	# start equality check
+	# Load constant int 1
+	ldi r24,lo8(1)
+	ldi r25,hi8(1)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
+
+	# Casting int to byte by popping
+	# 2 bytes off stack and only pushing low order bits
+	# back on.  Low order bits are on top of stack.
+	pop r24 # pop lower bits
+	pop r25 # pop higher bits
+	push r24 # push lower bits back 
+
+	# Load constant int 4
+	ldi r24,lo8(4)
+	ldi r25,hi8(4)
+	# push two byte expression onto stack
+	push r25 # higher bits
+	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2751,27 +2800,27 @@ MJ_L122:
 	pop r24
 	# compare the operands
 	cp r24, r18
-	breq MJ_L132 # goto true branch
-MJ_L133: # false branch
+	breq MJ_L150 # goto true branch
+MJ_L151: # false branch
 	ldi r24, 0
-	jmp MJ_L134
-MJ_L132: # true branch
+	jmp MJ_L152
+MJ_L150: # true branch
 	ldi r24, 1
-MJ_L134: 
+MJ_L152: 
 	push r24 # push the result on stack
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L126
+	breq MJ_L144
 
-MJ_L127: # false branch
+MJ_L145: # false branch
 	ldi r24, 0
-	jmp MJ_L128
+	jmp MJ_L146
 
-MJ_L126: # true branch
+MJ_L144: # true branch
 	ldi r24, 1
 
-MJ_L128: # get comparison result
+MJ_L146: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -2781,16 +2830,17 @@ MJ_L128: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L129
-	jmp MJ_L130
+	breq MJ_L147
+	jmp MJ_L148
 
-MJ_L129: # then branch
+MJ_L147: # then branch
 	# Load constant int 2
 	ldi r24,lo8(2)
 	ldi r25,hi8(2)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2805,6 +2855,7 @@ MJ_L129: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2828,15 +2879,16 @@ MJ_L129: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L131 # jump over the else branch
+	jmp MJ_L149 # jump over the else branch
 
-MJ_L130: # else branch
+MJ_L148: # else branch
 	# Load constant int 2
 	ldi r24,lo8(2)
 	ldi r25,hi8(2)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2851,6 +2903,7 @@ MJ_L130: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2874,7 +2927,7 @@ MJ_L130: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L131: 
+MJ_L149: 
 #### if statement
 	#push Meggy.Button.A
 	ldi r24, 2
@@ -2885,26 +2938,26 @@ MJ_L131:
 	lds    r24, Button_A
 	# if button value is zero, push 0 else push 1
 	tst    r24 # Test for Zero or Minus
-	breq MJ_L142 # goto false branch
-MJ_L141: # if true
+	breq MJ_L160 # goto false branch
+MJ_L159: # if true
 	ldi r24, 1
-	jmp MJ_L143
-MJ_L142: # false branch, r24 is already 0, do nothing
-MJ_L143: 
+	jmp MJ_L161
+MJ_L160: # false branch, r24 is already 0, do nothing
+MJ_L161: 
 	push r24
 	ldi r24, 1
 	pop r25
 	cp r24, r25
-	breq MJ_L135
+	breq MJ_L153
 
-MJ_L136: # false branch
+MJ_L154: # false branch
 	ldi r24, 0
-	jmp MJ_L137
+	jmp MJ_L155
 
-MJ_L135: # true branch
+MJ_L153: # true branch
 	ldi r24, 1
 
-MJ_L137: # get comparison result
+MJ_L155: # get comparison result
 	# push comparison result onto stack
 	push r24
 	# load condition and branch if false
@@ -2914,16 +2967,17 @@ MJ_L137: # get comparison result
 	ldi r25, 1
 	# use cp to set SREG
 	cp r24, r25
-	breq MJ_L138
-	jmp MJ_L139
+	breq MJ_L156
+	jmp MJ_L157
 
-MJ_L138: # then branch
+MJ_L156: # then branch
 	# Load constant int 3
 	ldi r24,lo8(3)
 	ldi r25,hi8(3)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2938,6 +2992,7 @@ MJ_L138: # then branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2961,15 +3016,16 @@ MJ_L138: # then branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-	jmp MJ_L140 # jump over the else branch
+	jmp MJ_L158 # jump over the else branch
 
-MJ_L139: # else branch
+MJ_L157: # else branch
 	# Load constant int 3
 	ldi r24,lo8(3)
 	ldi r25,hi8(3)
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -2984,6 +3040,7 @@ MJ_L139: # else branch
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -3007,7 +3064,7 @@ MJ_L139: # else branch
 	call   _Z6DrawPxhhh
 	call   _Z12DisplaySlatev
 
-MJ_L140: 
+MJ_L158: 
 
 /* epilogue start */
     endLabel:
