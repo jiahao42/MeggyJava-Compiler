@@ -54,7 +54,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   // promote Byte to Int if possible
   private void promoteByte2Int(Node n) {
     if (isByte(getType(n))) {
-      setType(n, Type.INT);
       // dumpWarning(n.getLine(), n.getPos(), "Promoting a BYTE to INT...");
       /**
        * | lower bits  | 
@@ -78,11 +77,29 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     }
   }
 
+  private void promoteTo2Bytes(Node n) {
+    String negBranch = new Label().toString();
+    String storeResult = new Label().toString();
+    write2File(
+      "\n\n\t## This is a auto typecast: promote Byte to Int" + 
+      "\n\tpop r24 # pop byte as the lower bits" + 
+      "\n\ttst r24" +
+      "\n\tbrlt " + negBranch +
+      "\n\tldi r25, 0" + 
+      "\n\tjmp " + storeResult +
+      "\n" + negBranch + ": " +
+      "\n\tldi r25, hi8(-1)" +
+      "\n" + storeResult + ": " +
+      "\n\tpush r25" + 
+      "\n\tpush r24"
+    );
+  }
+
   private void demoteInt2Byte(Node n) {
     if (isInt(getType(n))) {
       setType(n, Type.BYTE);
       dumpWarning(n.getLine(), n.getPos(), "Demoting a INT to BYTE, may lose precision here...");
-      write2File("\n\n\t## This is a auto typecast: demote Int to Byte");
+      write2File("\n\t## This is a auto typecast: demote Int to Byte");
       outByteCast(null);
     }
   }
@@ -306,39 +323,34 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void visitEqualExp(EqualExp node) {
-    inEqualExp(node);
-    if (node.getLExp() != null) {
-      node.getLExp().accept(this);
-      promoteByte2Int(node.getLExp());
-    }
-    if (node.getRExp() != null) {
-      node.getRExp().accept(this);
-      promoteByte2Int(node.getRExp());
-    }
-    outEqualExp(node);
-  }
-
-  @Override
   public void outEqualExp(EqualExp node) {
-    // Only compare two-byte with two-byte
-    // if operand is one-byte, promote it.
-    // TODO: make it more efficicent
+    // Convert everything to Int and compare
     String trueBranch = new Label().toString();
     String falseBranch = new Label().toString();
     String nextBlock = new Label().toString();
-    
+    if (!isInt(getType(node.getRExp()))) {
+      promoteTo2Bytes(null);
+    }
     write2File(
-      "\n\t# byte-byte equality check" +
-      "\n\t# load a two byte expression off stack" +
+      "\n\t# right operand of ==" +
       "\n\tpop r18" + 
-      "\n\tpop r19" +
-      "\n\t# load a two byte expression off stack" +
+      "\n\tpop r19"
+    );
+
+    if (!isInt(getType(node.getLExp()))) {
+      promoteTo2Bytes(null);
+    }
+
+    write2File(
+      "\n\t# left operand of ==" +
       "\n\tpop r24" + 
-      "\n\tpop r25" +
+      "\n\tpop r25"
+    );
+
+    write2File(
       "\n\t# compare the operands" +
-      "\n\tcp    r24, r18" +
-      "\n\tcpc   r25, r19" +
+      "\n\tcp    r24, r18" + 
+      "\n\tcpc   r25, r19" + 
       "\n\tbreq " + trueBranch + " # goto true branch" + 
       "\n" + falseBranch + ": # false branch" + 
       "\n\tldi r24, 0" + 
@@ -348,7 +360,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n" + nextBlock + ": " +
       "\n\tpush r24 # push the result on stack"
     );
-
   }
 
   @Override
@@ -779,7 +790,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     String thenBranch = new Label().toString();
     if (isByte(getType(node.getExp()))) {
       write2File(
-        "\n\t# neg byte" +
+        "\n\n\t# neg byte" +
         "\n\t# load a one byte expression off stack" +
         "\n\tpop r24" +
         "\n\t# promoting a byte to an int" +
@@ -790,17 +801,17 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         "\n" + negBranch + ": " +
         "\n\tldi r25, hi8(-1)" +
         "\n" + thenBranch + ": " +
-        "\n\tldi    r22, 0" +
-        "\n\tldi    r23, 0" +
-        "\n\tsub     r22, r24" +
-        "\n\tsbc     r23, r25" +
-        "\n\t# push two byte expression onto stack" +
-        "\n\tpush   r23" +
-        "\n\tpush   r22"
+        "\n\tldi r22, 0" +
+        "\n\tldi r23, 0" +
+        "\n\tsub r22, r24" +
+        "\n\tsbc r23, r25" +
+        "\n\t# pushtwo byte expression onto stack" +
+        "\n\tpush r23" +
+        "\n\tpush r22"
       );
-    } else {
+    } else { // Int
       write2File(
-        "\n\t# neg int" +
+        "\n\n\t# neg int" +
         "\n\t# load a two byte expression off stack" +
         "\n\tpop    r24" +
         "\n\tpop    r25" +
