@@ -55,7 +55,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   private void promoteByte2Int(Node n) {
     if (isByte(getType(n))) {
       setType(n, Type.INT);
-      dumpWarning(n.getLine(), n.getPos(), "Promoting a BYTE to INT...");
+      // dumpWarning(n.getLine(), n.getPos(), "Promoting a BYTE to INT...");
       /**
        * | lower bits  | 
        * | higher bits |
@@ -73,7 +73,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   private void demoteInt2Byte(Node n) {
     if (isInt(getType(n))) {
       setType(n, Type.BYTE);
-      dumpWarning(n.getLine(), n.getPos(), "Demoting a INT to BYTE...");
+      dumpWarning(n.getLine(), n.getPos(), "Demoting a INT to BYTE, may lose precision here...");
       write2File("\n\t## This is a auto typecast: demote Int to Byte");
       outByteCast(null);
     }

@@ -285,6 +285,23 @@ public class CheckTypes extends DepthFirstVisitor {
     if (node.getStatement() != null) {
       node.getStatement().accept(this);
     }
+	}
+	
+	/** Others **/
+	
+	@Override
+	public void outBlockStatement(BlockStatement node) {
+		
+	}
+
+	@Override
+  public void outMainClass(MainClass node) {
+    
+	}
+	
+	@Override
+  public void outProgram(Program node) {
+		
   }
 }
 
