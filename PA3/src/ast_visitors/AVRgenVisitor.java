@@ -653,9 +653,11 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outMinusExp(MinusExp node) {
     write2File(
-      "\n\t# x = x - y" + 
+      "\n\n\t# x = x - y" + 
+      "\n\t# load y" + 
       "\n\tpop r18 # lower bits of y" +
       "\n\tpop r19 # higher bits of y" +
+      "\n\t# load x" + 
       "\n\tpop r24 # lower bits of x" +
       "\n\tpop r25 # higher bits of x" +
       "\n\t# Do INT sub operation" +
@@ -695,6 +697,25 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tpush r24 # lower bits" +
       "\n\tpush r24 # higher bits"
     );
+    write2File(
+      "\n\n\t# MulExp, only works for byte" + 
+      "\n\t# load a one byte expression off stack" + 
+      "\n\tpop    r18" + 
+      "\n\t# load a one byte expression off stack" + 
+      "\n\tpop    r22" + 
+      "\n\t# move low byte src into dest reg" + 
+      "\n\tmov    r24, r18" + 
+      "\n\t# move low byte src into dest reg" + 
+      "\n\tmov    r26, r22" + 
+      "\n\t# Do mul operation of two input bytes" + 
+      "\n\tmuls   r24, r26" + 
+      "\n\t# push two byte expression onto stack" + 
+      "\n\tpush   r1" + 
+      "\n\tpush   r0" + 
+      "\n\t# clear r0 and r1" + 
+      "\n\teor    r0,r0" + 
+      "\n\teor    r1,r1"
+    );
   }
 
   @Override
@@ -727,24 +748,50 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     inNegExp(node);
     if (node.getExp() != null) {
       node.getExp().accept(this);
-      promoteByte2Int(node.getExp());
     }
     outNegExp(node);
   }
 
   @Override
   public void outNegExp(NegExp node) {
-    write2File(
-    "\n\t# neg int" +
-    "\n\tpop r24" +
-    "\n\tpop r25" +
-    "\n\tldi r18, 0" + 
-    "\n\tpush r18" + 
-    "\n\tpush r18" + 
-    "\n\tpush r25" + 
-    "\n\tpush r24"
-    );
-    outMinusExp(null);
+    String negBranch = new Label().toString();
+    String thenBranch = new Label().toString();
+    if (isByte(getType(node.getExp()))) {
+      write2File(
+        "\n\n\t# neg byte" +
+        "\n\t# load a one byte expression off stack" +
+        "\n\tpop r24" +
+        "\n\t# promoting a byte to an int" +
+        "\n\ttst r24" +
+        "\n\tbrlt " + negBranch +
+        "\n\tldi r25, 0" +
+        "\n\tjmp " + thenBranch +
+        "\n" + negBranch + ": " +
+        "\n\tldi r25, hi8(-1)" +
+        "\n" + thenBranch + ": " +
+        "\n\tldi r22, 0" +
+        "\n\tldi r23, 0" +
+        "\n\tsub r22, r24" +
+        "\n\tsbc r23, r25" +
+        "\n\t# pushtwo byte expression onto stack" +
+        "\n\tpush r23" +
+        "\n\tpush r22"
+      );
+    } else { // Int
+      write2File(
+        "\n\n\t# neg int" +
+        "\n\t# load a two byte expression off stack" +
+        "\n\tpop    r24" +
+        "\n\tpop    r25" +
+        "\n\tldi     r22, 0" +
+        "\n\tldi     r23, 0" +
+        "\n\tsub     r22, r24" +
+        "\n\tsbc     r23, r25" +
+        "\n\t# push two byte expression onto stack" +
+        "\n\tpush   r23" +
+        "\n\tpush   r22"
+      );
+    }
   }
 
   @Override
@@ -787,10 +834,10 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outPlusExp(PlusExp node) {
      write2File(
-        "\n\t# load a two byte expression off stack" + 
+        "\n\t# left operand of +" + 
         "\n\tpop    r18" + 
         "\n\tpop    r19" + 
-        "\n\t# load a two byte expression off stack" + 
+        "\n\t# right operand of +" + 
         "\n\tpop    r24" +
         "\n\tpop    r25" +
         "\n\t# Do add operation" +

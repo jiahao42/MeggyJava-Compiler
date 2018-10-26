@@ -36,10 +36,10 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -55,10 +55,10 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -67,6 +67,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -89,10 +90,10 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -101,6 +102,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -137,9 +139,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -155,9 +160,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -166,6 +174,7 @@ main:
 	# push two byte expression onto stack
 	push   r25 # higher bits
 	push   r24 # lower bits
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -187,9 +196,12 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -198,6 +210,7 @@ main:
 	# push two byte expression onto stack
 	push   r25 # higher bits
 	push   r24 # lower bits
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -229,6 +242,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -248,6 +262,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -260,10 +275,10 @@ main:
 	ldi r25, 0
 	push r25
 	push r24
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -272,6 +287,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -291,6 +307,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -303,10 +320,10 @@ main:
 	ldi r25, 0
 	push r25
 	push r24
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -315,6 +332,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -331,6 +349,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -350,6 +369,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -362,10 +382,10 @@ main:
 	ldi r25, 0
 	push r25
 	push r24
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -374,6 +394,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -393,6 +414,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -405,10 +427,10 @@ main:
 	ldi r25, 0
 	push r25
 	push r24
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -417,6 +439,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -446,6 +469,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -465,6 +489,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -477,9 +502,12 @@ main:
 	ldi r25, 0
 	push r25
 	push r24
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -488,6 +516,7 @@ main:
 	# push two byte expression onto stack
 	push   r25 # higher bits
 	push   r24 # lower bits
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -507,6 +536,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -519,9 +549,12 @@ main:
 	ldi r25, 0
 	push r25
 	push r24
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -530,6 +563,7 @@ main:
 	# push two byte expression onto stack
 	push   r25 # higher bits
 	push   r24 # lower bits
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -545,6 +579,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -564,6 +599,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -576,9 +612,12 @@ main:
 	ldi r25, 0
 	push r25
 	push r24
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -587,6 +626,7 @@ main:
 	# push two byte expression onto stack
 	push   r25 # higher bits
 	push   r24 # lower bits
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -606,6 +646,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -618,10 +659,10 @@ main:
 	ldi r25, 0
 	push r25
 	push r24
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -630,6 +671,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -668,10 +710,10 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -680,25 +722,18 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
 	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+	push   r23
+	push   r22
 	# Load constant int 8
 	ldi r24,lo8(8)
 	ldi r25,hi8(8)
@@ -706,10 +741,10 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -718,6 +753,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -740,29 +776,22 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
-	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
 	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
+	# push two byte expression onto stack
+	push   r23
+	push   r22
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -771,6 +800,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -807,17 +837,36 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
+	# push two byte expression onto stack
+	push   r23
+	push   r22
+
+	# neg int
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
+	# push two byte expression onto stack
+	push   r23
+	push   r22
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -826,17 +875,7 @@ main:
 	# push two byte expression onto stack
 	push   r25 # higher bits
 	push   r24 # lower bits
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
-	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -851,6 +890,19 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
+	# neg int
+	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
+	# push two byte expression onto stack
+	push   r23
+	push   r22
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -864,6 +916,25 @@ main:
 	muls r24, r25
 	push r24 # lower bits
 	push r24 # higher bits
+
+	# MulExp, only works for byte
+	# load a one byte expression off stack
+	pop    r18
+	# load a one byte expression off stack
+	pop    r22
+	# move low byte src into dest reg
+	mov    r24, r18
+	# move low byte src into dest reg
+	mov    r26, r22
+	# Do mul operation of two input bytes
+	muls   r24, r26
+	# push two byte expression onto stack
+	push   r1
+	push   r0
+	# clear r0 and r1
+	eor    r0,r0
+	eor    r1,r1
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -886,29 +957,22 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# neg int
-	pop r24
-	pop r25
-	ldi r18, 0
-	push r18
-	push r18
-	push r25
-	push r24
-	# x = x - y
-	pop r18 # lower bits of y
-	pop r19 # higher bits of y
-	pop r24 # lower bits of x
-	pop r25 # higher bits of x
-	# Do INT sub operation
-	sub    r24, r18
-	sbc    r25, r19
-	# push two byte expression onto stack
-	push   r25 # higher bits
-	push   r24 # lower bits
 	# load a two byte expression off stack
+	pop    r24
+	pop    r25
+	ldi     r22, 0
+	ldi     r23, 0
+	sub     r22, r24
+	sbc     r23, r25
+	# push two byte expression onto stack
+	push   r23
+	push   r22
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -917,6 +981,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -953,6 +1018,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -965,9 +1031,12 @@ main:
 	ldi r25, 0
 	push r25
 	push r24
+
 	# x = x - y
+	# load y
 	pop r18 # lower bits of y
 	pop r19 # higher bits of y
+	# load x
 	pop r24 # lower bits of x
 	pop r25 # higher bits of x
 	# Do INT sub operation
@@ -976,6 +1045,7 @@ main:
 	# push two byte expression onto stack
 	push   r25 # higher bits
 	push   r24 # lower bits
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -990,6 +1060,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
@@ -1010,10 +1081,10 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
-	# load a two byte expression off stack
+	# left operand of +
 	pop    r18
 	pop    r19
-	# load a two byte expression off stack
+	# right operand of +
 	pop    r24
 	pop    r25
 	# Do add operation
@@ -1022,6 +1093,7 @@ main:
 	# push two byte expression onto stack
 	push   r25
 	push   r24
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -1051,6 +1123,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -1065,6 +1138,7 @@ main:
 	push r25 # higher bits
 	push r24 # lower bits
 
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -1078,6 +1152,25 @@ main:
 	muls r24, r25
 	push r24 # lower bits
 	push r24 # higher bits
+
+	# MulExp, only works for byte
+	# load a one byte expression off stack
+	pop    r18
+	# load a one byte expression off stack
+	pop    r22
+	# move low byte src into dest reg
+	mov    r24, r18
+	# move low byte src into dest reg
+	mov    r26, r22
+	# Do mul operation of two input bytes
+	muls   r24, r26
+	# push two byte expression onto stack
+	push   r1
+	push   r0
+	# clear r0 and r1
+	eor    r0,r0
+	eor    r1,r1
+
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
 	# back on.  Low order bits are on top of stack.
@@ -1091,6 +1184,7 @@ main:
 	# push two byte expression onto stack
 	push r25 # higher bits
 	push r24 # lower bits
+
 
 	# Casting int to byte by popping
 	# 2 bytes off stack and only pushing low order bits
