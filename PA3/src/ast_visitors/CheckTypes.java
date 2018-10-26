@@ -200,7 +200,7 @@ public class CheckTypes extends DepthFirstVisitor {
 	@Override
   public void outNegExp(NegExp node) {
 		if (isIntOrByte(getType(node.getExp()))) {
-			setType(node, getType(node.getExp())); // type not change
+			setType(node, Type.INT); // use INT
 		} else {
 			throw new SemanticException("Invalid operands type for operator -, expect INT or BYTE", node.getLine(),
 					node.getPos());
@@ -301,7 +301,7 @@ public class CheckTypes extends DepthFirstVisitor {
 	
 	@Override
   public void outProgram(Program node) {
-		
+
   }
 }
 

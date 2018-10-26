@@ -60,10 +60,18 @@ public class AVRgenVisitor extends DepthFirstVisitor {
        * | lower bits  | 
        * | higher bits |
        */
+      String negBranch = new Label().toString();
+      String storeResult = new Label().toString();
       write2File(
-        "\n\t## This is a auto typecast: promote Byte to Int" + 
+        "\n\n\t## This is a auto typecast: promote Byte to Int" + 
         "\n\tpop r24 # pop byte as the lower bits" + 
+        "\n\ttst r24" +
+        "\n\tbrlt " + negBranch +
         "\n\tldi r25, 0" + 
+        "\n\tjmp " + storeResult +
+        "\n" + negBranch + ": " +
+        "\n\tldi r25, hi8(-1)" +
+        "\n" + storeResult + ": " +
         "\n\tpush r25" + 
         "\n\tpush r24"
       );
@@ -74,7 +82,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     if (isInt(getType(n))) {
       setType(n, Type.BYTE);
       dumpWarning(n.getLine(), n.getPos(), "Demoting a INT to BYTE, may lose precision here...");
-      write2File("\n\t## This is a auto typecast: demote Int to Byte");
+      write2File("\n\n\t## This is a auto typecast: demote Int to Byte");
       outByteCast(null);
     }
   }
@@ -298,18 +306,39 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
+  public void visitEqualExp(EqualExp node) {
+    inEqualExp(node);
+    if (node.getLExp() != null) {
+      node.getLExp().accept(this);
+      promoteByte2Int(node.getLExp());
+    }
+    if (node.getRExp() != null) {
+      node.getRExp().accept(this);
+      promoteByte2Int(node.getRExp());
+    }
+    outEqualExp(node);
+  }
+
+  @Override
   public void outEqualExp(EqualExp node) {
-    // TODO: only support byte comparison
+    // Only compare two-byte with two-byte
+    // if operand is one-byte, promote it.
+    // TODO: make it more efficicent
     String trueBranch = new Label().toString();
     String falseBranch = new Label().toString();
     String nextBlock = new Label().toString();
+    
     write2File(
-      "\n\t# load a one byte expression off stack" +
+      "\n\t# byte-byte equality check" +
+      "\n\t# load a two byte expression off stack" +
       "\n\tpop r18" + 
-      "\n\t# load a one byte expression off stack" +
+      "\n\tpop r19" +
+      "\n\t# load a two byte expression off stack" +
       "\n\tpop r24" + 
+      "\n\tpop r25" +
       "\n\t# compare the operands" +
-      "\n\tcp r24, r18" +
+      "\n\tcp    r24, r18" +
+      "\n\tcpc   r25, r19" +
       "\n\tbreq " + trueBranch + " # goto true branch" + 
       "\n" + falseBranch + ": # false branch" + 
       "\n\tldi r24, 0" + 
@@ -750,7 +779,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     String thenBranch = new Label().toString();
     if (isByte(getType(node.getExp()))) {
       write2File(
-        "\n\n\t# neg byte" +
+        "\n\t# neg byte" +
         "\n\t# load a one byte expression off stack" +
         "\n\tpop r24" +
         "\n\t# promoting a byte to an int" +
@@ -761,17 +790,17 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         "\n" + negBranch + ": " +
         "\n\tldi r25, hi8(-1)" +
         "\n" + thenBranch + ": " +
-        "\n\tldi r22, 0" +
-        "\n\tldi r23, 0" +
-        "\n\tsub r22, r24" +
-        "\n\tsbc r23, r25" +
-        "\n\t# pushtwo byte expression onto stack" +
-        "\n\tpush r23" +
-        "\n\tpush r22"
+        "\n\tldi    r22, 0" +
+        "\n\tldi    r23, 0" +
+        "\n\tsub     r22, r24" +
+        "\n\tsbc     r23, r25" +
+        "\n\t# push two byte expression onto stack" +
+        "\n\tpush   r23" +
+        "\n\tpush   r22"
       );
-    } else { // Int
+    } else {
       write2File(
-        "\n\n\t# neg int" +
+        "\n\t# neg int" +
         "\n\t# load a two byte expression off stack" +
         "\n\tpop    r24" +
         "\n\tpop    r25" +
