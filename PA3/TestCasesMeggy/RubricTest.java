@@ -14,7 +14,7 @@ class RubricTest {
     // setting pixels with constant integer expressions
     // setting pixels with color literals
     // **However, it won't pass Java compiler...**
-    Meggy.setPixel(1, 1, Meggy.Color.GREEN);
+    Meggy.setPixel((byte)1, (byte)1, Meggy.Color.GREEN);
 
     // settingpixels with byte casting
     Meggy.setPixel((byte)2, (byte)2, Meggy.Color.GREEN);
