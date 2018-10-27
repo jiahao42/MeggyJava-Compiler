@@ -8,13 +8,56 @@ UVA CS6620 Compiler
 
 ## Info about PA3
 
-### Problem (Will implemented in PA4)
+Dear Mary and TA:
 
-* 1. Operator for (Int, Byte) and (Byte, Byte) not implemented, only supports (Int, Int) right how. 
-  * Because No Symbol Table yet, which means there is no way to know the size of the variable (e.g. byte or int?), thus I can only assume that all the int constant to be the type of int, regardless of `(byte)1` or `1`. I will fix this problem (for operators like `+/-/*`) when I start to implement the Symbol Table.
+There are some potential problems while testing the compiler, but it is not because the compiler is not correct, for example:
 
-* 2. Mupltiply operation not implemented. 
-  * As the AVR instruction shows, the `mul` instruction only supports `8 bits * 8 bits` which returns 16 bits, but here we may have `16 bits * 16 bits` and `16 bits * 8bits`.
+* 1. Consider `Meggy.setPixel(1, 1, Meggy.Color.GREEN);`, the Java compiler will refuse to compile this statement because it wouldn't allow int-to-byte conversion. My compiler will allow this, which follows the design of the original `MJ.jar`.
+  * 1.1 My compiler will output warning when converting int to byte, e.g. `[16,20]: Warning: Demoting a INT to BYTE, may lose precision here...`
+
+* 2. In the file `PA2error.java`, the Java compiler will output several errors at one time, but my compiler will only output the first error it encounters and then exit, which also follows the design of the original `MJ.jar`.
+
+Except things above, this compiler meets all the requirements in the PA3 Rubric, it can correctly generate code for every test case under folder `PA3/TestCasesMeggy/WorkingTestCases`:
+
+```plaintext
+PA3/TestCasesMeggy/WorkingTestCases
+├── AndExpr.java
+├── Byte.java
+├── CheckButton.java
+├── CondExpr.java
+├── Delay.java
+├── GetPixel.java
+├── If.java
+├── IfStmt.java
+├── Not.java
+├── PA2ConstColor.java
+├── PA2EmptyStatement.java
+├── PA2FlowerSimple.java
+├── PA2Test1.java
+├── PA2bluedot.java
+├── PA2error.java
+├── PA3Cylon.java
+├── PA3Expressions.java
+├── PA3Test1.java
+├── PA3Test2.java
+├── PA3Test3.java
+├── PA3buttondot.java
+├── PA3ifdots.java
+├── While.java
+└── meggy
+    ├── Meggy.java
+    ├── MeggyException.java
+    ├── MeggyTest.java
+    ├── arg_opts
+    └── junit-4.8.2.jar
+
+1 directory, 28 files
+```
+
+Thanks.
+
+-Jiahao
+
 
 ## Info about PA2
 

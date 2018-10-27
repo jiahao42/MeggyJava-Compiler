@@ -19,8 +19,194 @@ main:
     /* Need to call this so that the meggy library gets set up */
 
 
-    #### while statement
+    # Load constant int 0
+    ldi    r24,lo8(0)
+    ldi    r25,hi8(0)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Load constant int 6
+    ldi    r24,lo8(6)
+    ldi    r25,hi8(6)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # neg int
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+    ldi     r22, 0
+    ldi     r23, 0
+    sub     r22, r24
+    sbc     r23, r25
+    # push two byte expression onto stack
+    push   r23
+    push   r22
+
+    # neg int
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+    ldi     r22, 0
+    ldi     r23, 0
+    sub     r22, r24
+    sbc     r23, r25
+    # push two byte expression onto stack
+    push   r23
+    push   r22
+    # load a two byte expression off stack
+    pop    r18
+    pop    r19
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+
+    # Do INT sub operation
+    sub    r24, r18
+    sbc    r25, r19
+    # push hi order byte first
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Casting int to byte by popping
+    # 2 bytes off stack and only pushing low order bits
+    # back on.  Low order bits are on top of stack.
+    pop    r24
+    pop    r25
+    push   r24
+
+    # Load constant int 1
+    ldi    r24,lo8(1)
+    ldi    r25,hi8(1)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # neg int
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+    ldi     r22, 0
+    ldi     r23, 0
+    sub     r22, r24
+    sbc     r23, r25
+    # push two byte expression onto stack
+    push   r23
+    push   r22
+
+    # Casting int to byte by popping
+    # 2 bytes off stack and only pushing low order bits
+    # back on.  Low order bits are on top of stack.
+    pop    r24
+    pop    r25
+    push   r24
+
+    # MulExp
+    # load a one byte expression off stack
+    pop    r18
+    # load a one byte expression off stack
+    pop    r22
+    # move low byte src into dest reg
+    mov    r24, r18
+    # move low byte src into dest reg
+    mov    r26, r22
+
+    # Do mul operation of two input bytes
+    muls   r24, r26
+    # push two byte expression onto stack
+    push   r1
+    push   r0
+    # clear r0 and r1, thanks Brendan!
+    eor    r0,r0
+    eor    r1,r1
+
+    # Casting int to byte by popping
+    # 2 bytes off stack and only pushing low order bits
+    # back on.  Low order bits are on top of stack.
+    pop    r24
+    pop    r25
+    push   r24
+
+    # Load constant int 10
+    ldi    r24,lo8(10)
+    ldi    r25,hi8(10)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Load constant int 5
+    ldi    r24,lo8(5)
+    ldi    r25,hi8(5)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Casting int to byte by popping
+    # 2 bytes off stack and only pushing low order bits
+    # back on.  Low order bits are on top of stack.
+    pop    r24
+    pop    r25
+    push   r24
+
+    # neg byte
+    # load a one byte expression off stack
+    pop    r24
+    # promoting a byte to an int
+    tst     r24
+    brlt     MJ_L0
+    ldi    r25, 0
+    jmp    MJ_L1
 MJ_L0:
+    ldi    r25, hi8(-1)
+MJ_L1:
+    ldi    r22, 0
+    ldi    r23, 0
+    sub     r22, r24
+    sbc     r23, r25
+    # push two byte expression onto stack
+    push   r23
+    push   r22
+    # load a two byte expression off stack
+    pop    r18
+    pop    r19
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+
+    # Do add operation
+    add    r24, r18
+    adc    r25, r19
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Casting int to byte by popping
+    # 2 bytes off stack and only pushing low order bits
+    # back on.  Low order bits are on top of stack.
+    pop    r24
+    pop    r25
+    push   r24
+
+    # Color expression Meggy.Color.ORANGE
+    ldi    r22,2
+    # push one byte expression onto stack
+    push   r22
+
+    ### Meggy.setPixel(x,y,color) call
+    # load a one byte expression off stack
+    pop    r20
+    # load a one byte expression off stack
+    pop    r22
+    # load a one byte expression off stack
+    pop    r24
+    call   _Z6DrawPxhhh
+    call   _Z12DisplaySlatev
+
+    #### while statement
+MJ_L2:
 
     # Load constant int 1
     ldi    r24,lo8(1)
@@ -70,19 +256,19 @@ MJ_L0:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    breq MJ_L4
+    breq MJ_L6
 
     # result is false
-MJ_L3:
+MJ_L5:
     ldi     r24, 0
-    jmp      MJ_L5
+    jmp      MJ_L7
 
     # result is true
-MJ_L4:
+MJ_L6:
     ldi     r24, 1
 
     # store result of equal expression
-MJ_L5:
+MJ_L7:
     # push one byte expression onto stack
     push   r24
 
@@ -99,16 +285,36 @@ MJ_L5:
     pop    r24
     ldi    r25,0
     cp     r24, r25
-    # WANT breq MJ_L2
-    brne   MJ_L1
-    jmp    MJ_L2
+    # WANT breq MJ_L4
+    brne   MJ_L3
+    jmp    MJ_L4
 
     # while loop body
-MJ_L1:
+MJ_L3:
 
-    # Load constant int 100
-    ldi    r24,lo8(100)
-    ldi    r25,hi8(100)
+    # Load constant int 4
+    ldi    r24,lo8(4)
+    ldi    r25,hi8(4)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Load constant int 10
+    ldi    r24,lo8(10)
+    ldi    r25,hi8(10)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+    # load a two byte expression off stack
+    pop    r18
+    pop    r19
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+
+    # Do add operation
+    add    r24, r18
+    adc    r25, r19
     # push two byte expression onto stack
     push   r25
     push   r24
@@ -121,10 +327,10 @@ MJ_L1:
     call   _Z8delay_msj
 
     # jump to while test
-    jmp    MJ_L0
+    jmp    MJ_L2
 
     # end of while
-MJ_L2:
+MJ_L4:
 
     # Load constant int 10
     ldi    r24,lo8(10)
@@ -193,19 +399,19 @@ MJ_L2:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    breq MJ_L10
+    breq MJ_L12
 
     # result is false
-MJ_L9:
+MJ_L11:
     ldi     r24, 0
-    jmp      MJ_L11
+    jmp      MJ_L13
 
     # result is true
-MJ_L10:
+MJ_L12:
     ldi     r24, 1
 
     # store result of equal expression
-MJ_L11:
+MJ_L13:
     # push one byte expression onto stack
     push   r24
 
@@ -217,11 +423,11 @@ MJ_L11:
     # compare left exp with zero
     ldi r25, 0
     cp    r24, r25
-    # Want this, breq MJ_L12
-    brne  MJ_L13
-    jmp   MJ_L12
+    # Want this, breq MJ_L14
+    brne  MJ_L15
+    jmp   MJ_L14
 
-MJ_L13:
+MJ_L15:
     # right operand
     # load a one byte expression off stack
     pop    r24
@@ -274,19 +480,19 @@ MJ_L13:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    breq MJ_L15
+    breq MJ_L17
 
     # result is false
-MJ_L14:
+MJ_L16:
     ldi     r24, 0
-    jmp      MJ_L16
+    jmp      MJ_L18
 
     # result is true
-MJ_L15:
+MJ_L17:
     ldi     r24, 1
 
     # store result of equal expression
-MJ_L16:
+MJ_L18:
     # push one byte expression onto stack
     push   r24
     # load a one byte expression off stack
@@ -294,7 +500,7 @@ MJ_L16:
     # push one byte expression onto stack
     push   r24
 
-MJ_L12:
+MJ_L14:
 
     # load condition and branch if false
     # load a one byte expression off stack
@@ -304,19 +510,19 @@ MJ_L12:
 
     #use cp to set SREG
     cp     r24, r25
-    #WANT breq MJ_L6
-    brne   MJ_L7
-    jmp    MJ_L6
-
-    # then label for if
-MJ_L7:
+    #WANT breq MJ_L8
+    brne   MJ_L9
     jmp    MJ_L8
 
+    # then label for if
+MJ_L9:
+    jmp    MJ_L10
+
     # else label for if
-MJ_L6:
+MJ_L8:
 
     # done label for if
-MJ_L8:
+MJ_L10:
 
     #### if statement
 
@@ -368,19 +574,19 @@ MJ_L8:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    breq MJ_L21
+    breq MJ_L23
 
     # result is false
-MJ_L20:
+MJ_L22:
     ldi     r24, 0
-    jmp      MJ_L22
+    jmp      MJ_L24
 
     # result is true
-MJ_L21:
+MJ_L23:
     ldi     r24, 1
 
     # store result of equal expression
-MJ_L22:
+MJ_L24:
     # push one byte expression onto stack
     push   r24
 
@@ -392,12 +598,12 @@ MJ_L22:
 
     #use cp to set SREG
     cp     r24, r25
-    #WANT breq MJ_L17
-    brne   MJ_L18
-    jmp    MJ_L17
+    #WANT breq MJ_L19
+    brne   MJ_L20
+    jmp    MJ_L19
 
     # then label for if
-MJ_L18:
+MJ_L20:
 
     #### if statement
 
@@ -406,12 +612,12 @@ MJ_L18:
     lds    r24, Button_Left
     # if button value is zero, push 0 else push 1
     tst    r24
-    breq   MJ_L26
-MJ_L27:
+    breq   MJ_L28
+MJ_L29:
     ldi    r24, 1
-    jmp    MJ_L28
-MJ_L26:
+    jmp    MJ_L30
 MJ_L28:
+MJ_L30:
     # push one byte expression onto stack
     push   r24
 
@@ -426,19 +632,19 @@ MJ_L28:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    breq MJ_L30
+    breq MJ_L32
 
     # result is false
-MJ_L29:
+MJ_L31:
     ldi     r24, 0
-    jmp      MJ_L31
+    jmp      MJ_L33
 
     # result is true
-MJ_L30:
+MJ_L32:
     ldi     r24, 1
 
     # store result of equal expression
-MJ_L31:
+MJ_L33:
     # push one byte expression onto stack
     push   r24
 
@@ -450,29 +656,29 @@ MJ_L31:
 
     #use cp to set SREG
     cp     r24, r25
-    #WANT breq MJ_L23
-    brne   MJ_L24
-    jmp    MJ_L23
-
-    # then label for if
-MJ_L24:
+    #WANT breq MJ_L25
+    brne   MJ_L26
     jmp    MJ_L25
 
-    # else label for if
-MJ_L23:
+    # then label for if
+MJ_L26:
+    jmp    MJ_L27
 
-    # done label for if
+    # else label for if
 MJ_L25:
-    jmp    MJ_L19
-
-    # else label for if
-MJ_L17:
 
     # done label for if
+MJ_L27:
+    jmp    MJ_L21
+
+    # else label for if
 MJ_L19:
 
+    # done label for if
+MJ_L21:
+
     #### while statement
-MJ_L32:
+MJ_L34:
 
     # True/1 expression
     ldi    r22, 1
@@ -484,12 +690,12 @@ MJ_L32:
     pop    r24
     ldi    r25,0
     cp     r24, r25
-    # WANT breq MJ_L34
-    brne   MJ_L33
-    jmp    MJ_L34
+    # WANT breq MJ_L36
+    brne   MJ_L35
+    jmp    MJ_L36
 
     # while loop body
-MJ_L33:
+MJ_L35:
 
     # NewExp
     ldi    r24, lo8(0)
@@ -567,20 +773,20 @@ MJ_L33:
     pop    r24
     # promoting a byte to an int
     tst     r24
-    brlt     MJ_L35
-    ldi    r25, 0
-    jmp    MJ_L36
-MJ_L35:
-    ldi    r25, hi8(-1)
-MJ_L36:
-    # promoting a byte to an int
-    tst     r18
     brlt     MJ_L37
-    ldi    r19, 0
+    ldi    r25, 0
     jmp    MJ_L38
 MJ_L37:
-    ldi    r19, hi8(-1)
+    ldi    r25, hi8(-1)
 MJ_L38:
+    # promoting a byte to an int
+    tst     r18
+    brlt     MJ_L39
+    ldi    r19, 0
+    jmp    MJ_L40
+MJ_L39:
+    ldi    r19, hi8(-1)
+MJ_L40:
 
     # Do add operation
     add    r24, r18
@@ -609,12 +815,12 @@ MJ_L38:
     pop    r25
     # promoting a byte to an int
     tst     r18
-    brlt     MJ_L39
+    brlt     MJ_L41
     ldi    r19, 0
-    jmp    MJ_L40
-MJ_L39:
+    jmp    MJ_L42
+MJ_L41:
     ldi    r19, hi8(-1)
-MJ_L40:
+MJ_L42:
 
     # Do add operation
     add    r24, r18
@@ -765,12 +971,12 @@ MJ_L40:
     lds    r24, Button_Left
     # if button value is zero, push 0 else push 1
     tst    r24
-    breq   MJ_L44
-MJ_L45:
+    breq   MJ_L46
+MJ_L47:
     ldi    r24, 1
-    jmp    MJ_L46
-MJ_L44:
+    jmp    MJ_L48
 MJ_L46:
+MJ_L48:
     # push one byte expression onto stack
     push   r24
 
@@ -785,19 +991,19 @@ MJ_L46:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    breq MJ_L48
+    breq MJ_L50
 
     # result is false
-MJ_L47:
+MJ_L49:
     ldi     r24, 0
-    jmp      MJ_L49
+    jmp      MJ_L51
 
     # result is true
-MJ_L48:
+MJ_L50:
     ldi     r24, 1
 
     # store result of equal expression
-MJ_L49:
+MJ_L51:
     # push one byte expression onto stack
     push   r24
 
@@ -809,12 +1015,12 @@ MJ_L49:
 
     #use cp to set SREG
     cp     r24, r25
-    #WANT breq MJ_L41
-    brne   MJ_L42
-    jmp    MJ_L41
+    #WANT breq MJ_L43
+    brne   MJ_L44
+    jmp    MJ_L43
 
     # then label for if
-MJ_L42:
+MJ_L44:
 
     # NewExp
     ldi    r24, lo8(0)
@@ -909,10 +1115,10 @@ MJ_L42:
     pop    r25
 
     call    MixedTest_SetLineColor
-    jmp    MJ_L43
+    jmp    MJ_L45
 
     # else label for if
-MJ_L41:
+MJ_L43:
 
     # NewExp
     ldi    r24, lo8(0)
@@ -1092,13 +1298,13 @@ MJ_L41:
     call    MixedTest_SetLineColor
 
     # done label for if
-MJ_L43:
+MJ_L45:
 
     # jump to while test
-    jmp    MJ_L32
+    jmp    MJ_L34
 
     # end of while
-MJ_L34:
+MJ_L36:
 
 
 /* epilogue start */
@@ -1165,19 +1371,19 @@ MixedTest_SetLineColor:
     pop    r25
     cp    r24, r18
     cpc   r25, r19
-    brlt MJ_L54
+    brlt MJ_L56
 
     # load false
-MJ_L53:
+MJ_L55:
     ldi     r24, 0
-    jmp      MJ_L55
+    jmp      MJ_L57
 
     # load true
-MJ_L54:
+MJ_L56:
     ldi    r24, 1
 
     # push result of less than
-MJ_L55:
+MJ_L57:
     # push one byte expression onto stack
     push   r24
 
@@ -1189,12 +1395,12 @@ MJ_L55:
 
     #use cp to set SREG
     cp     r24, r25
-    #WANT breq MJ_L50
-    brne   MJ_L51
-    jmp    MJ_L50
+    #WANT breq MJ_L52
+    brne   MJ_L53
+    jmp    MJ_L52
 
     # then label for if
-MJ_L51:
+MJ_L53:
 
     # Load constant int 0
     ldi    r24,lo8(0)
@@ -1603,13 +1809,13 @@ MJ_L51:
     pop    r24
     call   _Z6DrawPxhhh
     call   _Z12DisplaySlatev
-    jmp    MJ_L52
+    jmp    MJ_L54
 
     # else label for if
-MJ_L50:
+MJ_L52:
 
     # done label for if
-MJ_L52:
+MJ_L54:
 
 /* epilogue start for MixedTest_SetLineColor */
     # no return value
@@ -1710,19 +1916,19 @@ MixedTest_boundary_guard:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    brlt MJ_L57
+    brlt MJ_L59
 
     # load false
-MJ_L56:
+MJ_L58:
     ldi     r24, 0
-    jmp      MJ_L58
+    jmp      MJ_L60
 
     # load true
-MJ_L57:
+MJ_L59:
     ldi    r24, 1
 
     # push result of less than
-MJ_L58:
+MJ_L60:
     # push one byte expression onto stack
     push   r24
 
@@ -1734,11 +1940,11 @@ MJ_L58:
     # compare left exp with zero
     ldi r25, 0
     cp    r24, r25
-    # Want this, breq MJ_L59
-    brne  MJ_L60
-    jmp   MJ_L59
+    # Want this, breq MJ_L61
+    brne  MJ_L62
+    jmp   MJ_L61
 
-MJ_L60:
+MJ_L62:
     # right operand
     # load a one byte expression off stack
     pop    r24
@@ -1772,19 +1978,19 @@ MJ_L60:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    brlt MJ_L62
+    brlt MJ_L64
 
     # load false
-MJ_L61:
+MJ_L63:
     ldi     r24, 0
-    jmp      MJ_L63
+    jmp      MJ_L65
 
     # load true
-MJ_L62:
+MJ_L64:
     ldi    r24, 1
 
     # push result of less than
-MJ_L63:
+MJ_L65:
     # push one byte expression onto stack
     push   r24
     # load a one byte expression off stack
@@ -1792,7 +1998,7 @@ MJ_L63:
     # push one byte expression onto stack
     push   r24
 
-MJ_L59:
+MJ_L61:
 
     # &&: if left operand is false do not eval right
     # load a one byte expression off stack
@@ -1802,11 +2008,11 @@ MJ_L59:
     # compare left exp with zero
     ldi r25, 0
     cp    r24, r25
-    # Want this, breq MJ_L64
-    brne  MJ_L65
-    jmp   MJ_L64
+    # Want this, breq MJ_L66
+    brne  MJ_L67
+    jmp   MJ_L66
 
-MJ_L65:
+MJ_L67:
     # right operand
     # load a one byte expression off stack
     pop    r24
@@ -1861,19 +2067,19 @@ MJ_L65:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    brlt MJ_L67
+    brlt MJ_L69
 
     # load false
-MJ_L66:
+MJ_L68:
     ldi     r24, 0
-    jmp      MJ_L68
+    jmp      MJ_L70
 
     # load true
-MJ_L67:
+MJ_L69:
     ldi    r24, 1
 
     # push result of less than
-MJ_L68:
+MJ_L70:
     # push one byte expression onto stack
     push   r24
     # load a one byte expression off stack
@@ -1881,7 +2087,7 @@ MJ_L68:
     # push one byte expression onto stack
     push   r24
 
-MJ_L64:
+MJ_L66:
 
     # &&: if left operand is false do not eval right
     # load a one byte expression off stack
@@ -1891,11 +2097,11 @@ MJ_L64:
     # compare left exp with zero
     ldi r25, 0
     cp    r24, r25
-    # Want this, breq MJ_L69
-    brne  MJ_L70
-    jmp   MJ_L69
+    # Want this, breq MJ_L71
+    brne  MJ_L72
+    jmp   MJ_L71
 
-MJ_L70:
+MJ_L72:
     # right operand
     # load a one byte expression off stack
     pop    r24
@@ -1929,19 +2135,19 @@ MJ_L70:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    brlt MJ_L72
+    brlt MJ_L74
 
     # load false
-MJ_L71:
+MJ_L73:
     ldi     r24, 0
-    jmp      MJ_L73
+    jmp      MJ_L75
 
     # load true
-MJ_L72:
+MJ_L74:
     ldi    r24, 1
 
     # push result of less than
-MJ_L73:
+MJ_L75:
     # push one byte expression onto stack
     push   r24
     # load a one byte expression off stack
@@ -1949,7 +2155,7 @@ MJ_L73:
     # push one byte expression onto stack
     push   r24
 
-MJ_L69:
+MJ_L71:
 
 /* epilogue start for MixedTest_boundary_guard */
     # handle return value
@@ -1957,12 +2163,12 @@ MJ_L69:
     pop    r24
     # promoting a byte to an int
     tst     r24
-    brlt     MJ_L74
+    brlt     MJ_L76
     ldi    r25, 0
-    jmp    MJ_L75
-MJ_L74:
+    jmp    MJ_L77
+MJ_L76:
     ldi    r25, hi8(-1)
-MJ_L75:
+MJ_L77:
     # pop space off stack for parameters and locals
     pop    r30
     pop    r30
@@ -2060,19 +2266,19 @@ MixedTest_safeSetPixel:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    breq MJ_L80
+    breq MJ_L82
 
     # result is false
-MJ_L79:
+MJ_L81:
     ldi     r24, 0
-    jmp      MJ_L81
+    jmp      MJ_L83
 
     # result is true
-MJ_L80:
+MJ_L82:
     ldi     r24, 1
 
     # store result of equal expression
-MJ_L81:
+MJ_L83:
     # push one byte expression onto stack
     push   r24
 
@@ -2084,12 +2290,12 @@ MJ_L81:
 
     #use cp to set SREG
     cp     r24, r25
-    #WANT breq MJ_L76
-    brne   MJ_L77
-    jmp    MJ_L76
+    #WANT breq MJ_L78
+    brne   MJ_L79
+    jmp    MJ_L78
 
     # then label for if
-MJ_L77:
+MJ_L79:
 
     # IdExp
     # load value for variable x
@@ -2127,13 +2333,13 @@ MJ_L77:
     pop    r24
     call   _Z6DrawPxhhh
     call   _Z12DisplaySlatev
-    jmp    MJ_L78
+    jmp    MJ_L80
 
     # else label for if
-MJ_L76:
+MJ_L78:
 
     # done label for if
-MJ_L78:
+MJ_L80:
 
 /* epilogue start for MixedTest_safeSetPixel */
     # no return value
@@ -2237,11 +2443,11 @@ MixedTest_safeSwitchPixel:
     # compare left exp with zero
     ldi r25, 0
     cp    r24, r25
-    # Want this, breq MJ_L85
-    brne  MJ_L86
-    jmp   MJ_L85
+    # Want this, breq MJ_L87
+    brne  MJ_L88
+    jmp   MJ_L87
 
-MJ_L86:
+MJ_L88:
     # right operand
     # load a one byte expression off stack
     pop    r24
@@ -2295,7 +2501,7 @@ MJ_L86:
     # push one byte expression onto stack
     push   r24
 
-MJ_L85:
+MJ_L87:
 
     # load condition and branch if false
     # load a one byte expression off stack
@@ -2305,12 +2511,12 @@ MJ_L85:
 
     #use cp to set SREG
     cp     r24, r25
-    #WANT breq MJ_L82
-    brne   MJ_L83
-    jmp    MJ_L82
+    #WANT breq MJ_L84
+    brne   MJ_L85
+    jmp    MJ_L84
 
     # then label for if
-MJ_L83:
+MJ_L85:
 
     # Load constant int 7
     ldi    r24,lo8(7)
@@ -2376,13 +2582,13 @@ MJ_L83:
     pop    r24
     call   _Z6DrawPxhhh
     call   _Z12DisplaySlatev
-    jmp    MJ_L84
+    jmp    MJ_L86
 
     # else label for if
-MJ_L82:
+MJ_L84:
 
     # done label for if
-MJ_L84:
+MJ_L86:
 
     # IdExp
     # load value for variable x1
