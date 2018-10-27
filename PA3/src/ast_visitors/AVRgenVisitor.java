@@ -97,10 +97,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   private void demoteInt2Byte(Node n) {
     if (isInt(getType(n))) {
-      setType(n, Type.BYTE);
       dumpWarning(n.getLine(), n.getPos(), "Demoting a INT to BYTE, may lose precision here...");
-      write2File("\n\t## This is a auto typecast: demote Int to Byte");
-      outByteCast(null);
+      write2File(
+        "\n\n\t## This is a auto typecast: demote Int to Byte" +
+        "\n\t# 2 bytes off stack and only pushing low order bits" +
+        "\n\t# back on.  Low order bits are on top of stack." +
+        "\n\tpop r24 # pop lower bits" +
+        "\n\tpop r25 # pop higher bits" +
+        "\n\tpush r24 # push lower bits back \n"
+      );
     }
   }
 
