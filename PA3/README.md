@@ -16,7 +16,7 @@ There are some potential problems while testing the compiler, but it is not beca
 
 * In the file `PA2error.java`, the Java compiler will output several errors at one time, but my compiler will only output the first error it encounters and then exit, which also follows the design of the original `MJ.jar`.
 
-Except things above, this compiler meets all the requirements in the PA3 Rubric, it can correctly generate code for every test case under folder `PA3/TestCasesMeggy/WorkingTestCases`. You can run `./regress.sh ` under `PA3/TestCasesMeggy` to auto test all the test cases. Beside the test cases below, I have an extra test case `PA3/TestCasesMeggy/MyTestCases/RubricTest.java`, which test everything memtioned in `PA3 Rubric`.
+Except things above, this compiler meets all the requirements in the PA3 Rubric, it can correctly generate code for every test case under folder `PA3/TestCasesMeggy/WorkingTestCases`. You can run `./regress.sh ` under `PA3/TestCasesMeggy` to auto test all the test cases. Beside the test cases below, I have an extra test case called `PA3/TestCasesMeggy/MyTestCases/RubricTest.java`, which test everything mentioned in `PA3 Rubric`.
 
 ```plaintext
 PA3/TestCasesMeggy/WorkingTestCases

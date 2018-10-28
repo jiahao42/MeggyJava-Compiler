@@ -1,8 +1,2 @@
-Setting pixel (1,2) to RED
-Getting pixel (1,2) ==>RED
-Setting pixel (7,7) to GREEN
-Setting pixel (6,6) to YELLOW
-Setting pixel (5,5) to VIOLET
-Setting pixel (1,2) to WHITE
-Getting pixel (1,2) ==>WHITE
-Setting pixel (1,2) to GREEN
+2018-10-28 15:29:11,583 [main] FATAL ui.Main - Assembly File passed in does not exist.
+Assembly File passed in does not exist.
