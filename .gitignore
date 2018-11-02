@@ -1,6 +1,8 @@
+*.DS_Store
+
 # Compiled class file
 *.class
-!*/src/java_cup/
+!/PA3/src/java_cup/*
 
 # Generated Graphviz file
 *.dot
