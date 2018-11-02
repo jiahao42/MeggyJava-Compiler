@@ -2,7 +2,7 @@
 
 # Compiled class file
 *.class
-!/PA3/src/java_cup/*
+!/**/src/java_cup/**
 
 # Generated Graphviz file
 *.dot
