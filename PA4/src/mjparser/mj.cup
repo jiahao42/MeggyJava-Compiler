@@ -140,14 +140,23 @@ main_class ::=
     ;
 
 class_declaration_list ::=
-    class_declaration_list class_declaration
+    class_declaration_list:list class_declaration:c
+    {:
+        if (c != null) {
+            list.add(c);
+        }
+        RESULT = list;
+    :}
     | /* Empty */
+    {:
+        RESULT = new LinkedList<TopClassDecl>();
+    :}
     ;
 
 class_declaration ::=
-    CLASS ID:id LBRACE method_declaration_list:methods RBRACE
+    CLASS identifier:id LBRACE method_declaration_list:methods RBRACE
     {:
-        // RESULT = new TopClassDecl(id.line, id.pos, id, new LinkedList<VarDecl>(), methods);
+        RESULT = new TopClassDecl(id.getLine(), id.getPos(), id.getLexeme(), new LinkedList<VarDecl>(), methods);
     :}
     ;
 

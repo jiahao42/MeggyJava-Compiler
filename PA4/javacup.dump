@@ -33,7 +33,7 @@ Warning : Non terminal "exp_arg" was declared but never used
 [4] main_class ::= CLASS ID LBRACE PUBLIC STATIC VOID MAIN LPAREN STRING LBRACKET RBRACKET ID RPAREN block_statement NT$1 RBRACE 
 [5] class_declaration_list ::= class_declaration_list class_declaration 
 [6] class_declaration_list ::= 
-[7] class_declaration ::= CLASS ID LBRACE method_declaration_list RBRACE 
+[7] class_declaration ::= CLASS identifier LBRACE method_declaration_list RBRACE 
 [8] identifier ::= ID 
 [9] param_list ::= param_list COMMA formal_param 
 [10] param_list ::= formal_param 
@@ -145,7 +145,7 @@ transition on class_declaration_list to state [8]
 -------------------
 lalr_state [8]: {
   [class_declaration_list ::= class_declaration_list (*) class_declaration , {EOF CLASS }]
-  [class_declaration ::= (*) CLASS ID LBRACE method_declaration_list RBRACE , {EOF CLASS }]
+  [class_declaration ::= (*) CLASS identifier LBRACE method_declaration_list RBRACE , {EOF CLASS }]
   [program ::= IMPORT MEGGY SEMI main_class NT$0 class_declaration_list (*) , {EOF }]
 }
 transition on class_declaration to state [10]
@@ -153,8 +153,10 @@ transition on CLASS to state [9]
 
 -------------------
 lalr_state [9]: {
-  [class_declaration ::= CLASS (*) ID LBRACE method_declaration_list RBRACE , {EOF CLASS }]
+  [identifier ::= (*) ID , {LBRACE }]
+  [class_declaration ::= CLASS (*) identifier LBRACE method_declaration_list RBRACE , {EOF CLASS }]
 }
+transition on identifier to state [12]
 transition on ID to state [11]
 
 -------------------
@@ -164,35 +166,40 @@ lalr_state [10]: {
 
 -------------------
 lalr_state [11]: {
-  [class_declaration ::= CLASS ID (*) LBRACE method_declaration_list RBRACE , {EOF CLASS }]
+  [identifier ::= ID (*) , {LPAREN RPAREN LBRACE COMMA }]
 }
-transition on LBRACE to state [12]
 
 -------------------
 lalr_state [12]: {
-  [class_declaration ::= CLASS ID LBRACE (*) method_declaration_list RBRACE , {EOF CLASS }]
-  [method_declaration_list ::= (*) , {RBRACE PUBLIC }]
-  [method_declaration_list ::= (*) method_declaration_list method_declaration , {RBRACE PUBLIC }]
+  [class_declaration ::= CLASS identifier (*) LBRACE method_declaration_list RBRACE , {EOF CLASS }]
 }
-transition on method_declaration_list to state [13]
+transition on LBRACE to state [13]
 
 -------------------
 lalr_state [13]: {
-  [class_declaration ::= CLASS ID LBRACE method_declaration_list (*) RBRACE , {EOF CLASS }]
-  [method_declaration ::= (*) PUBLIC type identifier LPAREN param_list RPAREN LBRACE statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
-  [method_declaration_list ::= method_declaration_list (*) method_declaration , {RBRACE PUBLIC }]
+  [class_declaration ::= CLASS identifier LBRACE (*) method_declaration_list RBRACE , {EOF CLASS }]
+  [method_declaration_list ::= (*) , {RBRACE PUBLIC }]
+  [method_declaration_list ::= (*) method_declaration_list method_declaration , {RBRACE PUBLIC }]
 }
-transition on method_declaration to state [16]
-transition on PUBLIC to state [15]
-transition on RBRACE to state [14]
+transition on method_declaration_list to state [14]
 
 -------------------
 lalr_state [14]: {
-  [class_declaration ::= CLASS ID LBRACE method_declaration_list RBRACE (*) , {EOF CLASS }]
+  [class_declaration ::= CLASS identifier LBRACE method_declaration_list (*) RBRACE , {EOF CLASS }]
+  [method_declaration ::= (*) PUBLIC type identifier LPAREN param_list RPAREN LBRACE statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
+  [method_declaration_list ::= method_declaration_list (*) method_declaration , {RBRACE PUBLIC }]
 }
+transition on method_declaration to state [17]
+transition on PUBLIC to state [16]
+transition on RBRACE to state [15]
 
 -------------------
 lalr_state [15]: {
+  [class_declaration ::= CLASS identifier LBRACE method_declaration_list RBRACE (*) , {EOF CLASS }]
+}
+
+-------------------
+lalr_state [16]: {
   [type ::= (*) BYTE , {ID }]
   [method_declaration ::= PUBLIC (*) type identifier LPAREN param_list RPAREN LBRACE statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
   [type ::= (*) MEGGYTONE , {ID }]
@@ -202,66 +209,61 @@ lalr_state [15]: {
   [type ::= (*) INT , {ID }]
   [type ::= (*) MEGGYCOLOR , {ID }]
 }
-transition on INT to state [24]
-transition on VOID to state [23]
-transition on BOOLEAN to state [22]
-transition on BYTE to state [21]
-transition on MEGGYBUTTON to state [20]
-transition on MEGGYCOLOR to state [19]
-transition on type to state [18]
-transition on MEGGYTONE to state [17]
+transition on INT to state [25]
+transition on VOID to state [24]
+transition on BOOLEAN to state [23]
+transition on BYTE to state [22]
+transition on MEGGYBUTTON to state [21]
+transition on MEGGYCOLOR to state [20]
+transition on type to state [19]
+transition on MEGGYTONE to state [18]
 
 -------------------
-lalr_state [16]: {
+lalr_state [17]: {
   [method_declaration_list ::= method_declaration_list method_declaration (*) , {RBRACE PUBLIC }]
 }
 
 -------------------
-lalr_state [17]: {
+lalr_state [18]: {
   [type ::= MEGGYTONE (*) , {ID }]
 }
 
 -------------------
-lalr_state [18]: {
+lalr_state [19]: {
   [identifier ::= (*) ID , {LPAREN }]
   [method_declaration ::= PUBLIC type (*) identifier LPAREN param_list RPAREN LBRACE statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
 }
 transition on identifier to state [26]
-transition on ID to state [25]
+transition on ID to state [11]
 
 -------------------
-lalr_state [19]: {
+lalr_state [20]: {
   [type ::= MEGGYCOLOR (*) , {ID }]
 }
 
 -------------------
-lalr_state [20]: {
+lalr_state [21]: {
   [type ::= MEGGYBUTTON (*) , {ID }]
 }
 
 -------------------
-lalr_state [21]: {
+lalr_state [22]: {
   [type ::= BYTE (*) , {ID }]
 }
 
 -------------------
-lalr_state [22]: {
+lalr_state [23]: {
   [type ::= BOOLEAN (*) , {ID }]
 }
 
 -------------------
-lalr_state [23]: {
+lalr_state [24]: {
   [type ::= VOID (*) , {ID }]
 }
 
 -------------------
-lalr_state [24]: {
-  [type ::= INT (*) , {ID }]
-}
-
--------------------
 lalr_state [25]: {
-  [identifier ::= ID (*) , {LPAREN RPAREN COMMA }]
+  [type ::= INT (*) , {ID }]
 }
 
 -------------------
@@ -286,15 +288,15 @@ lalr_state [27]: {
   [type ::= (*) MEGGYBUTTON , {ID }]
 }
 transition on param_list to state [30]
-transition on BYTE to state [21]
+transition on BYTE to state [22]
 transition on formal_param to state [29]
-transition on MEGGYCOLOR to state [19]
+transition on MEGGYCOLOR to state [20]
 transition on type to state [28]
-transition on MEGGYBUTTON to state [20]
-transition on MEGGYTONE to state [17]
-transition on VOID to state [23]
-transition on BOOLEAN to state [22]
-transition on INT to state [24]
+transition on MEGGYBUTTON to state [21]
+transition on MEGGYTONE to state [18]
+transition on VOID to state [24]
+transition on BOOLEAN to state [23]
+transition on INT to state [25]
 
 -------------------
 lalr_state [28]: {
@@ -302,7 +304,7 @@ lalr_state [28]: {
   [formal_param ::= type (*) identifier , {RPAREN COMMA }]
 }
 transition on identifier to state [138]
-transition on ID to state [25]
+transition on ID to state [11]
 
 -------------------
 lalr_state [29]: {
@@ -329,15 +331,15 @@ lalr_state [31]: {
   [formal_param ::= (*) type identifier , {RPAREN COMMA }]
   [type ::= (*) MEGGYBUTTON , {ID }]
 }
-transition on BYTE to state [21]
+transition on BYTE to state [22]
 transition on formal_param to state [137]
 transition on type to state [28]
-transition on MEGGYCOLOR to state [19]
-transition on MEGGYBUTTON to state [20]
-transition on MEGGYTONE to state [17]
-transition on VOID to state [23]
-transition on BOOLEAN to state [22]
-transition on INT to state [24]
+transition on MEGGYCOLOR to state [20]
+transition on MEGGYBUTTON to state [21]
+transition on MEGGYTONE to state [18]
+transition on VOID to state [24]
+transition on BOOLEAN to state [23]
+transition on INT to state [25]
 
 -------------------
 lalr_state [32]: {
@@ -2536,58 +2538,58 @@ From state #9
 From state #10
  [term 0:REDUCE(with prod 5)] [term 29:REDUCE(with prod 5)]
 From state #11
- [term 7:SHIFT(to state 12)]
-From state #12
- [term 8:REDUCE(with prod 15)] [term 24:REDUCE(with prod 15)]
-From state #13
- [term 8:SHIFT(to state 14)] [term 24:SHIFT(to state 15)]
-From state #14
- [term 0:REDUCE(with prod 7)] [term 29:REDUCE(with prod 7)]
-From state #15
- [term 9:SHIFT(to state 22)] [term 10:SHIFT(to state 24)]
- [term 11:SHIFT(to state 21)] [term 28:SHIFT(to state 23)]
- [term 37:SHIFT(to state 19)] [term 38:SHIFT(to state 20)]
- [term 39:SHIFT(to state 17)]
-From state #16
- [term 8:REDUCE(with prod 14)] [term 24:REDUCE(with prod 14)]
-From state #17
- [term 47:REDUCE(with prod 24)]
-From state #18
- [term 47:SHIFT(to state 25)]
-From state #19
- [term 47:REDUCE(with prod 22)]
-From state #20
- [term 47:REDUCE(with prod 23)]
-From state #21
- [term 47:REDUCE(with prod 19)]
-From state #22
- [term 47:REDUCE(with prod 18)]
-From state #23
- [term 47:REDUCE(with prod 21)]
-From state #24
- [term 47:REDUCE(with prod 20)]
-From state #25
  [term 5:REDUCE(with prod 8)] [term 6:REDUCE(with prod 8)]
- [term 21:REDUCE(with prod 8)]
+ [term 7:REDUCE(with prod 8)] [term 21:REDUCE(with prod 8)]
+From state #12
+ [term 7:SHIFT(to state 13)]
+From state #13
+ [term 8:REDUCE(with prod 15)] [term 24:REDUCE(with prod 15)]
+From state #14
+ [term 8:SHIFT(to state 15)] [term 24:SHIFT(to state 16)]
+From state #15
+ [term 0:REDUCE(with prod 7)] [term 29:REDUCE(with prod 7)]
+From state #16
+ [term 9:SHIFT(to state 23)] [term 10:SHIFT(to state 25)]
+ [term 11:SHIFT(to state 22)] [term 28:SHIFT(to state 24)]
+ [term 37:SHIFT(to state 20)] [term 38:SHIFT(to state 21)]
+ [term 39:SHIFT(to state 18)]
+From state #17
+ [term 8:REDUCE(with prod 14)] [term 24:REDUCE(with prod 14)]
+From state #18
+ [term 47:REDUCE(with prod 24)]
+From state #19
+ [term 47:SHIFT(to state 11)]
+From state #20
+ [term 47:REDUCE(with prod 22)]
+From state #21
+ [term 47:REDUCE(with prod 23)]
+From state #22
+ [term 47:REDUCE(with prod 19)]
+From state #23
+ [term 47:REDUCE(with prod 18)]
+From state #24
+ [term 47:REDUCE(with prod 21)]
+From state #25
+ [term 47:REDUCE(with prod 20)]
 From state #26
  [term 5:SHIFT(to state 27)]
 From state #27
- [term 6:REDUCE(with prod 11)] [term 9:SHIFT(to state 22)]
- [term 10:SHIFT(to state 24)] [term 11:SHIFT(to state 21)]
- [term 21:REDUCE(with prod 11)] [term 28:SHIFT(to state 23)]
- [term 37:SHIFT(to state 19)] [term 38:SHIFT(to state 20)]
- [term 39:SHIFT(to state 17)]
+ [term 6:REDUCE(with prod 11)] [term 9:SHIFT(to state 23)]
+ [term 10:SHIFT(to state 25)] [term 11:SHIFT(to state 22)]
+ [term 21:REDUCE(with prod 11)] [term 28:SHIFT(to state 24)]
+ [term 37:SHIFT(to state 20)] [term 38:SHIFT(to state 21)]
+ [term 39:SHIFT(to state 18)]
 From state #28
- [term 47:SHIFT(to state 25)]
+ [term 47:SHIFT(to state 11)]
 From state #29
  [term 6:REDUCE(with prod 10)] [term 21:REDUCE(with prod 10)]
 From state #30
  [term 6:SHIFT(to state 32)] [term 21:SHIFT(to state 31)]
 From state #31
- [term 9:SHIFT(to state 22)] [term 10:SHIFT(to state 24)]
- [term 11:SHIFT(to state 21)] [term 28:SHIFT(to state 23)]
- [term 37:SHIFT(to state 19)] [term 38:SHIFT(to state 20)]
- [term 39:SHIFT(to state 17)]
+ [term 9:SHIFT(to state 23)] [term 10:SHIFT(to state 25)]
+ [term 11:SHIFT(to state 22)] [term 28:SHIFT(to state 24)]
+ [term 37:SHIFT(to state 20)] [term 38:SHIFT(to state 21)]
+ [term 39:SHIFT(to state 18)]
 From state #32
  [term 7:SHIFT(to state 33)]
 From state #33
@@ -3317,20 +3319,21 @@ From state #7
 From state #8
  [non term 7->state 10]
 From state #9
+ [non term 16->state 12]
 From state #10
 From state #11
 From state #12
- [non term 10->state 13]
 From state #13
- [non term 9->state 16]
+ [non term 10->state 14]
 From state #14
+ [non term 9->state 17]
 From state #15
- [non term 6->state 18]
 From state #16
+ [non term 6->state 19]
 From state #17
 From state #18
- [non term 16->state 26]
 From state #19
+ [non term 16->state 26]
 From state #20
 From state #21
 From state #22
