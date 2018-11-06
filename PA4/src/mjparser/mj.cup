@@ -88,6 +88,16 @@ non terminal IStatement statement;
 non terminal LinkedList<IStatement> statement_list;
 non terminal BlockStatement block_statement;
 non terminal MainClass main_class;
+non terminal type;
+non terminal class_declaration;
+non terminal class_declaration_list;
+non terminal method_declaration;
+non terminal method_declaration_list;
+non terminal formal_param;
+non terminal param_list;
+non terminal return_stmt;
+non terminal exp_args_list;
+non terminal exp_arg;
 
 /* 
 Declare precedence and associativity here
@@ -106,6 +116,7 @@ precedence right NOT;
 precedence right UMINUS;
 precedence left RBRACKET, RBRACKET, DOT, LPAREN, RPAREN;
 precedence left ELSE;
+precedence left COMMA;
 
 
 
@@ -113,7 +124,7 @@ precedence left ELSE;
 start with program;
 
 program ::= 
-    IMPORT:i MEGGY SEMI main_class:m {: RESULT = new Program(i.line, i.pos, m, new LinkedList<IClassDecl>()); :}
+    IMPORT:i MEGGY SEMI main_class:m {: RESULT = new Program(i.line, i.pos, m, new LinkedList<IClassDecl>()); :} class_declaration_list
     ;
     
 main_class ::=
@@ -127,15 +138,64 @@ main_class ::=
         RBRACE
     ;
 
+class_declaration_list ::=
+    class_declaration_list class_declaration
+    | /* Empty */
+    ;
+
+class_declaration ::=
+    CLASS ID:id LBRACE method_declaration_list RBRACE
+    ;
+
+param_list ::=
+    param_list COMMA formal_param
+    | formal_param
+    | /* Empty */
+    ;
+
+formal_param ::= type ID;
+
+method_declaration ::=
+    PUBLIC type ID LPAREN param_list RPAREN LBRACE statement_list return_stmt RBRACE 
+    ;
+
+method_declaration_list ::=
+    method_declaration_list method_declaration
+    | /* Empty */
+    ;
+
+return_stmt ::=
+    RETURN exp COMMA
+    | /* Empty */
+    ;
+
+type ::=
+    BOOLEAN
+    | BYTE
+    | INT
+    | VOID
+    | MEGGYCOLOR
+    | MEGGYBUTTON
+    | MEGGYTONE
+    ;
+
 statement ::= 
     MEGGYSETPIXEL:msp LPAREN exp:e1 COMMA exp:e2 COMMA exp:e3 RPAREN SEMI
     {:
         RESULT = new MeggySetPixel(msp.line, msp.pos, e1, e2, e3);
     :}
+    | MEGGYTONESTART:mt LPAREN exp COMMA exp COMMA exp RPAREN SEMI
+    {:
+        // TODO
+    :}
     | MEGGYDELAY:md LPAREN exp:e RPAREN SEMI
     {:
         RESULT = new MeggyDelay(md.line, md.pos, e);
     :}
+    | exp DOT ID LPAREN exp_args_list RPAREN SEMI
+    {:
+        // TODO
+    :} 
     | IF:i LPAREN exp:e RPAREN statement:s
     {:
         RESULT = new IfStatement(i.line, i.pos, e, s, null);
@@ -173,6 +233,13 @@ block_statement ::=
     :}
     ;
 
+exp_args_list ::=
+    exp_args_list COMMA exp
+    | exp
+    | /* Empty */
+    ;
+
+
 exp ::= 
     exp:e1 AND:op exp:e2
     {:
@@ -198,6 +265,10 @@ exp ::=
     {:
         RESULT = new NegExp(m.line, m.pos, e);
     :}
+    | exp DOT ID LPAREN exp_args_list RPAREN
+    {:
+        // TODO
+    :}
     | MEGGYGETPIXEL:m LPAREN exp:e1 COMMA exp:e2 RPAREN
     {:
         RESULT = new MeggyGetPixel(m.line, m.pos, e1, e2);
@@ -222,6 +293,10 @@ exp ::=
     {:
         RESULT = new ButtonLiteral(b.line, b.pos, b.lexeme, b.value);
     :}
+    | TONE_LITERAL:t
+    {:
+        // TODO
+    :}
     | TRUE:t
     {:
         RESULT = new TrueLiteral(t.line, t.pos, t.lexeme, t.value);
@@ -237,6 +312,18 @@ exp ::=
     | LPAREN exp:e RPAREN 
     {:
         RESULT = e;
+    :}
+    | ID 
+    {:
+        // TODO
+    :}
+    | THIS
+    {:
+        // TODO
+    :}
+    | NEW ID LPAREN RPAREN
+    {:
+        // TODO
     :}
     ;
 
