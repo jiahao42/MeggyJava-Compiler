@@ -144,7 +144,10 @@ class_declaration_list ::=
     ;
 
 class_declaration ::=
-    CLASS ID:id LBRACE method_declaration_list RBRACE
+    CLASS ID:id LBRACE method_declaration_list:methods RBRACE
+    {:
+        // RESULT = new TopClassDecl(id.line, id.pos, id, new LinkedList<VarDecl>(), methods);
+    :}
     ;
 
 param_list ::=
@@ -170,13 +173,34 @@ return_stmt ::=
     ;
 
 type ::=
-    BOOLEAN
-    | BYTE
-    | INT
-    | VOID
-    | MEGGYCOLOR
-    | MEGGYBUTTON
-    | MEGGYTONE
+    BOOLEAN:b
+    {:
+        RESULT = new BoolType(b.line, b.pos);
+    :}
+    | BYTE:b
+    {:
+        RESULT = new ByteType(b.line, b.pos);
+    :}
+    | INT:i
+    {:
+        RESULT = new IntType(i.line, i.pos);
+    :}
+    | VOID:v
+    {:
+        RESULT = new VoidType(v.line, v.pos);
+    :}
+    | MEGGYCOLOR:m
+    {:
+        RESULT = new ColorType(m.line, m.pos);
+    :}
+    | MEGGYBUTTON:m
+    {:
+        RESULT = new ButtonType(m.line, m.pos);
+    :}
+    | MEGGYTONE:m
+    {:
+        RESULT = new ToneType(m.line, m.pos);
+    :}
     ;
 
 statement ::= 
