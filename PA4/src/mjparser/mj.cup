@@ -262,17 +262,17 @@ statement ::=
     {:
         RESULT = new MeggySetPixel(msp.line, msp.pos, e1, e2, e3);
     :}
-    | MEGGYTONESTART:mt LPAREN exp COMMA exp COMMA exp RPAREN SEMI
+    | MEGGYTONESTART:mt LPAREN exp:e1 COMMA exp:e2 RPAREN SEMI
     {:
-        // TODO
+        RESULT = new MeggyToneStart(mt.line, mt.pos, e1, e2);
     :}
     | MEGGYDELAY:md LPAREN exp:e RPAREN SEMI
     {:
         RESULT = new MeggyDelay(md.line, md.pos, e);
     :}
-    | exp DOT ID LPAREN exp_args_list RPAREN SEMI
+    | exp:e1 DOT identifier:id LPAREN exp_args_list:list RPAREN SEMI
     {:
-        // TODO
+        RESULT = new CallStatement(e1.getLine(), e1.getPos(), e1, id.getLexeme(), list);
     :} 
     | IF:i LPAREN exp:e RPAREN statement:s
     {:
@@ -343,9 +343,9 @@ exp ::=
     {:
         RESULT = new NegExp(m.line, m.pos, e);
     :}
-    | exp DOT ID LPAREN exp_args_list RPAREN
+    | exp:e1 DOT identifier:id LPAREN exp_args_list:list RPAREN
     {:
-        // TODO
+        RESULT = new CallExp(e1.getLine(), e1.getPos(), e1, id.getLexeme(), list);
     :}
     | MEGGYGETPIXEL:m LPAREN exp:e1 COMMA exp:e2 RPAREN
     {:
@@ -373,7 +373,7 @@ exp ::=
     :}
     | TONE_LITERAL:t
     {:
-        // TODO
+        RESULT = new ToneLiteral(t.line, t.pos, t.lexeme, t.value);
     :}
     | TRUE:t
     {:
@@ -391,17 +391,17 @@ exp ::=
     {:
         RESULT = e;
     :}
-    | ID 
+    | identifier:id
     {:
-        // TODO
+        RESULT = id;
     :}
-    | THIS
+    | THIS:t
     {:
-        // TODO
+        RESULT = new ThisLiteral(t.line, t.pos, t.lexeme, t.value);
     :}
-    | NEW ID LPAREN RPAREN
+    | NEW:n identifier:id LPAREN RPAREN
     {:
-        // TODO
+        RESULT = new NewExp(n.line, n.pos, id.getLexeme());
     :}
     ;
 
