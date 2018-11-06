@@ -88,16 +88,17 @@ non terminal IStatement statement;
 non terminal LinkedList<IStatement> statement_list;
 non terminal BlockStatement block_statement;
 non terminal MainClass main_class;
-non terminal type;
-non terminal class_declaration;
-non terminal class_declaration_list;
-non terminal method_declaration;
-non terminal method_declaration_list;
-non terminal formal_param;
-non terminal param_list;
+non terminal IType type;
+non terminal TopClassDecl class_declaration;
+non terminal LinkedList<TopClassDecl> class_declaration_list;
+non terminal MethodDecl method_declaration;
+non terminal LinkedList<MethodDecl> method_declaration_list;
+non terminal Formal formal_param;
+non terminal LinkedList<Formal> param_list;
 non terminal return_stmt;
-non terminal exp_args_list;
-non terminal exp_arg;
+non terminal LinkedList<IExp> exp_args_list;
+non terminal IExp exp_arg;
+non terminal ILiteral identifier;
 
 /* 
 Declare precedence and associativity here
@@ -150,13 +151,39 @@ class_declaration ::=
     :}
     ;
 
-param_list ::=
-    param_list COMMA formal_param
-    | formal_param
-    | /* Empty */
+identifier ::=
+    ID:i
+    {:
+        RESULT = new IdLiteral(i.line, i.pos, i.lexeme);
+    :}
     ;
 
-formal_param ::= type ID;
+param_list ::=
+    param_list:list COMMA formal_param:param
+    {:
+        if (param != null) {
+            list.add(param);
+        }
+        RESULT = list;
+    :}
+    | formal_param:param
+    {:
+        LinkedList<Formal> list = new LinkedList<Formal>();
+        list.add(param);
+        RESULT = list;
+    :}
+    | /* Empty */
+    {:
+        RESULT = new LinkedList<Formal>();
+    :}
+    ;
+
+formal_param ::= 
+    type:t identifier:id
+    {:
+        RESULT = new Formal(t.getLine(), t.getPos(), t, id.getLexeme());
+    :}
+    ;
 
 method_declaration ::=
     PUBLIC type ID LPAREN param_list RPAREN LBRACE statement_list return_stmt RBRACE 
