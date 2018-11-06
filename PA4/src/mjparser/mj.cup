@@ -95,7 +95,7 @@ non terminal MethodDecl method_declaration;
 non terminal LinkedList<MethodDecl> method_declaration_list;
 non terminal Formal formal_param;
 non terminal LinkedList<Formal> param_list;
-non terminal return_stmt;
+non terminal IExp return_stmt;
 non terminal LinkedList<IExp> exp_args_list;
 non terminal IExp exp_arg;
 non terminal ILiteral identifier;
@@ -186,17 +186,35 @@ formal_param ::=
     ;
 
 method_declaration ::=
-    PUBLIC type ID LPAREN param_list RPAREN LBRACE statement_list return_stmt RBRACE 
+    PUBLIC type:t identifier:id LPAREN param_list:p_list RPAREN LBRACE statement_list:s_list return_stmt:rt RBRACE 
+    {:
+        RESULT = new MethodDecl(id.getLine(), id.getPos(), t, id.getLexeme(), p_list, new LinkedList<VarDecl>(), s_list, rt);
+    :}
     ;
 
 method_declaration_list ::=
-    method_declaration_list method_declaration
+    method_declaration_list:list method_declaration:m
+    {:
+        if (m != null) {
+            list.add(m);
+        }
+        RESULT = list;
+    :}
     | /* Empty */
+    {:
+        RESULT = new LinkedList<MethodDecl>();
+    :}
     ;
 
 return_stmt ::=
-    RETURN exp COMMA
+    RETURN exp:e SEMI
+    {:
+        RESULT = e;
+    :}
     | /* Empty */
+    {:
+        RESULT = null;
+    :}
     ;
 
 type ::=
