@@ -6,6 +6,7 @@
 
 # Testcases
 /**/TestCasesMeggy/*.java
+/**/TestCasesMeggy/*.s
 
 # Generated diff files
 t1
