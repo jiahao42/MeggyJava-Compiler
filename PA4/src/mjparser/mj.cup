@@ -111,6 +111,7 @@ Declare precedence and associativity here
 */
 precedence left AND;
 precedence left EQUAL;
+precedence left LT;
 precedence left PLUS, MINUS;
 precedence left TIMES;
 precedence right NOT;
@@ -312,9 +313,25 @@ block_statement ::=
     ;
 
 exp_args_list ::=
-    exp_args_list COMMA exp
-    | exp
+    exp_args_list:list COMMA exp:e
+    {:
+        if (e != null) {
+            list.add(e);
+        }
+        RESULT = list;
+    :}
+    | exp:e 
+    {:
+        LinkedList<IExp> list = new LinkedList<IExp>();
+        if (e != null) {
+            list.add(e);
+        }
+        RESULT = list;
+    :}
     | /* Empty */
+    {:
+        RESULT = new LinkedList<IExp>();
+    :}
     ;
 
 
@@ -322,6 +339,10 @@ exp ::=
     exp:e1 AND:op exp:e2
     {:
         RESULT = new AndExp(op.line, op.pos, e1, e2);
+    :}
+    | exp:e1 LT:lt exp:e2
+    {:
+        RESULT = new LtExp(lt.line, lt.pos, e1, e2);
     :}
     | exp:e1 EQUAL:eq exp:e2
     {:
