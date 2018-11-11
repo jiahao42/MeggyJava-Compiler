@@ -1,12 +1,14 @@
+# macOS dir files
 *.DS_Store
 
 # Compiled class file
 *.class
-!/**/src/java_cup/**
+!/**/src/java_cup/**/*.class
 
 # Testcases
 /**/TestCasesMeggy/*.java
-/**/TestCasesMeggy/*.s
+/**/TestCasesMeggy/**/*.s
+!/**/TestCasesMeggy/SampleTestCases/**
 
 # Generated diff files
 t1
