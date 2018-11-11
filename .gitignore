@@ -4,6 +4,14 @@
 *.class
 !/**/src/java_cup/**
 
+# Testcases
+/**/TestCasesMeggy/*.java
+
+# Generated diff files
+t1
+t2
+
+
 # Generated Graphviz file
 *.dot
 *.png
