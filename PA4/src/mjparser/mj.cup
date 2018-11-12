@@ -90,7 +90,7 @@ non terminal BlockStatement block_statement;
 non terminal MainClass main_class;
 non terminal IType type;
 non terminal TopClassDecl class_declaration;
-non terminal LinkedList<TopClassDecl> class_declaration_list;
+non terminal LinkedList<IClassDecl> class_declaration_list;
 non terminal MethodDecl method_declaration;
 non terminal LinkedList<MethodDecl> method_declaration_list;
 non terminal Formal formal_param;
@@ -126,7 +126,7 @@ precedence left COMMA;
 start with program;
 
 program ::= 
-    IMPORT:i MEGGY SEMI main_class:m {: RESULT = new Program(i.line, i.pos, m, new LinkedList<IClassDecl>()); :} class_declaration_list
+    IMPORT:i MEGGY SEMI main_class:m class_declaration_list:class_list {: RESULT = new Program(i.line, i.pos, m, class_list); :}
     ;
     
 main_class ::=
@@ -150,7 +150,7 @@ class_declaration_list ::=
     :}
     | /* Empty */
     {:
-        RESULT = new LinkedList<TopClassDecl>();
+        RESULT = new LinkedList<IClassDecl>();
     :}
     ;
 

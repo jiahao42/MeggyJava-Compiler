@@ -42,7 +42,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
   
   private void setType(Node node, Type t) {
-		this.ST.setExpType(node, t);
+    this.ST.setExpType(node, t);
   }
   
   private void dumpWarning(int line, int pos, String msg) {
@@ -264,21 +264,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outCallStatement(CallStatement node) {
-
-    // write2File(
-    //   "#### function call" +
-    //   "# put parameter values into appropriate registers" +
-    //   "# load a two byte expression off stack" +
-    //   "pop    r20" +
-    //   "pop    r21" +
-    //   "# load a one byte expression off stack" +
-    //   "pop    r22" +
-    //   "# receiver will be passed as first param" +
-    //   "# load a two byte expression off stack" +
-    //   "pop    r24" +
-    //   "pop    r25" +
-    //   "call    Class1_func2"
-    // );
+    defaultOut(node);
   }
 
   @Override
@@ -393,16 +379,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outFalseExp(FalseLiteral node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inFormal(Formal node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outFormal(Formal node) {
     defaultOut(node);
   }
 
@@ -681,14 +657,137 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void inMethodDecl(MethodDecl node) {
-    defaultIn(node);
+  public void visitMethodDecl(MethodDecl node) {
+    inMethodDecl(node);
+    String className = ((TopClassDecl)(node.parent())).getName();
+    String methodName = className + "_" + node.getName();
+    write2File(
+      "\n.text" +
+      "\n.global " + methodName + 
+      "\n\t.type " + methodName + ", @function" +
+      "\n" + methodName + ":" +
+      "\n\tpush r29" +
+      "\n\tpush r28" + 
+      "\n\t# make space for locals and params" + 
+      "\n\tldi r30, 0"
+    );
+    if (node.getType() != null) {
+      node.getType().accept(this);
+    }
+    int formalSize = 2; // 2 for the implicit this pointer
+    {
+      List<Formal> copy = new ArrayList<Formal>(node.getFormals());
+      for (Formal e : copy) {
+        e.accept(this);
+        // formalSize += getType(e).getAVRTypeSize(); // calculate size for params
+      }
+    }
+    for (int i = 0; i < formalSize; i++) {
+      write2File(
+        "\n\tpush r30" // allocate space on stack
+      );
+    }
+    write2File(
+      "\n\t# Copy stack pointer to frame pointer" +
+      "\n\tin r28,__SP_L__" +
+      "\n\tin r29,__SP_H__"
+    );
+    write2File(
+      "\n\t# save off parameters" + 
+      "\n\tstd    Y + 2, r25" + 
+      "\n\tstd    Y + 1, r24" + 
+      "\n\tstd    Y + 3, r22" + 
+      "\n\tstd    Y + 5, r21" + 
+      "\n\tstd    Y + 4, r20" + 
+      "\n\t/* done with function " + methodName + " prologue */"
+    );
+    int reg = 23;
+    int offset = 3;
+    // for (Formal e : node.getFormals()) {
+    //   int size = getType(e).getAVRTypeSize();
+    //   if (size == 2) {
+    //     write2File(
+    //       "\n\tstd Y + " + String.valueOf(offset + 1) + ", r" + String.valueOf(reg) + 
+    //       "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg)
+    //     );
+    //     offset += 2;
+    //   } else if (size == 1) {
+    //     write2File(
+    //       "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg)
+    //     );
+    //     offset += 1;
+    //   }
+    //   reg -= 2;
+    // }
+    // int varSize = 0;
+    // {
+    //   List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
+    //   for (VarDecl e : copy) {
+    //     e.accept(this);
+    //     varSize += getType(e).getAVRTypeSize(); // calculate size for locals
+    //   }
+    // }
+    {
+      List<IStatement> copy = new ArrayList<IStatement>(node.getStatements());
+      for (IStatement e : copy) {
+        e.accept(this);
+      }
+    }
+    if (node.getExp() != null) {
+      node.getExp().accept(this);
+    }
+    outMethodDecl(node);
   }
-
-  @Override
-  public void outMethodDecl(MethodDecl node) {
-    defaultOut(node);
-  }
+  // .text
+  // .global Class1_func2
+  //     .type  Class1_func2, @function
+  // Class1_func2:
+  //     push   r29
+  //     push   r28
+  //     # make space for locals and params
+  //     ldi    r30, 0
+  //     push   r30
+  //     push   r30
+  //     push   r30
+  //     push   r30
+  //     push   r30
+  
+  //     # Copy stack pointer to frame pointer
+  //     in     r28,__SP_L__
+  //     in     r29,__SP_H__
+  
+  //     # save off parameters
+  //     std    Y + 2, r25
+  //     std    Y + 1, r24
+  //     std    Y + 3, r22
+  //     std    Y + 5, r21
+  //     std    Y + 4, r20
+  // /* done with function Class1_func2 prologue */
+  
+  
+  //     # Load constant int 0
+  //     ldi    r24,lo8(0)
+  //     ldi    r25,hi8(0)
+  //     # push two byte expression onto stack
+  //     push   r25
+  //     push   r24
+  
+    //  /* epilogue start for Class1_func2 */
+    //   # handle return value
+    //   # load a two byte expression off stack
+    //   pop    r24
+    //   pop    r25
+    //   # pop space off stack for parameters and locals
+    //   pop    r30
+    //   pop    r30
+    //   pop    r30
+    //   pop    r30
+    //   pop    r30
+    //   # restoring the frame pointer
+    //   pop    r28
+    //   pop    r29
+    //   ret
+    //   .size Class1_func2, .-Class1_func2
 
   @Override
   public void inMinusExp(MinusExp node) {
@@ -789,15 +888,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     // TODO: should NEW with parameters in the future
     // TODO: Should calculate the size of object
     write2File(
-      "# NewExp" +
-      "ldi    r24, lo8(0)" +
-      "ldi    r25, hi8(0)" +
-      "# allocating object of size 0 on heap" +
-      "call    malloc" +
-      "# push object address" +
-      "# push two byte expression onto stack" +
-      "push   r25" +
-      "push   r24"
+      "\n\t# NewExp" +
+      "\n\tldi    r24, lo8(0)" +
+      "\n\tldi    r25, hi8(0)" +
+      "\n\t# allocating object of size 0 on heap" +
+      "\n\tcall    malloc" +
+      "\n\t# push object address" +
+      "\n\t# push two byte expression onto stack" +
+      "\n\tpush   r25" +
+      "\n\tpush   r24"
     );
   }
 
