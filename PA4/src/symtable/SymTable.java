@@ -20,6 +20,7 @@ public class SymTable {
     public SymTable() {
         mGlobalScope = new Scope();
         mScopeStack = new Stack<>();
+        mScopeStack.push(mGlobalScope);
     }
 
     public void setExpType(Node exp, Type t) {
@@ -78,79 +79,5 @@ public class SymTable {
 
     public void popScope() {
         mScopeStack.pop();
-    }
-}
-
-
-class STE {
-    private String mName;
-    private Scope mScope;
-    public STE(String name, Scope scope) {
-        mName = name;
-        mScope = scope;
-    }
-    public String getName() {
-        return mName;
-    }
-    public Scope getScope() {
-        return mScope;
-    }
-}
-
-class MethodSTE extends STE {
-    private Signature mSignature;
-    public MethodSTE(String name, Signature signature, Scope scope) {
-        super(name, scope);
-        mSignature = signature;
-    }
-}
-
-class ClassSTE extends STE {
-    private boolean mMain;
-    private ClassSTE mSuperClass;
-    public ClassSTE(String name, boolean main, ClassSTE superClass, Scope scope) {
-        super(name, scope);
-        mMain = main;
-        mSuperClass = superClass;
-    }
-}
-
-class VarSTE extends STE {
-    private Type mType;
-    private int mBase;
-    private int mOffset;
-    public VarSTE(String name, Type type, int base, int offset) {
-        super(name, null);
-        mType = type;
-        mBase = base;
-        mOffset = offset;
-    }
-}
-
-class Signature {
-    private List<Type> _param_types;
-    private Type _returnType;
-    public Signature(List<Type> param_types, Type returnType) {
-        _param_types = param_types;
-        _returnType = returnType;
-    }
-    public List<Type> getParamTypes() {
-        return _param_types;
-    }
-    public Type getReturnType() {
-        return _returnType;
-    }
-}
-
-class Scope {
-    private HashMap<String, STE> mDict;
-    public Scope() {
-        mDict = new HashMap<String, STE>();
-    }
-    public STE lookup(String sym) {
-        return mDict.get(sym);
-    }
-    public void insert(STE ste) {
-        mDict.put(ste.getName(), ste);
     }
 }
