@@ -73,10 +73,9 @@ public class MJDriver {
 					System.out.println("Printing AST to " + filename + ".ast.dot");
 					
 					// create the symbol table
-					// TODO: Not implemented Symbol Table yet
-          // BuildSymTable stVisitor = new BuildSymTable();
-          // ast_root.accept(stVisitor);
-					// symtable.SymTable globalST = stVisitor.getSymTable();
+          BuildSymTable stVisitor = new BuildSymTable();
+          ast_root.accept(stVisitor);
+					symtable.SymTable globalST = stVisitor.getSymTable();
           
 					// print Symbol table to file
 					// TODO: Not implemented Symbol Table yet
@@ -88,8 +87,6 @@ public class MJDriver {
                     
 					// perform type checking 
 					// TODO: Not implemented Type check yet
-					// ast_root.accept(new CheckTypes(globalST));
-					SymTable globalST = new SymTable();
 					ast_root.accept(new CheckTypes(globalST));
           
 					// Determine whether to do register allocation or not.
