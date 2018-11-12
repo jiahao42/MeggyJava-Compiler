@@ -264,7 +264,21 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outCallStatement(CallStatement node) {
-    defaultOut(node);
+
+    // write2File(
+    //   "#### function call" +
+    //   "# put parameter values into appropriate registers" +
+    //   "# load a two byte expression off stack" +
+    //   "pop    r20" +
+    //   "pop    r21" +
+    //   "# load a one byte expression off stack" +
+    //   "pop    r22" +
+    //   "# receiver will be passed as first param" +
+    //   "# load a two byte expression off stack" +
+    //   "pop    r24" +
+    //   "pop    r25" +
+    //   "call    Class1_func2"
+    // );
   }
 
   @Override
@@ -772,7 +786,19 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outNewExp(NewExp node) {
-    defaultOut(node);
+    // TODO: should NEW with parameters in the future
+    // TODO: Should calculate the size of object
+    write2File(
+      "# NewExp" +
+      "ldi    r24, lo8(0)" +
+      "ldi    r25, hi8(0)" +
+      "# allocating object of size 0 on heap" +
+      "call    malloc" +
+      "# push object address" +
+      "# push two byte expression onto stack" +
+      "push   r25" +
+      "push   r24"
+    );
   }
 
   @Override
