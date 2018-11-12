@@ -8,6 +8,7 @@
  */
 
 package symtable;
+import java.util.*;
 
 public class Signature {
     private List<Type> _param_types;

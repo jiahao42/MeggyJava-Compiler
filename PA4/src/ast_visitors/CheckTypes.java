@@ -108,7 +108,7 @@ public class CheckTypes extends DepthFirstVisitor {
 			setType(node, Type.BOOL);
 		} else {
 			throw new SemanticException("Invalid parameter type for Meggy.checkButton, expect Meggy.Button", node.getExp().getLine(),
-			node.getPos());
+			node.getExp().getPos());
 		}
 	}
 	
@@ -120,7 +120,7 @@ public class CheckTypes extends DepthFirstVisitor {
 			setType(node, Type.COLOR);
 		} else {
 			throw new SemanticException("Invalid parameter types for Meggy.getPixel, expect (BYTE, BYTE)", node.getXExp().getLine(),
-					node.getPos());
+					node.getXExp().getPos());
 		}
 	}
 	

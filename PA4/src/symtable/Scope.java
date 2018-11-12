@@ -8,6 +8,8 @@
  */
 
 package symtable;
+import java.util.*;
+
 
 public class Scope {
     private HashMap<String, STE> mDict;
@@ -17,7 +19,12 @@ public class Scope {
     public STE lookup(String sym) {
         return mDict.get(sym);
     }
-    public void insert(STE ste) {
-        mDict.put(ste.getName(), ste);
+    public boolean insert(STE ste) {
+        if (mDict.get(ste.getName()) == null) {
+            mDict.put(ste.getName(), ste);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

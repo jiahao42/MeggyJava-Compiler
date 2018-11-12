@@ -9,7 +9,6 @@
 
 package symtable;
 
-
 public class VarSTE extends STE {
     private Type mType;
     private int mBase;

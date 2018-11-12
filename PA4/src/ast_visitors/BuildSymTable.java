@@ -8,10 +8,12 @@
  */
 package ast_visitors;
 
-import symtable.SymTable.*;
+import symtable.*;
 import java.util.*;
 import ast.visitor.*;
 import ast.node.*;
+import exceptions.InternalException;
+import exceptions.SemanticException;
 
 public class BuildSymTable extends DepthFirstVisitor {
   SymTable ST;
@@ -24,80 +26,95 @@ public class BuildSymTable extends DepthFirstVisitor {
     return ST;
   }
 
-  public void inTopClassDecl(TopClassDecl node)
-  {
-    ClassSTE
+  private Type getType(Node node) {
+    return this.ST.getExpType(node);
   }
 
-  public void outTopClassDecl(TopClassDecl node)
-  {
-      defaultOut(node);
+  private void setType(Node node, Type t) {
+    this.ST.setExpType(node, t);
   }
 
-  public void inMethodDecl(MethodDecl node)
-  {
-      defaultIn(node);
-  }
-
-  public void outMethodDecl(MethodDecl node)
-  {
-      defaultOut(node);
+  /* Literals */
+  @Override
+  public void outIntType(IntType node) {
+    setType(node, Type.INT);
   }
 
   @Override
-  public void visitMethodDecl(MethodDecl node)
-  {
-      inMethodDecl(node);
-      if(node.getType() != null)
-      {
-          node.getType().accept(this);
-      }
-      {
-          List<Formal> copy = new ArrayList<Formal>(node.getFormals());
-          for(Formal e : copy)
-          {
-              e.accept(this);
-          }
-      }
-      {
-          List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
-          for(VarDecl e : copy)
-          {
-              e.accept(this);
-          }
-      }
-      {
-          List<IStatement> copy = new ArrayList<IStatement>(node.getStatements());
-          for(IStatement e : copy)
-          {
-              e.accept(this);
-          }
-      }
-      if(node.getExp() != null)
-      {
-          node.getExp().accept(this);
-      }
-      outMethodDecl(node);
-  }
-
-  public void inFormal(Formal node)
-  {
-      defaultIn(node);
-  }
-
-  public void outFormal(Formal node)
-  {
-      defaultOut(node);
+  public void outColorType(ColorType node) {
+    setType(node, Type.COLOR);
   }
 
   @Override
-  public void visitFormal(Formal node)
-  {
-      inFormal(node);
-      if(node.getType() != null)
-      {
-          node.getType().accept(this);
-      }
-      outFormal(node);
+  public void outButtonType(ButtonType node) {
+    setType(node, Type.BUTTON);
+  }
+
+  @Override
+  public void outBoolType(BoolType node) {
+    setType(node, Type.BOOL);
+  }
+
+  @Override
+  public void outByteType(ByteType node) {
+    setType(node, Type.BOOL);
+  }
+
+  @Override
+  public void outVoidType(VoidType node) {
+    setType(node, Type.BOOL);
+  }
+
+  @Override
+  public void inMainClass(MainClass node) {
+    assert (ST.getCurrentScope() == ST.getGlobalScope());
+    ClassSTE mSTE = new ClassSTE(node.getName(), true, null, new Scope());
+    if (!ST.insert(mSTE)) {
+      throw new SemanticException("Class " + mSTE.getName() + " already exists in current scope!", node.getLine(),
+          node.getPos());
+    }
+    ST.pushScope(mSTE.getName());
+  }
+
+  @Override
+  public void outMainClass(MainClass node) {
+    defaultOut(node);
+    ST.popScope();
+  }
+
+  @Override
+  public void inTopClassDecl(TopClassDecl node) {
+    assert (ST.getCurrentScope() == ST.getGlobalScope());
+    ClassSTE mSTE = new ClassSTE(node.getName(), false, null, new Scope());
+    if (!ST.insert(mSTE)) {
+      throw new SemanticException("Class " + mSTE.getName() + " already exists in current scope!", node.getLine(),
+          node.getPos());
+    }
+    ST.pushScope(mSTE.getName());
+  }
+
+  @Override
+  public void outTopClassDecl(TopClassDecl node) {
+    ST.popScope();
+  }
+
+  @Override
+  public void inMethodDecl(MethodDecl node) {
+    List<Type> mTypeList = new LinkedList<>();
+    for (Formal e : node.getFormals()) {
+      mTypeList.add(getType(e.getType()));
+    }
+    Type retType = getType(node.getType());
+    MethodSTE mSTE = new MethodSTE(node.getName(), new Signature(mTypeList, retType), new Scope());
+    if (!ST.insert(mSTE)) {
+      throw new SemanticException("Method " + mSTE.getName() + " already exists in current scope!", node.getLine(),
+          node.getPos());
+    }
+    ST.pushScope(mSTE.getName());
+  }
+
+  @Override
+  public void outMethodDecl(MethodDecl node) {
+    ST.popScope();
   }
 }

@@ -54,9 +54,9 @@ public class SymTable {
      * When inserting an STE will just insert
      * it into the scope at the top of the scope stack.
      */
-    public void insert(STE ste) {
+    public boolean insert(STE ste) {
         Scope currentScope = mScopeStack.peek();
-        currentScope.insert(ste);
+        return currentScope.insert(ste);
     }
 
     /**
@@ -73,11 +73,19 @@ public class SymTable {
      * scope. That is, make it the top of the scope stack.
      */
     public void pushScope(String id) {
-        Scope currentScope = mScopeStack.peek();
+        Scope currentScope = getCurrentScope();
         mScopeStack.push(currentScope.lookup(id).getScope());
     }
 
     public void popScope() {
         mScopeStack.pop();
+    }
+
+    public Scope getCurrentScope() {
+        return mScopeStack.peek();
+    }
+
+    public Scope getGlobalScope() {
+        return mGlobalScope;
     }
 }
