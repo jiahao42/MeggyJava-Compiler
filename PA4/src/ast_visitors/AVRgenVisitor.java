@@ -263,8 +263,30 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void outCallStatement(CallStatement node) {
-    defaultOut(node);
+  public void outCallStatement(CallStatement node){
+    write2File(
+      "\n\t#### function call" + 
+      "\n\t# put parameter values into appropriate registers"
+    );
+    int reg = 20;
+    for (IExp e : node.getArgs()) {
+      
+    }
+  }
+
+  @Override
+  public void visitCallStatement(CallStatement node) {
+    inCallStatement(node);
+    if (node.getExp() != null) {
+      node.getExp().accept(this);
+    }
+    {
+      List<IExp> copy = new ArrayList<IExp>(node.getArgs());
+      for (IExp e : copy) {
+        e.accept(this);
+      }
+    }
+    outCallStatement(node);
   }
 
   @Override
@@ -714,26 +736,31 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tin r28,__SP_L__" +
       "\n\tin r29,__SP_H__"
     );
+
     write2File(
       "\n\t# save off parameters" + 
-      "\n\t# implicit this pointer" + 
-      "\n\tstd Y + 2, r25" + 
-      "\n\tstd Y + 1, r24"
+      "\n\t# implicit this pointer"
     );
-
-    int reg = 23;
-    int offset = 3;
+    int formalNum = node.getFormals().size();
+    int reg = 19 + (1 + formalNum) * 2; // with implicit this pointer
+    int offset = 1;
+    write2File(
+      "\n\tstd Y + " + String.valueOf(offset + 1) + ", r" + String.valueOf(reg) + 
+      "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg)
+    );
+    reg -= 2;
+    offset += 2;
     for (Formal e : node.getFormals()) {
       int size = getType(e.getType()).getAVRTypeSize();
       if (size == 2) {
         write2File(
           "\n\tstd Y + " + String.valueOf(offset + 1) + ", r" + String.valueOf(reg) + 
-          "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg)
+          "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg - 1)
         );
         offset += 2;
       } else if (size == 1) {
         write2File(
-          "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg)
+          "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg - 1)
         );
         offset += 1;
       }
