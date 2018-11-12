@@ -739,6 +739,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       }
       reg -= 2;
     }
+    write2File("\n\t/* done with function " + methodName + " prologue */");
     int varSize = 0;
     {
       List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
@@ -756,59 +757,36 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     if (node.getExp() != null) {
       node.getExp().accept(this);
     }
-    write2File("\n\t/* done with function " + methodName + " prologue */");
+    write2File(
+      "\n\t/* epilogue start for Class1_func2 */" + 
+      "\n\t# handle return value"
+    );
+    int retSize = getType(node.getType()).getAVRTypeSize();
+    if (retSize == 1) {
+      write2File(
+        "\n\t# load a one byte expression off stack" + 
+        "\n\tpop    r25"
+      );
+    } else {
+      write2File(
+        "\n\t# load a two byte expression off stack" + 
+        "\n\tpop    r24" + 
+        "\n\tpop    r25"
+      );
+    }
+    write2File("\n\t# pop space off stack for parameters and locals");
+    for (int i = 0; i < formalSize; i++) {
+      write2File("\n\tpop r30");
+    }
+    write2File(
+      "\n\t# restoring the frame pointer" + 
+      "\n\tpop    r28" + 
+      "\n\tpop    r29" + 
+      "\n\tret" +
+      "\n\t.size " + methodName + ", .-" + methodName
+    );
     outMethodDecl(node);
   }
-  // .text
-  // .global Class1_func2
-  //     .type  Class1_func2, @function
-  // Class1_func2:
-  //     push   r29
-  //     push   r28
-  //     # make space for locals and params
-  //     ldi    r30, 0
-  //     push   r30
-  //     push   r30
-  //     push   r30
-  //     push   r30
-  //     push   r30
-  
-  //     # Copy stack pointer to frame pointer
-  //     in     r28,__SP_L__
-  //     in     r29,__SP_H__
-  
-  //     # save off parameters
-  //     std    Y + 2, r25
-  //     std    Y + 1, r24
-  //     std    Y + 3, r22
-  //     std    Y + 5, r21
-  //     std    Y + 4, r20
-  // /* done with function Class1_func2 prologue */
-  
-  
-  //     # Load constant int 0
-  //     ldi    r24,lo8(0)
-  //     ldi    r25,hi8(0)
-  //     # push two byte expression onto stack
-  //     push   r25
-  //     push   r24
-  
-    //  /* epilogue start for Class1_func2 */
-    //   # handle return value
-    //   # load a two byte expression off stack
-    //   pop    r24
-    //   pop    r25
-    //   # pop space off stack for parameters and locals
-    //   pop    r30
-    //   pop    r30
-    //   pop    r30
-    //   pop    r30
-    //   pop    r30
-    //   # restoring the frame pointer
-    //   pop    r28
-    //   pop    r29
-    //   ret
-    //   .size Class1_func2, .-Class1_func2
 
   @Override
   public void inMinusExp(MinusExp node) {
