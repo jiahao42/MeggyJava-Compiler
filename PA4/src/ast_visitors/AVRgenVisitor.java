@@ -512,7 +512,29 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outMainClass(MainClass node) {
-    defaultOut(node);
+    InputStream mainPrologue = null;
+    BufferedReader reader = null;
+    try {
+      System.out.println("Generate epilog using avrF.rtl.s");
+      mainPrologue = this.getClass().getClassLoader().getResourceAsStream("avrF.rtl.s");
+      reader = new BufferedReader(new InputStreamReader(mainPrologue));
+      String line = null;
+      while ((line = reader.readLine()) != null) {
+         this.out.println(line);
+      }
+    } catch (Exception e2) {
+      e2.printStackTrace();
+    } finally {
+      try {
+        if (mainPrologue != null)
+          mainPrologue.close();
+        if (reader != null)
+          reader.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    this.out.flush(); // write all the buffer to file.
   }
 
   @Override
@@ -1041,29 +1063,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outProgram(Program node) {
-    InputStream mainPrologue = null;
-    BufferedReader reader = null;
-    try {
-      System.out.println("Generate epilog using avrF.rtl.s");
-      mainPrologue = this.getClass().getClassLoader().getResourceAsStream("avrF.rtl.s");
-      reader = new BufferedReader(new InputStreamReader(mainPrologue));
-      String line = null;
-      while ((line = reader.readLine()) != null) {
-         this.out.println(line);
-      }
-    } catch (Exception e2) {
-      e2.printStackTrace();
-    } finally {
-      try {
-        if (mainPrologue != null)
-          mainPrologue.close();
-        if (reader != null)
-          reader.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    this.out.flush(); // write all the buffer to file.
+    this.out.flush();
   }
 
   @Override
