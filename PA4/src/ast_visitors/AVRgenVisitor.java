@@ -679,7 +679,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       List<Formal> copy = new ArrayList<Formal>(node.getFormals());
       for (Formal e : copy) {
         e.accept(this);
-        // formalSize += getType(e).getAVRTypeSize(); // calculate size for params
+        formalSize += getType(e.getType()).getAVRTypeSize(); // calculate size for params
       }
     }
     for (int i = 0; i < formalSize; i++) {
@@ -694,39 +694,37 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     );
     write2File(
       "\n\t# save off parameters" + 
-      "\n\tstd    Y + 2, r25" + 
-      "\n\tstd    Y + 1, r24" + 
-      "\n\tstd    Y + 3, r22" + 
-      "\n\tstd    Y + 5, r21" + 
-      "\n\tstd    Y + 4, r20" + 
-      "\n\t/* done with function " + methodName + " prologue */"
+      "\n\t# implicit this pointer" + 
+      "\n\tstd Y + 2, r25" + 
+      "\n\tstd Y + 1, r24"
     );
+
     int reg = 23;
     int offset = 3;
-    // for (Formal e : node.getFormals()) {
-    //   int size = getType(e).getAVRTypeSize();
-    //   if (size == 2) {
-    //     write2File(
-    //       "\n\tstd Y + " + String.valueOf(offset + 1) + ", r" + String.valueOf(reg) + 
-    //       "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg)
-    //     );
-    //     offset += 2;
-    //   } else if (size == 1) {
-    //     write2File(
-    //       "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg)
-    //     );
-    //     offset += 1;
-    //   }
-    //   reg -= 2;
-    // }
-    // int varSize = 0;
-    // {
-    //   List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
-    //   for (VarDecl e : copy) {
-    //     e.accept(this);
-    //     varSize += getType(e).getAVRTypeSize(); // calculate size for locals
-    //   }
-    // }
+    for (Formal e : node.getFormals()) {
+      int size = getType(e.getType()).getAVRTypeSize();
+      if (size == 2) {
+        write2File(
+          "\n\tstd Y + " + String.valueOf(offset + 1) + ", r" + String.valueOf(reg) + 
+          "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg)
+        );
+        offset += 2;
+      } else if (size == 1) {
+        write2File(
+          "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg)
+        );
+        offset += 1;
+      }
+      reg -= 2;
+    }
+    int varSize = 0;
+    {
+      List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
+      for (VarDecl e : copy) {
+        e.accept(this);
+        varSize += getType(e).getAVRTypeSize(); // calculate size for locals
+      }
+    }
     {
       List<IStatement> copy = new ArrayList<IStatement>(node.getStatements());
       for (IStatement e : copy) {
@@ -736,6 +734,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     if (node.getExp() != null) {
       node.getExp().accept(this);
     }
+    write2File("\n\t/* done with function " + methodName + " prologue */");
     outMethodDecl(node);
   }
   // .text
