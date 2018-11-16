@@ -74,36 +74,6 @@ public class CheckTypes extends DepthFirstVisitor {
 	}
 
 	/** Type check for Experssions **/
-	/* Literals */
-	@Override
-	public void outIntegerExp(IntLiteral node) {
-		setType(node, Type.INT);
-	}
-
-	@Override
-	public void outColorExp(ColorLiteral node) {
-		setType(node, Type.COLOR);
-	}
-
-	@Override
-  public void outButtonExp(ButtonLiteral node) {
-    setType(node, Type.BUTTON);
-	}
-	
-	@Override
-  public void outTrueExp(TrueLiteral node) {
-		setType(node, Type.BOOL);
-	}
-
-	@Override
-  public void outFalseExp(FalseLiteral node) {
-		setType(node, Type.BOOL);
-	}
-
-	@Override
-	public void outToneExp(ToneLiteral node) {
-		setType(node, Type.TONE);
-	}
 
 	/* Functions */
 

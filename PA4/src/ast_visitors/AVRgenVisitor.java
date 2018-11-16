@@ -1146,19 +1146,14 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   public void outThisExp(ThisLiteral node) {
     defaultOut(node);
   }
-
-  @Override
-  public void inToneExp(ToneLiteral node) {
-    write2File(
-      "# Push" + node.getLexeme() + "onto the stack." + 
-      "ldi    r25, hi8(" + node.getIntValue() + ")" +
-      "ldi    r24, lo8(" + node.getIntValue() + ")"
-    );
-  }
-
+  
   @Override
   public void outToneExp(ToneLiteral node) {
-    defaultOut(node);
+    write2File(
+      "# Push" + node.getLexeme() + "onto the stack." + 
+      "ldi r25, hi8(" + node.getIntValue() + ")" +
+      "ldi r24, lo8(" + node.getIntValue() + ")"
+    );
   }
 
   @Override
