@@ -13,9 +13,13 @@ import java.util.*;
 
 public class Scope {
     private HashMap<String, STE> mDict;
-    public Scope() {
+    private String mName;
+
+    public Scope(String name) {
         mDict = new HashMap<String, STE>();
+        mName = name;
     }
+
     public STE lookup(String sym) {
         return mDict.get(sym);
     }
@@ -26,5 +30,9 @@ public class Scope {
         } else {
             return false;
         }
+    }
+    
+    public String getName() {
+        return mName;
     }
 }

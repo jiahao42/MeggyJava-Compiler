@@ -3,7 +3,6 @@ package symtable;
 import java.util.*;
 import ast.node.*;
 
-import exceptions.InternalException;
 
 /**
  * SymTable .... The symbol table also keeps a mapping of expression nodes to
@@ -18,7 +17,7 @@ public class SymTable {
     private Stack<Scope> mScopeStack;
 
     public SymTable() {
-        mGlobalScope = new Scope();
+        mGlobalScope = new Scope("global"); // Global Scope don't need name, maybe?
         mScopeStack = new Stack<>();
         mScopeStack.push(mGlobalScope);
     }
@@ -29,6 +28,10 @@ public class SymTable {
 
     public Type getExpType(Node exp) {
         return this.mExpType.get(exp);
+    }
+
+    public HashMap<Node, Type> getMap() {
+        return mExpType;
     }
 
     /**
@@ -72,9 +75,8 @@ public class SymTable {
      * Lookup the given method scope and make it the innermost
      * scope. That is, make it the top of the scope stack.
      */
-    public void pushScope(String id) {
-        Scope currentScope = getCurrentScope();
-        mScopeStack.push(currentScope.lookup(id).getScope());
+    public void pushScope(Scope scope) {
+        mScopeStack.push(scope);
     }
 
     public void popScope() {
@@ -87,5 +89,10 @@ public class SymTable {
 
     public Scope getGlobalScope() {
         return mGlobalScope;
+    }
+
+    public String genMethodName(String methodName) {
+        System.out.println(mScopeStack.peek().getName() + "_" + methodName);
+        return mScopeStack.peek().getName() + "_" + methodName;
     }
 }

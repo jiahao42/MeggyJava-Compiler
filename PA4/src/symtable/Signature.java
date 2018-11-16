@@ -11,16 +11,27 @@ package symtable;
 import java.util.*;
 
 public class Signature {
-    private List<Type> _param_types;
-    private Type _returnType;
-    public Signature(List<Type> param_types, Type returnType) {
-        _param_types = param_types;
-        _returnType = returnType;
+    private List<Type> mParamTypes;
+    private Type mReturnType;
+    public Signature(List<Type> paramTypes, Type returnType) {
+        mParamTypes = paramTypes;
+        mReturnType = returnType;
     }
     public List<Type> getParamTypes() {
-        return _param_types;
+        return mParamTypes;
     }
     public Type getReturnType() {
-        return _returnType;
+        return mReturnType;
+    }
+
+    @Override
+    public String toString() {
+        String paramTypesLiteral = "(";
+        for (Type t : mParamTypes) {
+            paramTypesLiteral += t.toString() + ",";
+        }
+        paramTypesLiteral = paramTypesLiteral.substring(0, paramTypesLiteral.length() - 1); // delete last comma
+        paramTypesLiteral += ") returns " + mReturnType.toString();
+        return paramTypesLiteral;
     }
 }

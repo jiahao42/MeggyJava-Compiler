@@ -13,12 +13,26 @@ public class Type
   public static final Type BUTTON = new Type();
   public static final Type VOID = new Type();
 
+  private String typeName;
+  private static HashMap<String, Type> typeMap = new HashMap<>();
+
   private Type()
   {
-
+    typeName = null;
   }
 
+  public Type(String name) {
+    typeName = name;
+    typeMap.put(name, this);
+  }
 
+  public static Type getOrCreateType(String name) {
+    if (typeMap.containsKey(name)) {
+      return typeMap.get(name);
+    } else {
+      return new Type(name);
+    }
+  }
     
 /*
 */
@@ -48,6 +62,10 @@ public class Type
     if(this == BUTTON)
     {
       return "BUTTON";
+    }
+
+    if (typeName != null) {
+      return typeName;
     }
 
     

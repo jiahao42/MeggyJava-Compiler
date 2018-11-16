@@ -68,29 +68,28 @@ public class BuildSymTable extends DepthFirstVisitor {
   @Override
   public void inMainClass(MainClass node) {
     assert (ST.getCurrentScope() == ST.getGlobalScope());
-    ClassSTE mSTE = new ClassSTE(node.getName(), true, null, new Scope());
+    ClassSTE mSTE = new ClassSTE(node.getName(), true, null, new Scope(node.getName()));
     if (!ST.insert(mSTE)) {
       throw new SemanticException("Class " + mSTE.getName() + " already exists in current scope!", node.getLine(),
           node.getPos());
     }
-    ST.pushScope(mSTE.getName());
+    ST.pushScope(mSTE.getScope());
   }
 
   @Override
   public void outMainClass(MainClass node) {
-    defaultOut(node);
     ST.popScope();
   }
 
   @Override
   public void inTopClassDecl(TopClassDecl node) {
     assert (ST.getCurrentScope() == ST.getGlobalScope());
-    ClassSTE mSTE = new ClassSTE(node.getName(), false, null, new Scope());
+    ClassSTE mSTE = new ClassSTE(node.getName(), false, null, new Scope(node.getName()));
     if (!ST.insert(mSTE)) {
       throw new SemanticException("Class " + mSTE.getName() + " already exists in current scope!", node.getLine(),
           node.getPos());
     }
-    ST.pushScope(mSTE.getName());
+    ST.pushScope(mSTE.getScope());
   }
 
   @Override
@@ -100,21 +99,29 @@ public class BuildSymTable extends DepthFirstVisitor {
 
   @Override
   public void inMethodDecl(MethodDecl node) {
+    // String name = ST.genMethodName(node.getName());
+    setType(node, getType(node.getType()));
+    String name = node.getName();
     List<Type> mTypeList = new LinkedList<>();
     for (Formal e : node.getFormals()) {
       mTypeList.add(getType(e.getType()));
     }
     Type retType = getType(node.getType());
-    MethodSTE mSTE = new MethodSTE(node.getName(), new Signature(mTypeList, retType), new Scope());
+    MethodSTE mSTE = new MethodSTE(name, new Signature(mTypeList, retType), new Scope(name));
     if (!ST.insert(mSTE)) {
       throw new SemanticException("Method " + mSTE.getName() + " already exists in current scope!", node.getLine(),
           node.getPos());
     }
-    ST.pushScope(mSTE.getName());
+    ST.pushScope(mSTE.getScope());
   }
 
   @Override
   public void outMethodDecl(MethodDecl node) {
     ST.popScope();
+  }
+
+  @Override
+  public void outNewExp(NewExp node) {
+    setType(node, Type.getOrCreateType(node.getId()));
   }
 }

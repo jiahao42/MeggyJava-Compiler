@@ -274,7 +274,7 @@ statement ::=
     | exp:e1 DOT identifier:id LPAREN exp_args_list:list RPAREN SEMI
     {:
         RESULT = new CallStatement(e1.getLine(), e1.getPos(), e1, id.getLexeme(), list);
-    :} 
+    :}
     | IF:i LPAREN exp:e RPAREN statement:s
     {:
         RESULT = new IfStatement(i.line, i.pos, e, s, null);

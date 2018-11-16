@@ -78,12 +78,11 @@ public class MJDriver {
 					symtable.SymTable globalST = stVisitor.getSymTable();
           
 					// print Symbol table to file
-					// TODO: Not implemented Symbol Table yet
-          // java.io.PrintStream STout =
-          //   new java.io.PrintStream(
-          //       new java.io.FileOutputStream(filename + ".ST.dot"));
-					// System.out.println("Printing symbol table to " + filename + ".ST.dot");
-					// globalST.outputDot(STout);
+          java.io.PrintStream STout =
+            new java.io.PrintStream(
+                new java.io.FileOutputStream(filename + ".ST.dot"));
+					System.out.println("Printing symbol table to " + filename + ".ST.dot");
+          // globalST.outputDot(STout);
                     
 					// perform type checking 
 					// TODO: Not implemented Type check yet

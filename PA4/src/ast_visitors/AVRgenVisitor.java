@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import label.Label;
+import symtable.MethodSTE;
 import symtable.SymTable;
 import symtable.Type;
 
@@ -269,9 +270,48 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\t# put parameter values into appropriate registers"
     );
     int reg = 20;
-    for (IExp e : node.getArgs()) {
-      
+    // Iterate in reverse.
+    ListIterator<IExp> argIter = node.getArgs().listIterator(node.getArgs().size());
+    while(argIter.hasPrevious()) {
+      IExp arg = argIter.previous();
+      if (getType(arg).getAVRTypeSize() == 2) {
+        write2File(
+          "\n\t# load a two bytes expression off stack" + 
+          "\n\tpop r" + String.valueOf(reg) + 
+          "\n\tpop r" + String.valueOf(reg + 1)
+        );
+      } else { // size == 1
+        write2File(
+          "\n\t# load a one byte expression off stack" + 
+          "\n\tpop r" + String.valueOf(reg)
+        );
+      }
+      reg += 2;
     }
+
+    // for (IExp e : node.getArgs()) {
+    //   if (getType(e).getAVRTypeSize() == 2) {
+    //     write2File(
+    //       "\n\t# load a two bytes expression off stack" + 
+    //       "\n\tpop r" + String.valueOf(reg) + 
+    //       "\n\tpop r" + String.valueOf(reg + 1)
+    //     );
+    //   } else { // size == 1
+    //     write2File(
+    //       "\n\t# load a one byte expression off stack" + 
+    //       "\n\tpop r" + String.valueOf(reg)
+    //     );
+    //   }
+    //   reg += 2;
+    // }
+    String methodName = getType(node.getExp()).toString() + "_" + node.getId();
+    write2File(
+      "\n\t# receiver will be passed as first param" + 
+      "\n\t# load a two byte expression off stack" + 
+      "\n\tpop r" + String.valueOf(reg) + 
+      "\n\tpop r" + String.valueOf(reg + 1) + 
+      "\n\tcall " + methodName
+    );
   }
 
   @Override
@@ -529,11 +569,16 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inMainClass(MainClass node) {
-    defaultIn(node);
+    ST.pushScope(ST.lookup(node.getName()).getScope());
   }
 
   @Override
   public void outMainClass(MainClass node) {
+    ST.popScope();
+    writeEpilog();
+  }
+
+  private void writeEpilog() {
     InputStream mainPrologue = null;
     BufferedReader reader = null;
     try {
@@ -703,10 +748,10 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void visitMethodDecl(MethodDecl node) {
     inMethodDecl(node);
-    String className = ((TopClassDecl)(node.parent())).getName();
-    String methodName = className + "_" + node.getName();
+    String methodName = ST.genMethodName(node.getName());
+    ST.pushScope(ST.lookup(node.getName()).getScope());
     write2File(
-      "\n.text" +
+      "\n\t.text" +
       "\n.global " + methodName + 
       "\n\t.type " + methodName + ", @function" +
       "\n" + methodName + ":" +
@@ -746,7 +791,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     int offset = 1;
     write2File(
       "\n\tstd Y + " + String.valueOf(offset + 1) + ", r" + String.valueOf(reg) + 
-      "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg)
+      "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg - 1)
     );
     reg -= 2;
     offset += 2;
@@ -810,8 +855,9 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tpop    r28" + 
       "\n\tpop    r29" + 
       "\n\tret" +
-      "\n\t.size " + methodName + ", .-" + methodName
+      "\n\t.size " + methodName + ", .-" + methodName + "\n\n"
     );
+    ST.popScope();
     outMethodDecl(node);
   }
 
@@ -1103,12 +1149,14 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inTopClassDecl(TopClassDecl node) {
-    defaultIn(node);
+    assert(ST.getCurrentScope() == ST.getGlobalScope());
+    ST.pushScope(ST.lookup(node.getName()).getScope());
   }
 
   @Override
   public void outTopClassDecl(TopClassDecl node) {
-    defaultOut(node);
+    ST.popScope();
+    assert(ST.getCurrentScope() == ST.getGlobalScope());
   }
 
   @Override
