@@ -100,6 +100,11 @@ public class CheckTypes extends DepthFirstVisitor {
 		setType(node, Type.BOOL);
 	}
 
+	@Override
+	public void outToneExp(ToneLiteral node) {
+		setType(node, Type.TONE);
+	}
+
 	/* Functions */
 
 	@Override
@@ -264,6 +269,19 @@ public class CheckTypes extends DepthFirstVisitor {
 			throw new SemanticException("Invalid parameter types for Meggy.delay, expect INT", node.getLine(),
 			node.getPos());
 		}
+	}
+
+	@Override
+	public void outMeggyToneStart(MeggyToneStart node) {
+		if (getType(node.getToneExp()) != Type.TONE) {
+			throw new SemanticException("Invalid parameter types for Meggy.toneStart, expect Meggy.Tone", node.getToneExp().getLine(),
+			node.getToneExp().getPos());
+		}
+		if (isIntOrByte(getType(node.getDurationExp()))) {
+			throw new SemanticException("Invalid parameter types for Meggy.toneStart, expect INT", node.getDurationExp().getLine(),
+			node.getDurationExp().getPos());
+		}
+		setType(node, Type.VOID);
 	}
 	
 	@Override

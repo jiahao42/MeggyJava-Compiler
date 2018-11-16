@@ -737,13 +737,31 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void inMeggyToneStart(MeggyToneStart node) {
-    defaultIn(node);
+  public void visitMeggyToneStart(MeggyToneStart node) {
+    inMeggyToneStart(node);
+    if (node.getToneExp() != null) {
+      node.getToneExp().accept(this);
+    }
+
+    if (node.getDurationExp() != null) {
+      node.getDurationExp().accept(this);
+      promoteByte2Int(node.getDurationExp());
+    }
+    outMeggyToneStart(node);
   }
 
   @Override
   public void outMeggyToneStart(MeggyToneStart node) {
-    defaultOut(node);
+    write2File(
+      "### Meggy.toneStart(tone, time_ms) call" + 
+      "# load a two byte expression off stack" + 
+      "pop    r22" + 
+      "pop    r23" + 
+      "# load a two byte expression off stack" + 
+      "pop    r24" + 
+      "pop    r25" + 
+      "call   _Z10Tone_Startjj"
+    );
   }
 
   @Override
@@ -1131,7 +1149,11 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inToneExp(ToneLiteral node) {
-    defaultIn(node);
+    write2File(
+      "# Push" + node.getLexeme() + "onto the stack." + 
+      "ldi    r25, hi8(" + node.getIntValue() + ")" +
+      "ldi    r24, lo8(" + node.getIntValue() + ")"
+    );
   }
 
   @Override

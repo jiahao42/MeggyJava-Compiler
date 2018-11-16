@@ -11,6 +11,7 @@ public class Type
   public static final Type BYTE = new Type();
   public static final Type COLOR = new Type();
   public static final Type BUTTON = new Type();
+  public static final Type TONE = new Type();
   public static final Type VOID = new Type();
 
   private String typeName;
