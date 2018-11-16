@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import label.Label;
+import symtable.ClassSTE;
 import symtable.MethodSTE;
 import symtable.SymTable;
 import symtable.Type;
@@ -959,10 +960,11 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   public void outNewExp(NewExp node) {
     // TODO: should NEW with parameters in the future
     // TODO: Should calculate the size of object
+    int size = ST.lookup(node.getId()).getSize();
     write2File(
       "\n\t# NewExp" +
-      "\n\tldi    r24, lo8(0)" +
-      "\n\tldi    r25, hi8(0)" +
+      "\n\tldi    r24, lo8(" + String.valueOf(size) + ")" + 
+      "\n\tldi    r25, hi8(" + String.valueOf(size) + ")" + 
       "\n\t# allocating object of size 0 on heap" +
       "\n\tcall    malloc" +
       "\n\t# push object address" +

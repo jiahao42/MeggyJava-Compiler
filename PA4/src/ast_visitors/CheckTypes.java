@@ -19,7 +19,7 @@ import ast.visitor.DepthFirstVisitor;
 import java.util.*;
 
 import symtable.SymTable;
-import symtable.Type;
+import symtable.*;
 import exceptions.InternalException;
 import exceptions.SemanticException;
 
@@ -226,6 +226,18 @@ public class CheckTypes extends DepthFirstVisitor {
 					node.getPos());
 		}
 	}
+
+	@Override
+  public void outNewExp(NewExp node) {
+    // TODO: should NEW with parameters in the future
+    // TODO: Should calculate the size of object
+		STE ste = mCurrentST.lookup(node.getId());
+		if (!(ste instanceof ClassSTE) || ste == null) {
+			throw new SemanticException("Symbol " + node.getId() + " not exists!", node.getLine(),
+					node.getPos());
+		}
+		setType(node, Type.getOrCreateType(ste.getName()));
+  }
 	
 	/** Type check for statement **/
 

@@ -18,5 +18,15 @@ public class VarSTE extends STE {
         mType = type;
         mBase = base;
         mOffset = offset;
+        mSize = type.getAVRTypeSize();
+    }
+    public Type getType() {
+        return this.mType;
+    }
+    public int getBase() {
+        return this.mBase;
+    }
+    public int getOffset() {
+        return this.getOffset();
     }
 }

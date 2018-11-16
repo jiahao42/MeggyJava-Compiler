@@ -14,5 +14,11 @@ public class MethodSTE extends STE {
     public MethodSTE(String name, Signature signature, Scope scope) {
         super(name, scope);
         mSignature = signature;
+        for (Object ste : scope.getDict().values()) {
+            mSize = 0;
+            if (ste instanceof VarSTE) {
+                mSize += ((VarSTE)ste).getType().getAVRTypeSize();
+            }
+        }
     }
 }

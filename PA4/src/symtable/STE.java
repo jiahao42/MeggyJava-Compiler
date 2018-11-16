@@ -12,6 +12,7 @@ package symtable;
 public class STE {
     private String mName;
     private Scope mScope;
+    protected int mSize;
     public STE(String name, Scope scope) {
         mName = name;
         mScope = scope;
@@ -21,5 +22,8 @@ public class STE {
     }
     public Scope getScope() {
         return mScope;
+    }
+    public int getSize() {
+        return mSize;
     }
 }

@@ -3,6 +3,8 @@
 
 # Compiled class file
 *.class
+
+# Exclude Java cup class files
 !/**/src/java_cup/**/*.class
 
 # Testcases

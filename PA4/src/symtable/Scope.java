@@ -31,8 +31,12 @@ public class Scope {
             return false;
         }
     }
-    
+
     public String getName() {
         return mName;
+    }
+
+    public HashMap<String, STE> getDict() {
+        return mDict;
     }
 }
