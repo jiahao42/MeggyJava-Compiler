@@ -559,13 +559,41 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void inLtExp(LtExp node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outLtExp(LtExp node) {
-    defaultOut(node);
+  public void visitLtExp(LtExp node) { // INT to INT
+      inLtExp(node);
+      if(node.getLExp() != null)
+      {
+          node.getLExp().accept(this);
+      }
+      promoteByte2Int(node.getLExp());
+      if(node.getRExp() != null)
+      {
+          node.getRExp().accept(this);
+      }
+      promoteByte2Int(node.getRExp());
+      String trueBranch = new Label().toString();
+      String falseBranch = new Label().toString();
+      String thenBranch = new Label().toString();
+      write2File(
+        "\n\t# less than expression" +
+        "\n\t# load a two byte expression off stack" +
+        "\n\tpop r18" +
+        "\n\tpop r19" +
+        "\n\t# load a two byte expression off stack" +
+        "\n\tpop r24" +
+        "\n\tpop r25" +
+        "\n\tcp r24, r18" +
+        "\n\tcpc r25, r19" +
+        "\n\tbrlt " + trueBranch +
+        "\n\t# load false" +
+        "\n" + falseBranch + ": " + 
+        "\n\tldi r24, 0" +
+        "\n\tjmp " + thenBranch +
+        "\n\t# load true" +
+        "\n" + trueBranch + ": " +
+        "\n\tldi    r24, 1" + 
+        "\n" + thenBranch
+      );
   }
 
   @Override
@@ -753,14 +781,14 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outMeggyToneStart(MeggyToneStart node) {
     write2File(
-      "### Meggy.toneStart(tone, time_ms) call" + 
-      "# load a two byte expression off stack" + 
-      "pop    r22" + 
-      "pop    r23" + 
-      "# load a two byte expression off stack" + 
-      "pop    r24" + 
-      "pop    r25" + 
-      "call   _Z10Tone_Startjj"
+      "\n\n\t### Meggy.toneStart(tone, time_ms) call" + 
+      "\n\t# load a two byte expression off stack" + 
+      "\n\tpop    r22" + 
+      "\n\tpop    r23" + 
+      "\n\t# load a two byte expression off stack" + 
+      "\n\tpop    r24" + 
+      "\n\tpop    r25" + 
+      "\n\tcall   _Z10Tone_Startjj"
     );
   }
 
@@ -1146,13 +1174,16 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   public void outThisExp(ThisLiteral node) {
     defaultOut(node);
   }
-  
+
   @Override
   public void outToneExp(ToneLiteral node) {
     write2File(
-      "# Push" + node.getLexeme() + "onto the stack." + 
-      "ldi r25, hi8(" + node.getIntValue() + ")" +
-      "ldi r24, lo8(" + node.getIntValue() + ")"
+      "\n\n\t# Push" + node.getLexeme() + " onto the stack." + 
+      "\n\tldi r25, hi8(" + node.getIntValue() + ")" +
+      "\n\tldi r24, lo8(" + node.getIntValue() + ")" + 
+      "\n\t# push two byte expression onto stack" + 
+      "\n\tpush   r25" + 
+      "\n\tpush   r24"
     );
   }
 

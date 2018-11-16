@@ -58,6 +58,10 @@ public class CheckTypes extends DepthFirstVisitor {
 		return t == Type.COLOR;
 	}
 
+	private boolean isTone(Type t) {
+		return t == Type.TONE;
+	}
+
 	private Type getType(Node node) {
 		return this.mCurrentST.getExpType(node);
 	}
@@ -180,7 +184,19 @@ public class CheckTypes extends DepthFirstVisitor {
 			throw new SemanticException("Invalid operands type for operator -, expect INT or BYTE", node.getLine(),
 					node.getPos());
 		}
-  }
+	}
+	
+	@Override
+	public void outLtExp(LtExp node) {
+		if (!isIntOrByte(getType(node.getLExp()))) {
+			throw new SemanticException("Invalid operands type for operator <, expect INT or BYTE", node.getLExp().getLine(),
+					node.getLExp().getPos());
+		} else if (!isIntOrByte(getType(node.getRExp()))) {
+			throw new SemanticException("Invalid operands type for operator <, expect INT or BYTE", node.getLExp().getLine(),
+					node.getRExp().getPos());
+		}
+		setType(node, Type.BOOL);
+	}
 
 	@Override
 	public void outByteCast(ByteCast node) {
@@ -243,11 +259,11 @@ public class CheckTypes extends DepthFirstVisitor {
 
 	@Override
 	public void outMeggyToneStart(MeggyToneStart node) {
-		if (getType(node.getToneExp()) != Type.TONE) {
+		if (!isTone(getType(node.getToneExp()))) {
 			throw new SemanticException("Invalid parameter types for Meggy.toneStart, expect Meggy.Tone", node.getToneExp().getLine(),
 			node.getToneExp().getPos());
 		}
-		if (isIntOrByte(getType(node.getDurationExp()))) {
+		if (!isIntOrByte(getType(node.getDurationExp()))) {
 			throw new SemanticException("Invalid parameter types for Meggy.toneStart, expect INT", node.getDurationExp().getLine(),
 			node.getDurationExp().getPos());
 		}

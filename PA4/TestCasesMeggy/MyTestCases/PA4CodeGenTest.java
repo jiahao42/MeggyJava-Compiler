@@ -13,6 +13,10 @@ class PA4CodeGenTest {
   public static void main(String[] parameters) {
     // new Class1().func1((byte)1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
     new Class1().func2((byte)1, 2);
+    Meggy.toneStart(Meggy.Tone.Cs3, 10);
+    // if (1 < 2) {}
+    // if ((byte)1 < 2) {}
+    // if ((byte)2 < (byte)1) {}
   }
 }
 
