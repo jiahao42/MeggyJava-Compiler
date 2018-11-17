@@ -17,13 +17,26 @@ import exceptions.SemanticException;
 
 public class BuildSymTable extends DepthFirstVisitor {
   SymTable ST;
+  boolean mDebug;
 
   public BuildSymTable() {
     ST = new SymTable();
+    mDebug = false;
+  }
+
+  public BuildSymTable(boolean debug) {
+    ST = new SymTable();
+    mDebug = debug;
   }
 
   public SymTable getSymTable() {
     return ST;
+  }
+
+  private void debugInfo(String msg) {
+    if (mDebug) {
+      System.err.println("[Debug Info]: " + msg);
+    }
   }
 
   private Type getType(Node node) {
@@ -65,6 +78,11 @@ public class BuildSymTable extends DepthFirstVisitor {
     setType(node, Type.BOOL);
   }
 
+  @Override
+  public void outToneType(ToneType node) {
+    setType(node, Type.TONE);
+  }
+
   /* Literals */
 	@Override
 	public void outIntegerExp(IntLiteral node) {
@@ -104,6 +122,7 @@ public class BuildSymTable extends DepthFirstVisitor {
       throw new SemanticException("Class " + mSTE.getName() + " already exists in current scope!", node.getLine(),
           node.getPos());
     }
+    debugInfo("Insert class [" + node.getName() + "] under scope " + ST.getCurrentScope().getName());
     ST.pushScope(mSTE.getScope());
   }
 
@@ -120,6 +139,7 @@ public class BuildSymTable extends DepthFirstVisitor {
       throw new SemanticException("Class " + mSTE.getName() + " already exists in current scope!", node.getLine(),
           node.getPos());
     }
+    debugInfo("Insert class [" + node.getName() + "] under scope " + ST.getCurrentScope().getName());
     ST.pushScope(mSTE.getScope());
   }
 
@@ -136,8 +156,6 @@ public class BuildSymTable extends DepthFirstVisitor {
     if (!ST.insert(mSTE)) {
       throw new SemanticException("Method " + mSTE.getName() + " already exists in current scope!", node.getLine(),
           node.getPos());
-    } else {
-      System.out.println("Insert method " + node.getName() + " under scope " + ST.getCurrentScope().getName());
     }
     ST.pushScope(mSTE.getScope());
     if (node.getType() != null) {
@@ -169,10 +187,11 @@ public class BuildSymTable extends DepthFirstVisitor {
       node.getExp().accept(this);
     }
     Type retType = getType(node.getType());
+    // debugInfo(node.getName());
     Signature mSignature = new Signature(mTypeList, retType);
     mSTE.setSignature(mSignature);
-    // System.out.println(mSignature);
     ST.popScope();
+    debugInfo("Insert method [" + node.getName() + mSignature.toString() + "] under scope " + ST.getCurrentScope().getName());
   }
 
   @Override

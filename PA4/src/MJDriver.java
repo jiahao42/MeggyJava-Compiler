@@ -73,7 +73,7 @@ public class MJDriver {
 					System.out.println("Printing AST to " + filename + ".ast.dot");
 					
 					// create the symbol table
-          BuildSymTable stVisitor = new BuildSymTable();
+          BuildSymTable stVisitor = new BuildSymTable(true);
           ast_root.accept(stVisitor);
 					symtable.SymTable globalST = stVisitor.getSymTable();
           
