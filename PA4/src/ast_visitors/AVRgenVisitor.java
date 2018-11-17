@@ -354,7 +354,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   public void inColorExp(ColorLiteral node) {
      write2File(
         "\n\t# Color expression " + node.getLexeme() + 
-        "\n\tldi r22," + node.getIntValue() + 
+        "\n\tldi r22, " + node.getIntValue() + 
         "\n\t# push one byte expression onto stack" +
         "\n\tpush r22\n");
   }
@@ -434,9 +434,9 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   public void inFalseExp(FalseLiteral node) {
     write2File(
       "\n\t# False/0 expression" +
-      "\n\tldi    r22, 0" +
+      "\n\tldi r22, 0" +
       "\n\t# push one byte expression onto stack" +
-      "\n\tpush   r22"
+      "\n\tpush r22"
     );
   }
 
@@ -530,8 +530,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   public void inIntegerExp(IntLiteral node) {
     write2File(
       "\n\t# Load constant int " + node.getIntValue() + 
-      "\n\tldi r24,lo8(" + node.getIntValue() + ")" + 
-      "\n\tldi r25,hi8(" + node.getIntValue() + ")" + 
+      "\n\tldi r24, lo8(" + node.getIntValue() + ")" + 
+      "\n\tldi r25, hi8(" + node.getIntValue() + ")" + 
       "\n\t# push two byte expression onto stack" +
       "\n\tpush r25 # higher bits" +
       "\n\tpush r24 # lower bits\n"
@@ -591,8 +591,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         "\n\tjmp " + thenBranch +
         "\n\t# load true" +
         "\n" + trueBranch + ": " +
-        "\n\tldi    r24, 1" + 
-        "\n" + thenBranch
+        "\n\tldi r24, 1" + 
+        "\n" + thenBranch + ": "
       );
   }
 
@@ -1182,8 +1182,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tldi r25, hi8(" + node.getIntValue() + ")" +
       "\n\tldi r24, lo8(" + node.getIntValue() + ")" + 
       "\n\t# push two byte expression onto stack" + 
-      "\n\tpush   r25" + 
-      "\n\tpush   r24"
+      "\n\tpush r25" + 
+      "\n\tpush r24"
     );
   }
 
@@ -1213,9 +1213,9 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   public void inTrueExp(TrueLiteral node) {
     write2File(
       "\n\t# True/1 expression" +
-      "\n\tldi    r22, 1" +
+      "\n\tldi r22, 1" +
       "\n\t# push one byte expression onto stack" +
-      "\n\tpush   r22"
+      "\n\tpush r22"
     );
   }
 
@@ -1268,7 +1268,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\t# examine condition" +
       "\n\t# load a one byte expression off stack" +
       "\n\tpop r24" +
-      "\n\tldi r25,1" +
+      "\n\tldi r25, 1" +
       "\n\tcp r24, r25" +
       "\n\tbreq " + body + " # if true, go to body" +
       "\n\tjmp " + nextBlock + " # if false, go to next block" +
