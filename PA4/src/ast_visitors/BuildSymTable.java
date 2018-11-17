@@ -57,7 +57,7 @@ public class BuildSymTable extends DepthFirstVisitor {
 
   @Override
   public void outByteType(ByteType node) {
-    setType(node, Type.BOOL);
+    setType(node, Type.BYTE);
   }
 
   @Override
@@ -129,26 +129,8 @@ public class BuildSymTable extends DepthFirstVisitor {
   }
 
   @Override
-  public void inMethodDecl(MethodDecl node) {
-    setType(node, getType(node.getType()));
-    String name = node.getName();
-    List<Type> mTypeList = new LinkedList<>();
-    for (Formal e : node.getFormals()) {
-      mTypeList.add(getType(e.getType()));
-    }
-    Type retType = getType(node.getType());
-    MethodSTE mSTE = new MethodSTE(name, new Signature(mTypeList, retType), new Scope(name));
-    if (!ST.insert(mSTE)) {
-      throw new SemanticException("Method " + mSTE.getName() + " already exists in current scope!", node.getLine(),
-          node.getPos());
-    } else {
-      System.out.println("Insert method " + node.getName() + " under scope " + ST.getCurrentScope().getName());
-    }
-    ST.pushScope(mSTE.getScope());
-  }
-
-  @Override
   public void visitMethodDecl(MethodDecl node) {
+    // System.out.println(node.getType());
     String name = node.getName();
     MethodSTE mSTE = new MethodSTE(name, new Scope(name));
     if (!ST.insert(mSTE)) {
@@ -187,7 +169,9 @@ public class BuildSymTable extends DepthFirstVisitor {
       node.getExp().accept(this);
     }
     Type retType = getType(node.getType());
-    mSTE.setSignature(new Signature(mTypeList, retType));
+    Signature mSignature = new Signature(mTypeList, retType);
+    mSTE.setSignature(mSignature);
+    System.out.println(mSignature);
     ST.popScope();
   }
 

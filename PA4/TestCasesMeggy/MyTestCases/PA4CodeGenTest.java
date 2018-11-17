@@ -17,6 +17,9 @@ class PA4CodeGenTest {
     if (new Class1().func2((byte)1, 2) == 0) {
       Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
     }
+    if (new Class1().func3() == 1) {
+      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
+    }
   }
 }
 
@@ -26,6 +29,9 @@ class Class1 {
   // }
   public int func2(byte a, int b) {
     return 0;
+  }
+  public byte func3() {
+    return (byte)1;
   }
 }
 

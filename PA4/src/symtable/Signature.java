@@ -30,7 +30,9 @@ public class Signature {
         for (Type t : mParamTypes) {
             paramTypesLiteral += t.toString() + ",";
         }
-        paramTypesLiteral = paramTypesLiteral.substring(0, paramTypesLiteral.length() - 1); // delete last comma
+        if (mParamTypes.size() > 0) {
+            paramTypesLiteral = paramTypesLiteral.substring(0, paramTypesLiteral.length() - 1); // delete last comma
+        }
         paramTypesLiteral += ") returns " + mReturnType.toString();
         return paramTypesLiteral;
     }

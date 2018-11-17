@@ -313,7 +313,6 @@ public class CheckTypes extends DepthFirstVisitor {
 		if (ste != null && ste instanceof MethodSTE) {
 			MethodSTE mSTE = (MethodSTE)ste;
 			setType(node, mSTE.getSignature().getReturnType());
-			System.out.println(node.toString());
 		} else {
 			throw new SemanticException("Method " + node.getId() + " not exsits under scope " + mCurrentST.getCurrentScope().getName(), node.getLine(),
 			node.getPos());
@@ -334,6 +333,17 @@ public class CheckTypes extends DepthFirstVisitor {
 			node.getPos());
 		}
 		mCurrentST.popScope();
+	}
+
+	@Override
+	public void outMethodDecl(MethodDecl node) {
+		Type declareExpType = getType(node.getExp());
+		Type retExpType = getType(node.getType());
+		if (declareExpType != retExpType) {
+			throw new SemanticException("Method " + node.getName() + " has incorrect return type, expect: " + getType(node.getType()).toString() + ", actual: " + getType(node.getExp()).toString(),
+			node.getLine(),
+			node.getPos());
+		}
 	}
 	
 	@Override
