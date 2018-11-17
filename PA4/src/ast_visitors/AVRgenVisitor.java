@@ -250,18 +250,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void inCallExp(CallExp node) {
-    defaultIn(node);
-  }
-
-  @Override
   public void outCallExp(CallExp node) {
     defaultOut(node);
-  }
-
-  @Override
-  public void inCallStatement(CallStatement node) {
-    defaultIn(node);
   }
 
   @Override
@@ -289,22 +279,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       }
       reg += 2;
     }
-
-    // for (IExp e : node.getArgs()) {
-    //   if (getType(e).getAVRTypeSize() == 2) {
-    //     write2File(
-    //       "\n\t# load a two bytes expression off stack" + 
-    //       "\n\tpop r" + String.valueOf(reg) + 
-    //       "\n\tpop r" + String.valueOf(reg + 1)
-    //     );
-    //   } else { // size == 1
-    //     write2File(
-    //       "\n\t# load a one byte expression off stack" + 
-    //       "\n\tpop r" + String.valueOf(reg)
-    //     );
-    //   }
-    //   reg += 2;
-    // }
     String methodName = getType(node.getExp()).toString() + "_" + node.getId();
     write2File(
       "\n\t# receiver will be passed as first param" + 
@@ -585,14 +559,13 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         "\n\tcp r24, r18" +
         "\n\tcpc r25, r19" +
         "\n\tbrlt " + trueBranch +
-        "\n\t# load false" +
-        "\n" + falseBranch + ": " + 
+        "\n" + falseBranch + ": # load false" + 
         "\n\tldi r24, 0" +
         "\n\tjmp " + thenBranch +
-        "\n\t# load true" +
-        "\n" + trueBranch + ": " +
+        "\n" + trueBranch + ": # load true" +
         "\n\tldi r24, 1" + 
-        "\n" + thenBranch + ": "
+        "\n" + thenBranch + ": " +
+        "\n\tpush r24 # push the result of less than"
       );
   }
 
