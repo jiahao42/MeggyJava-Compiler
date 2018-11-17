@@ -211,15 +211,16 @@ public class BuildSymTable extends DepthFirstVisitor {
         e.accept(this);
       }
     }
-    Type retType;
+    // The return type here should be determined be the type
+    // instead of the type of the return statement.
     if (node.getExp() != null) {
       node.getExp().accept(this);
-      debugInfo(String.valueOf(node.getExp().getLine()) + String.valueOf(node.getExp().getPos()));
-      debugInfo(node.getExp().toString());
-      retType = getType(node.getExp());
     } else {
-      retType = Type.VOID;
+      setType(node.getExp(), Type.VOID);
     }
+    // It is possible that this type has never been seen before
+    // TODO: now we just consider native types in PA4
+    Type retType = getType(node.getType());
 
     // debugInfo(node.getName());
     Signature mSignature = new Signature(mTypeList, retType);
@@ -233,17 +234,20 @@ public class BuildSymTable extends DepthFirstVisitor {
     setType(node, Type.getOrCreateType(node.getId()));
   }
 
-  @Override
-  public void outCallExp(CallExp node) {
-    // this.testThis();
-    STE ste = ST.lookup(node.getId());
-    MethodSTE methodSTE;
-    if (ste instanceof MethodSTE) {
-      methodSTE = (MethodSTE)ste;
-    } else {
-      throw new SemanticException("Method [" + node.getId() + "] not found in scope " + ST.getInnermostClassName(), node.getLine(),
-      node.getPos());
-    }
-    setType(node, methodSTE.getSignature().getReturnType());
-  }
+  // @Override
+  // public void outCallExp(CallExp node) {
+	// 	STE ste = ST.lookup(getType(node.getExp()).toString());
+	// 	ST.pushScope(ste.getScope());
+  //   String methodName = ST.genMethodName(node.getId());
+  //   ste = ST.lookup(node.getId());
+  //   MethodSTE methodSTE;
+  //   if (ste instanceof MethodSTE) {
+  //     methodSTE = (MethodSTE)ste;
+  //   } else {
+  //     throw new SemanticException("Method [" + methodName + "] not found in scope " + ST.getInnermostClassName(), node.getLine(),
+  //     node.getPos());
+  //   }
+  //   ST.popScope();
+  //   setType(node, methodSTE.getSignature().getReturnType());
+  // }
 }

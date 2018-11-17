@@ -30,6 +30,35 @@ class PA4Test2 {
 }
 
 class MultiClassTest1 {
+  public int testThis() {
+    return new MultiClassTest2().sameNameFunction();
+  }
+  public int sameNameFunction() {
+    return this.testThis();
+  }
+}
+
+class MultiClassTest2 {
+    public int testThis() {
+    return new MultiClassTest3().sameNameFunction();
+  }
+  public int sameNameFunction() {
+    return this.testThis();
+  }
+
+}
+
+class MultiClassTest3 {
+  public int testThis() {
+    return 0;
+  }
+  public int sameNameFunction() {
+    return this.testThis();
+  }
+}
+
+/*
+class MultiClassTest1 {
   public int sameNameFunction() {
     return this.testThis();
   }
@@ -55,3 +84,4 @@ class MultiClassTest3 {
     return 0;
   }
 }
+*/

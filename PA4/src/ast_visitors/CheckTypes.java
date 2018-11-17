@@ -351,6 +351,7 @@ public class CheckTypes extends DepthFirstVisitor {
 		if (declareExpType != Type.VOID) {
 			retExpType = getType(node.getExp());
 		}
+		// System.out.println(node.getName());
 		if (declareExpType != retExpType) {
 			throw new SemanticException("Method " + node.getName() + " has incorrect return type, expect: " + declareExpType.toString() + ", actual: " + retExpType.toString(),
 			node.getLine(),
