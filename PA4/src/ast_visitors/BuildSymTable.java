@@ -133,13 +133,13 @@ public class BuildSymTable extends DepthFirstVisitor {
   @Override
   public void inMainClass(MainClass node) {
     assert (ST.getCurrentScope() == ST.getGlobalScope());
-    ClassSTE methodSTE = new ClassSTE(node.getName(), true, null, new Scope(node.getName(), Scope.classScope));
-    if (!ST.insert(methodSTE)) {
-      throw new SemanticException("Class " + methodSTE.getName() + " already exists in current scope!", node.getLine(),
+    ClassSTE classSTE = new ClassSTE(node.getName(), true, null, new Scope(node.getName(), Scope.classScope));
+    if (!ST.insert(classSTE)) {
+      throw new SemanticException("Class " + classSTE.getName() + " already exists in current scope!", node.getLine(),
           node.getPos());
     }
     debugInfo("Insert class [" + node.getName() + "] under scope " + ST.getCurrentScope().getName());
-    ST.pushScope(methodSTE.getScope());
+    ST.pushScope(classSTE.getScope());
   }
 
   @Override
@@ -150,13 +150,13 @@ public class BuildSymTable extends DepthFirstVisitor {
   @Override
   public void inTopClassDecl(TopClassDecl node) {
     assert (ST.getCurrentScope() == ST.getGlobalScope());
-    ClassSTE methodSTE = new ClassSTE(node.getName(), false, null, new Scope(node.getName(), Scope.classScope));
-    if (!ST.insert(methodSTE)) {
-      throw new SemanticException("Class " + methodSTE.getName() + " already exists in scope " + ST.getCurrentScope().getName(), node.getLine(),
+    ClassSTE classSTE = new ClassSTE(node.getName(), false, null, new Scope(node.getName(), Scope.classScope));
+    if (!ST.insert(classSTE)) {
+      throw new SemanticException("Class " + classSTE.getName() + " already exists in scope " + ST.getCurrentScope().getName(), node.getLine(),
           node.getPos());
     }
     debugInfo("Insert class [" + node.getName() + "] under scope " + ST.getCurrentScope().getName());
-    ST.pushScope(methodSTE.getScope());
+    ST.pushScope(classSTE.getScope());
   }
 
   @Override

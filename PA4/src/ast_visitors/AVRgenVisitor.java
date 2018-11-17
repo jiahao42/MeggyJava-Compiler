@@ -16,6 +16,7 @@ import symtable.ClassSTE;
 import symtable.MethodSTE;
 import symtable.SymTable;
 import symtable.Type;
+import symtable.VarSTE;
 
 public class AVRgenVisitor extends DepthFirstVisitor {
   private PrintWriter out;
@@ -1137,13 +1138,17 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void inThisExp(ThisLiteral node) {
-    defaultIn(node);
-  }
-
-  @Override
   public void outThisExp(ThisLiteral node) {
-    defaultOut(node);
+    VarSTE thisSTE = (VarSTE)(ST.lookupInnermost(node.getLexeme()));
+    write2File(
+      "\n\t# loading the implicit \"this\"" +
+      "\n\t# load a two byte variable from base+offset" +
+      "\n\tldd    r31, " + thisSTE.getBase() + " + " + int2String(thisSTE.getOffset() + 1) + 
+      "\n\tldd    r30, " + thisSTE.getBase() + " + " + int2String(thisSTE.getOffset()) + 
+      "\n\t# push two byte expression onto stack" +
+      "\n\tpush   r31" +
+      "\n\tpush   r30"
+    );
   }
 
   @Override
