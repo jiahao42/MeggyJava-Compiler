@@ -252,6 +252,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outCallExp(CallExp node) {
     genFuncCall(node);
+    handleReturn(node);
   }
 
   @Override
@@ -294,7 +295,21 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   private void handleReturn(FuncCall node) {
-    
+    int size = getType(node.getExp()).getAVRTypeSize();
+    if (size == 2) {
+      write2File(
+        "\n\t# handle return value" + 
+        "\n\t# push two byte expression onto stack" + 
+        "\n\tpush r25" + 
+        "\n\tpush r24"
+      );
+    } else {
+      write2File(
+        "\n\t# handle return value" + 
+        "\n\t# push one byte expression onto stack" + 
+        "\n\tpush r24"
+      );
+    }
   }
 
   @Override

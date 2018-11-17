@@ -14,9 +14,6 @@ class PA4CodeGenTest {
     // new Class1().func1((byte)1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
     new Class1().func2((byte)1, 2);
     Meggy.toneStart(Meggy.Tone.Cs3, 10);
-    if (1 < 2) { Meggy.setPixel(1, 2, Meggy.Color.GREEN); }
-    if ((byte)1 < 2) { Meggy.setPixel(1, 2, Meggy.Color.GREEN); }
-    if ((byte)2 < (byte)1) { Meggy.setPixel(1, 2, Meggy.Color.RED); }
     if (new Class1().func2((byte)1, 2) == 0) {
       Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
     }
