@@ -25,39 +25,10 @@ class PA4Test2 {
     Meggy.toneStart(Meggy.Tone.Ds3, 10);
     Meggy.toneStart(Meggy.Tone.D3, 10);
     Meggy.toneStart(Meggy.Tone.B3, 10);
-    Meggy.setPixel((byte)1, (byte)3, Meggy.Color.VIOLET);
+    Meggy.setPixel((byte)1, (byte)3, Meggy.Color.GREEN);
   }
 }
 
-class MultiClassTest1 {
-  public int testThis() {
-    return new MultiClassTest2().sameNameFunction();
-  }
-  public int sameNameFunction() {
-    return this.testThis();
-  }
-}
-
-class MultiClassTest2 {
-    public int testThis() {
-    return new MultiClassTest3().sameNameFunction();
-  }
-  public int sameNameFunction() {
-    return this.testThis();
-  }
-
-}
-
-class MultiClassTest3 {
-  public int testThis() {
-    return 0;
-  }
-  public int sameNameFunction() {
-    return this.testThis();
-  }
-}
-
-/*
 class MultiClassTest1 {
   public int sameNameFunction() {
     return this.testThis();
@@ -84,4 +55,3 @@ class MultiClassTest3 {
     return 0;
   }
 }
-*/

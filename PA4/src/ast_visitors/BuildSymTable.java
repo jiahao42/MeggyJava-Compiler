@@ -233,21 +233,4 @@ public class BuildSymTable extends DepthFirstVisitor {
   public void outNewExp(NewExp node) {
     setType(node, Type.getOrCreateType(node.getId()));
   }
-
-  // @Override
-  // public void outCallExp(CallExp node) {
-	// 	STE ste = ST.lookup(getType(node.getExp()).toString());
-	// 	ST.pushScope(ste.getScope());
-  //   String methodName = ST.genMethodName(node.getId());
-  //   ste = ST.lookup(node.getId());
-  //   MethodSTE methodSTE;
-  //   if (ste instanceof MethodSTE) {
-  //     methodSTE = (MethodSTE)ste;
-  //   } else {
-  //     throw new SemanticException("Method [" + methodName + "] not found in scope " + ST.getInnermostClassName(), node.getLine(),
-  //     node.getPos());
-  //   }
-  //   ST.popScope();
-  //   setType(node, methodSTE.getSignature().getReturnType());
-  // }
 }
