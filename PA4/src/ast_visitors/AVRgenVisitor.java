@@ -267,10 +267,11 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   private void genFuncCall(FuncCall node) {
     write2File(
-      "\n\t#### function call" + 
+      "\n\n\t#### function call" + 
       "\n\t# put parameter values into appropriate registers"
     );
-    int reg = 20;
+    int argsNum = node.getArgs().size();
+    int reg = 26 - (argsNum + 1) * 2; // include this pointer
     // Iterate in reverse.
     ListIterator<IExp> argIter = node.getArgs().listIterator(node.getArgs().size());
     while(argIter.hasPrevious()) {
