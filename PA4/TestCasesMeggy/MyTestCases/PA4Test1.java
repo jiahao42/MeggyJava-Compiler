@@ -16,26 +16,28 @@ import meggy.Meggy;
 
 class PA4Test1 {
   public static void main(String[] parameters) {
-    new TestReturnValue().testAll();
+    // new TestReturnValue().testAll();
     new TestParameters().testAll();
-    new TestLessThan().testLessThan();
-    Meggy.setPixel((byte)1, (byte)2, Meggy.Color.RED);
+    if (new TestLessThan().testLessThan() == true) {
+      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
+    }
+    Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
     Meggy.delay(5);
     if (Meggy.checkButton(Meggy.Button.Down) == true) {
-      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.BLUE);
+      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.RED);
     }
   }
 }
 
 class TestReturnValue {
   public void testAll() {
-    this.testBoolean();
-    this.testByte();
-    this.testInt();
-    this.testVoid();
-    this.testColor();
-    this.testButton();
-    this.testTone();
+    // this.testBoolean();
+    // this.testByte();
+    // this.testInt();
+    // this.testVoid();
+    // this.testColor();
+    // this.testButton();
+    // this.testTone();
   }
 
   public boolean testBoolean() {

@@ -821,16 +821,17 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     }
     write2File(
       "\n\t# Copy stack pointer to frame pointer" +
-      "\n\tin r28,__SP_L__" +
-      "\n\tin r29,__SP_H__"
+      "\n\tin r28, __SP_L__" +
+      "\n\tin r29, __SP_H__"
     );
 
     write2File(
       "\n\t# save off parameters" + 
       "\n\t# implicit this pointer"
     );
-    int formalNum = node.getFormals().size();
-    int reg = 19 + (1 + formalNum) * 2; // with implicit this pointer
+    // int formalNum = node.getFormals().size();
+    // int reg = 19 + (1 + formalNum) * 2; // with implicit this pointer
+    int reg = 25;
     int offset = 1;
     write2File(
       "\n\tstd Y + " + String.valueOf(offset + 1) + ", r" + String.valueOf(reg) + 
