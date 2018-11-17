@@ -17,7 +17,7 @@ public class SymTable {
     private Stack<Scope> mScopeStack;
 
     public SymTable() {
-        mGlobalScope = new Scope("global"); // Global Scope don't need name, maybe?
+        mGlobalScope = new Scope("global", Scope.globalScope); // Global Scope don't need name, maybe?
         mScopeStack = new Stack<>();
         mScopeStack.push(mGlobalScope);
     }
@@ -72,6 +72,17 @@ public class SymTable {
     public STE lookupInnermost(String sym) {
         Scope currentScope = mScopeStack.peek();
         return currentScope.lookup(sym);
+    }
+
+    public String getInnermostClassName() {
+        Stack<Scope> copy = (Stack<Scope>)mScopeStack.clone();
+        while (!copy.empty()) {
+            Scope currentScope = copy.pop();
+            if (currentScope.getScopeType() == Scope.classScope) {
+                return currentScope.getName();
+            }
+        }
+        return null;
     }
 
     /**

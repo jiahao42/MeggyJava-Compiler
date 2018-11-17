@@ -69,6 +69,10 @@ public class Type
       return "TONE";
     }
 
+    if (this == VOID) {
+      return "VOID";
+    }
+
     if (typeName != null) {
       return typeName;
     }
