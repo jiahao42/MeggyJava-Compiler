@@ -75,7 +75,7 @@ public class BuildSymTable extends DepthFirstVisitor {
 
   @Override
   public void outVoidType(VoidType node) {
-    setType(node, Type.BOOL);
+    setType(node, Type.VOID);
   }
 
   @Override
@@ -112,7 +112,17 @@ public class BuildSymTable extends DepthFirstVisitor {
 	@Override
 	public void outToneExp(ToneLiteral node) {
 		setType(node, Type.TONE);
-	}
+  }
+  
+  @Override
+	public void outByteCast(ByteCast node) {
+		setType(node, Type.BYTE);
+  }
+  
+  @Override
+  public void outLtExp(LtExp node) {
+    setType(node, Type.BOOL);
+  }
 
   @Override
   public void inMainClass(MainClass node) {
@@ -161,6 +171,7 @@ public class BuildSymTable extends DepthFirstVisitor {
     if (node.getType() != null) {
       node.getType().accept(this);
     }
+    setType(node, getType(node.getType()));
     {
       List<Formal> copy = new ArrayList<Formal>(node.getFormals());
       for (Formal e : copy) {
@@ -183,10 +194,16 @@ public class BuildSymTable extends DepthFirstVisitor {
         e.accept(this);
       }
     }
+    Type retType;
     if (node.getExp() != null) {
       node.getExp().accept(this);
+      // debugInfo(String.valueOf(node.getExp().getLine()) + String.valueOf(node.getExp().getPos()));
+      // debugInfo(node.getExp().toString());
+      retType = getType(node.getExp());
+    } else {
+      retType = Type.VOID;
     }
-    Type retType = getType(node.getType());
+
     // debugInfo(node.getName());
     Signature mSignature = new Signature(mTypeList, retType);
     mSTE.setSignature(mSignature);

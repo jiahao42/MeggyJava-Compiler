@@ -322,8 +322,15 @@ public class CheckTypes extends DepthFirstVisitor {
 
 	@Override
 	public void outCallStatement(CallStatement node) {
-		STE ste = mCurrentST.lookup(getType(node.getExp()).toString());
-		mCurrentST.pushScope(ste.getScope());
+		boolean enterScope = true;
+		if (node.getExp() instanceof ThisLiteral) {
+			enterScope = false;
+		}
+		STE ste;
+		if (enterScope) {
+			ste = mCurrentST.lookup(getType(node.getExp()).toString());
+			mCurrentST.pushScope(ste.getScope());
+		}
 		ste = mCurrentST.lookup(node.getId());
 		if (ste != null && ste instanceof MethodSTE) {
 			MethodSTE mSTE = (MethodSTE)ste;
@@ -332,20 +339,37 @@ public class CheckTypes extends DepthFirstVisitor {
 			throw new SemanticException("Method " + node.getId() + " not exsits under scope " + mCurrentST.getCurrentScope().getName(), node.getLine(),
 			node.getPos());
 		}
-		mCurrentST.popScope();
+		if (enterScope) {
+			mCurrentST.popScope();
+		}
 	}
 
 	@Override
 	public void outMethodDecl(MethodDecl node) {
-		Type declareExpType = getType(node.getExp());
-		Type retExpType = getType(node.getType());
+		Type declareExpType = getType(node.getType());
+		Type retExpType = Type.VOID;
+		if (declareExpType != Type.VOID) {
+			retExpType = getType(node.getExp());
+		}
 		if (declareExpType != retExpType) {
-			throw new SemanticException("Method " + node.getName() + " has incorrect return type, expect: " + getType(node.getType()).toString() + ", actual: " + getType(node.getExp()).toString(),
+			throw new SemanticException("Method " + node.getName() + " has incorrect return type, expect: " + declareExpType.toString() + ", actual: " + retExpType.toString(),
 			node.getLine(),
 			node.getPos());
 		}
 	}
 	
+	@Override
+  public void inTopClassDecl(TopClassDecl node) {
+		assert (mCurrentST.getCurrentScope() == mCurrentST.getGlobalScope());
+		STE mSTE = mCurrentST.lookup(node.getName());
+		mCurrentST.pushScope(mSTE.getScope());
+	}
+
+  @Override
+  public void outTopClassDecl(TopClassDecl node) {
+    mCurrentST.popScope();
+  }
+
 	@Override
 	public void outBlockStatement(BlockStatement node) {
 		

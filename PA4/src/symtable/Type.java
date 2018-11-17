@@ -65,6 +65,10 @@ public class Type
       return "BUTTON";
     }
 
+    if (this == TONE) {
+      return "TONE";
+    }
+
     if (typeName != null) {
       return typeName;
     }
