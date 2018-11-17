@@ -95,7 +95,7 @@ public class SymTable {
     }
 
     public String genMethodName(String methodName) {
-        System.out.println(mScopeStack.peek().getName() + "_" + methodName);
+        // System.out.println(mScopeStack.peek().getName() + "_" + methodName);
         return mScopeStack.peek().getName() + "_" + methodName;
     }
 }

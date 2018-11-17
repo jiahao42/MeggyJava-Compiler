@@ -171,7 +171,7 @@ public class BuildSymTable extends DepthFirstVisitor {
     Type retType = getType(node.getType());
     Signature mSignature = new Signature(mTypeList, retType);
     mSTE.setSignature(mSignature);
-    System.out.println(mSignature);
+    // System.out.println(mSignature);
     ST.popScope();
   }
 
