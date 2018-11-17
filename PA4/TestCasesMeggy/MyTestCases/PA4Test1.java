@@ -31,7 +31,8 @@ class PA4Test1 {
 
 class TestReturnValue {
   public void testAll() {
-    // this.testBoolean();
+    this.testBoolean();
+    if (this.testBoolean() == true) {}
     // this.testByte();
     // this.testInt();
     // this.testVoid();

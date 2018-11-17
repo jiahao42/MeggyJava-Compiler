@@ -133,13 +133,13 @@ public class BuildSymTable extends DepthFirstVisitor {
   @Override
   public void inMainClass(MainClass node) {
     assert (ST.getCurrentScope() == ST.getGlobalScope());
-    ClassSTE mSTE = new ClassSTE(node.getName(), true, null, new Scope(node.getName(), Scope.classScope));
-    if (!ST.insert(mSTE)) {
-      throw new SemanticException("Class " + mSTE.getName() + " already exists in current scope!", node.getLine(),
+    ClassSTE methodSTE = new ClassSTE(node.getName(), true, null, new Scope(node.getName(), Scope.classScope));
+    if (!ST.insert(methodSTE)) {
+      throw new SemanticException("Class " + methodSTE.getName() + " already exists in current scope!", node.getLine(),
           node.getPos());
     }
     debugInfo("Insert class [" + node.getName() + "] under scope " + ST.getCurrentScope().getName());
-    ST.pushScope(mSTE.getScope());
+    ST.pushScope(methodSTE.getScope());
   }
 
   @Override
@@ -150,13 +150,13 @@ public class BuildSymTable extends DepthFirstVisitor {
   @Override
   public void inTopClassDecl(TopClassDecl node) {
     assert (ST.getCurrentScope() == ST.getGlobalScope());
-    ClassSTE mSTE = new ClassSTE(node.getName(), false, null, new Scope(node.getName(), Scope.classScope));
-    if (!ST.insert(mSTE)) {
-      throw new SemanticException("Class " + mSTE.getName() + " already exists in current scope!", node.getLine(),
+    ClassSTE methodSTE = new ClassSTE(node.getName(), false, null, new Scope(node.getName(), Scope.classScope));
+    if (!ST.insert(methodSTE)) {
+      throw new SemanticException("Class " + methodSTE.getName() + " already exists in scope " + ST.getCurrentScope().getName(), node.getLine(),
           node.getPos());
     }
     debugInfo("Insert class [" + node.getName() + "] under scope " + ST.getCurrentScope().getName());
-    ST.pushScope(mSTE.getScope());
+    ST.pushScope(methodSTE.getScope());
   }
 
   @Override
@@ -168,12 +168,12 @@ public class BuildSymTable extends DepthFirstVisitor {
   public void visitMethodDecl(MethodDecl node) {
     // System.out.println(node.getType());
     String name = node.getName();
-    MethodSTE mSTE = new MethodSTE(name, new Scope(name, Scope.methodScope));
-    if (!ST.insert(mSTE)) {
-      throw new SemanticException("Method " + mSTE.getName() + " already exists in current scope!", node.getLine(),
+    MethodSTE methodSTE = new MethodSTE(name, new Scope(name, Scope.methodScope));
+    if (!ST.insert(methodSTE)) {
+      throw new SemanticException("Method " + methodSTE.getName() + " already exists in scope " + ST.getCurrentScope().getName(), node.getLine(),
           node.getPos());
     }
-    ST.pushScope(mSTE.getScope());
+    ST.pushScope(methodSTE.getScope());
     if (node.getType() != null) {
       node.getType().accept(this);
     }
@@ -188,10 +188,21 @@ public class BuildSymTable extends DepthFirstVisitor {
     for (Formal e : node.getFormals()) {
       mTypeList.add(getType(e.getType()));
     }
+    int offset = 1;
+    VarSTE thisSTE = new VarSTE("this", Type.getOrCreateType(ST.getInnermostClassName()), offset);
+    methodSTE.getScope().insert(thisSTE);
     {
       List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
       for (VarDecl e : copy) {
         e.accept(this);
+        offset += 2;
+        VarSTE varSTE = new VarSTE(e.getName(), getType(e), offset);
+        if (methodSTE.getScope().insert(varSTE)) {
+          debugInfo("Insert var [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
+        } else {
+          throw new SemanticException("Var " + e.getName() + " already exists in scope " + ST.getCurrentScope().getName(), node.getLine(),
+          node.getPos());
+        }
       }
     }
     {
@@ -212,7 +223,7 @@ public class BuildSymTable extends DepthFirstVisitor {
 
     // debugInfo(node.getName());
     Signature mSignature = new Signature(mTypeList, retType);
-    mSTE.setSignature(mSignature);
+    methodSTE.setSignature(mSignature);
     ST.popScope();
     debugInfo("Insert method [" + node.getName() + mSignature.toString() + "] under scope " + ST.getCurrentScope().getName());
   }

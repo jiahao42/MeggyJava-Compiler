@@ -53,6 +53,10 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     }
   }
 
+  private String int2String(int val) {
+    return String.valueOf(val);
+  }
+
   // promote Byte to Int if possible
   private void promoteByte2Int(Node n) {
     if (isByte(getType(n))) {
@@ -273,13 +277,13 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       if (getType(arg).getAVRTypeSize() == 2) {
         write2File(
           "\n\t# load a two bytes expression off stack" + 
-          "\n\tpop r" + String.valueOf(reg) + 
-          "\n\tpop r" + String.valueOf(reg + 1)
+          "\n\tpop r" + int2String(reg) + 
+          "\n\tpop r" + int2String(reg + 1)
         );
       } else { // size == 1
         write2File(
           "\n\t# load a one byte expression off stack" + 
-          "\n\tpop r" + String.valueOf(reg)
+          "\n\tpop r" + int2String(reg)
         );
       }
       reg += 2;
@@ -288,8 +292,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     write2File(
       "\n\t# receiver will be passed as first param" + 
       "\n\t# load a two byte expression off stack" + 
-      "\n\tpop r" + String.valueOf(reg) + 
-      "\n\tpop r" + String.valueOf(reg + 1) + 
+      "\n\tpop r" + int2String(reg) + 
+      "\n\tpop r" + int2String(reg + 1) + 
       "\n\tcall " + methodName
     );
   }
@@ -310,41 +314,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         "\n\tpush r24"
       );
     }
-  }
-
-  @Override
-  public void visitCallStatement(CallStatement node) {
-    inCallStatement(node);
-    if (node.getExp() != null) {
-      node.getExp().accept(this);
-    }
-    {
-      List<IExp> copy = new ArrayList<IExp>(node.getArgs());
-      for (IExp e : copy) {
-        e.accept(this);
-      }
-    }
-    outCallStatement(node);
-  }
-
-  @Override
-  public void inChildClassDecl(ChildClassDecl node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outChildClassDecl(ChildClassDecl node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inClassType(ClassType node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outClassType(ClassType node) {
-    defaultOut(node);
   }
 
   @Override
@@ -834,8 +803,10 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     int reg = 25;
     int offset = 1;
     write2File(
-      "\n\tstd Y + " + String.valueOf(offset + 1) + ", r" + String.valueOf(reg) + 
-      "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg - 1)
+      "\n\t# store r" + int2String(reg) + " to Y + " + int2String(offset + 1) + 
+      "\n\tstd Y + " + int2String(offset + 1) + ", r" + int2String(reg) + 
+      "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
+      "\n\tstd Y + " + int2String(offset) + ", r" + int2String(reg - 1)
     );
     reg -= 2;
     offset += 2;
@@ -843,19 +814,22 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       int size = getType(e.getType()).getAVRTypeSize();
       if (size == 2) {
         write2File(
-          "\n\tstd Y + " + String.valueOf(offset + 1) + ", r" + String.valueOf(reg) + 
-          "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg - 1)
+          "\n\t# store r" + int2String(reg) + " to Y + " + int2String(offset + 1) + 
+          "\n\tstd Y + " + int2String(offset + 1) + ", r" + int2String(reg) + 
+          "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
+          "\n\tstd Y + " + int2String(offset) + ", r" + int2String(reg - 1)
         );
         offset += 2;
       } else if (size == 1) {
         write2File(
-          "\n\tstd Y + " + String.valueOf(offset) + ", r" + String.valueOf(reg - 1)
+          "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
+          "\n\tstd Y + " + int2String(offset) + ", r" + int2String(reg - 1)
         );
         offset += 1;
       }
       reg -= 2;
     }
-    write2File("\n\t/* done with function " + methodName + " prologue */");
+    write2File("\n\t/* done with function " + methodName + " prologue */\n\n");
     int varSize = 0;
     {
       List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
@@ -1006,8 +980,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     int size = ST.lookup(node.getId()).getSize();
     write2File(
       "\n\t# NewExp" +
-      "\n\tldi    r24, lo8(" + String.valueOf(size) + ")" + 
-      "\n\tldi    r25, hi8(" + String.valueOf(size) + ")" + 
+      "\n\tldi    r24, lo8(" + int2String(size) + ")" + 
+      "\n\tldi    r25, hi8(" + int2String(size) + ")" + 
       "\n\t# allocating object of size 0 on heap" +
       "\n\tcall    malloc" +
       "\n\t# push object address" +

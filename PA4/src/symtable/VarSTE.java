@@ -11,22 +11,22 @@ package symtable;
 
 public class VarSTE extends STE {
     private Type mType;
-    private int mBase;
+    private String mBase;
     private int mOffset;
-    public VarSTE(String name, Type type, int base, int offset) {
+    public VarSTE(String name, Type type, int offset) {
         super(name, null);
         mType = type;
-        mBase = base;
+        mBase = "Y";
         mOffset = offset;
         mSize = type.getAVRTypeSize();
     }
     public Type getType() {
         return this.mType;
     }
-    public int getBase() {
+    public String getBase() {
         return this.mBase;
     }
     public int getOffset() {
-        return this.getOffset();
+        return this.mOffset;
     }
 }
