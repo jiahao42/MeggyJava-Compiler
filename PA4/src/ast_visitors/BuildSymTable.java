@@ -214,8 +214,8 @@ public class BuildSymTable extends DepthFirstVisitor {
     Type retType;
     if (node.getExp() != null) {
       node.getExp().accept(this);
-      // debugInfo(String.valueOf(node.getExp().getLine()) + String.valueOf(node.getExp().getPos()));
-      // debugInfo(node.getExp().toString());
+      debugInfo(String.valueOf(node.getExp().getLine()) + String.valueOf(node.getExp().getPos()));
+      debugInfo(node.getExp().toString());
       retType = getType(node.getExp());
     } else {
       retType = Type.VOID;
@@ -231,5 +231,19 @@ public class BuildSymTable extends DepthFirstVisitor {
   @Override
   public void outNewExp(NewExp node) {
     setType(node, Type.getOrCreateType(node.getId()));
+  }
+
+  @Override
+  public void outCallExp(CallExp node) {
+    // this.testThis();
+    STE ste = ST.lookup(node.getId());
+    MethodSTE methodSTE;
+    if (ste instanceof MethodSTE) {
+      methodSTE = (MethodSTE)ste;
+    } else {
+      throw new SemanticException("Method [" + node.getId() + "] not found in scope " + ST.getInnermostClassName(), node.getLine(),
+      node.getPos());
+    }
+    setType(node, methodSTE.getSignature().getReturnType());
   }
 }
