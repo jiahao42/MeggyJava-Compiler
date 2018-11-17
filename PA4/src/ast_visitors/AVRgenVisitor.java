@@ -302,16 +302,17 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   private void handleReturn(Type t) {
     int size = t.getAVRTypeSize();
-    if (size == 2) {
+    write2File("\n\t# handle return value");
+    if (size == 0) {
+      write2File("\n\t# no return value");
+    } else if (size == 2) {
       write2File(
-        "\n\t# handle return value" + 
         "\n\t# push two byte expression onto stack" + 
         "\n\tpush r25" + 
         "\n\tpush r24"
       );
     } else {
       write2File(
-        "\n\t# handle return value" + 
         "\n\t# push one byte expression onto stack" + 
         "\n\tpush r24"
       );
@@ -850,11 +851,13 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       node.getExp().accept(this);
     }
     write2File(
-      "\n\t/* epilogue start for Class1_func2 */" + 
+      "\n\t/* epilogue start for " + methodName + " */" + 
       "\n\t# handle return value"
     );
     int retSize = getType(node.getType()).getAVRTypeSize();
-    if (retSize == 1) {
+    if (retSize == 0) {
+      write2File("\n\t# no return value");
+    } else if (retSize == 1) {
       write2File(
         "\n\t# load a one byte expression off stack" + 
         "\n\tpop    r25"

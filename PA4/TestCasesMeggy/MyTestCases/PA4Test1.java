@@ -18,14 +18,14 @@ class PA4Test1 {
   public static void main(String[] parameters) {
     // new TestReturnValue().testAll();
     new TestParameters().testAll();
-    if (new TestLessThan().testLessThan() == true) {
-      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
-    }
-    Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
-    Meggy.delay(5);
-    if (Meggy.checkButton(Meggy.Button.Down) == true) {
-      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.RED);
-    }
+    // if (new TestLessThan().testLessThan() == true) {
+    //   Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
+    // }
+    // Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
+    // Meggy.delay(5);
+    // if (Meggy.checkButton(Meggy.Button.Down) == true) {
+    //   Meggy.setPixel((byte)1, (byte)2, Meggy.Color.RED);
+    // }
   }
 }
 
