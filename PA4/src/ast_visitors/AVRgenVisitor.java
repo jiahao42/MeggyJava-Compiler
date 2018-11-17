@@ -251,11 +251,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outCallExp(CallExp node) {
-    defaultOut(node);
+    genFuncCall(node);
   }
 
   @Override
   public void outCallStatement(CallStatement node){
+    genFuncCall(node);
+  }
+
+  private void genFuncCall(FuncCall node) {
     write2File(
       "\n\t#### function call" + 
       "\n\t# put parameter values into appropriate registers"
@@ -287,6 +291,10 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tpop r" + String.valueOf(reg + 1) + 
       "\n\tcall " + methodName
     );
+  }
+
+  private void handleReturn(FuncCall node) {
+    
   }
 
   @Override

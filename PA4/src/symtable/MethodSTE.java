@@ -21,4 +21,16 @@ public class MethodSTE extends STE {
             }
         }
     }
+
+    public MethodSTE(String name, Scope scope) {
+        super(name, scope);
+    }
+
+    public void setSignature(Signature signature) {
+        mSignature = signature;
+    }
+
+    public Signature getSignature() {
+        return mSignature;
+    }
 }

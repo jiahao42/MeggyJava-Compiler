@@ -17,6 +17,9 @@ public class STE {
         mName = name;
         mScope = scope;
     }
+    // public STE(String name) {
+    //     mName = name;
+    // }
     public String getName() {
         return mName;
     }

@@ -74,7 +74,7 @@ public class CheckTypes extends DepthFirstVisitor {
 
 	@Override
 	public void defaultOut(Node node) {
-		System.err.println("Node not implemented in CheckTypes, " + node.getClass());
+		// System.err.println("Node not implemented in CheckTypes, " + node.getClass());
 	}
 
 	/** Type check for Experssions **/
@@ -111,7 +111,6 @@ public class CheckTypes extends DepthFirstVisitor {
 			throw new SemanticException("Invalid left operand type for operator &&", node.getLExp().getLine(),
 					node.getLExp().getPos());
 		}
-
 		if (getType(node.getRExp()) != Type.BOOL) {
 			throw new SemanticException("Invalid right operand type for operator &&", node.getRExp().getLine(),
 					node.getRExp().getPos());
@@ -135,7 +134,7 @@ public class CheckTypes extends DepthFirstVisitor {
 		} else if (lExpType == rExpType) {
 			setType(node, Type.BOOL);
 		} else {
-				throw new SemanticException("Invalid operands type for operator ==, expect same type on left and right", node.getLine(),
+				throw new SemanticException("Invalid operands type for operator ==, expect same type on left and right, left: " + lExpType.toString() + ", right: " + rExpType.toString(), node.getLine(),
 						node.getPos());
 		}
 	}
@@ -223,11 +222,12 @@ public class CheckTypes extends DepthFirstVisitor {
     // TODO: should NEW with parameters in the future
     // TODO: Should calculate the size of object
 		STE ste = mCurrentST.lookup(node.getId());
-		if (!(ste instanceof ClassSTE) || ste == null) {
-			throw new SemanticException("Symbol " + node.getId() + " not exists!", node.getLine(),
+		if (ste != null && ste instanceof ClassSTE) {
+			setType(node, Type.getOrCreateType(ste.getName()));
+		} else {
+			throw new SemanticException("Symbol " + node.getId() + " not exists under scope " + mCurrentST.getCurrentScope().getName(), node.getLine(),
 					node.getPos());
 		}
-		setType(node, Type.getOrCreateType(ste.getName()));
   }
 	
 	/** Type check for statement **/
@@ -304,6 +304,37 @@ public class CheckTypes extends DepthFirstVisitor {
 	}
 	
 	/** Others **/
+	
+	@Override
+	public void outCallExp(CallExp node) {
+		STE ste = mCurrentST.lookup(getType(node.getExp()).toString());
+		mCurrentST.pushScope(ste.getScope());
+		ste = mCurrentST.lookup(node.getId());
+		if (ste != null && ste instanceof MethodSTE) {
+			MethodSTE mSTE = (MethodSTE)ste;
+			setType(node, mSTE.getSignature().getReturnType());
+			System.out.println(node.toString());
+		} else {
+			throw new SemanticException("Method " + node.getId() + " not exsits under scope " + mCurrentST.getCurrentScope().getName(), node.getLine(),
+			node.getPos());
+		}
+		mCurrentST.popScope();
+	}
+
+	@Override
+	public void outCallStatement(CallStatement node) {
+		STE ste = mCurrentST.lookup(getType(node.getExp()).toString());
+		mCurrentST.pushScope(ste.getScope());
+		ste = mCurrentST.lookup(node.getId());
+		if (ste != null && ste instanceof MethodSTE) {
+			MethodSTE mSTE = (MethodSTE)ste;
+			setType(node, mSTE.getSignature().getReturnType());
+		} else {
+			throw new SemanticException("Method " + node.getId() + " not exsits under scope " + mCurrentST.getCurrentScope().getName(), node.getLine(),
+			node.getPos());
+		}
+		mCurrentST.popScope();
+	}
 	
 	@Override
 	public void outBlockStatement(BlockStatement node) {

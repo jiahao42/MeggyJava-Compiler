@@ -130,7 +130,6 @@ public class BuildSymTable extends DepthFirstVisitor {
 
   @Override
   public void inMethodDecl(MethodDecl node) {
-    // String name = ST.genMethodName(node.getName());
     setType(node, getType(node.getType()));
     String name = node.getName();
     List<Type> mTypeList = new LinkedList<>();
@@ -142,12 +141,53 @@ public class BuildSymTable extends DepthFirstVisitor {
     if (!ST.insert(mSTE)) {
       throw new SemanticException("Method " + mSTE.getName() + " already exists in current scope!", node.getLine(),
           node.getPos());
+    } else {
+      System.out.println("Insert method " + node.getName() + " under scope " + ST.getCurrentScope().getName());
     }
     ST.pushScope(mSTE.getScope());
   }
 
   @Override
-  public void outMethodDecl(MethodDecl node) {
+  public void visitMethodDecl(MethodDecl node) {
+    String name = node.getName();
+    MethodSTE mSTE = new MethodSTE(name, new Scope(name));
+    if (!ST.insert(mSTE)) {
+      throw new SemanticException("Method " + mSTE.getName() + " already exists in current scope!", node.getLine(),
+          node.getPos());
+    } else {
+      System.out.println("Insert method " + node.getName() + " under scope " + ST.getCurrentScope().getName());
+    }
+    ST.pushScope(mSTE.getScope());
+    if (node.getType() != null) {
+      node.getType().accept(this);
+    }
+    {
+      List<Formal> copy = new ArrayList<Formal>(node.getFormals());
+      for (Formal e : copy) {
+        e.accept(this);
+      }
+    }
+    List<Type> mTypeList = new LinkedList<>();
+    for (Formal e : node.getFormals()) {
+      mTypeList.add(getType(e.getType()));
+    }
+    {
+      List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
+      for (VarDecl e : copy) {
+        e.accept(this);
+      }
+    }
+    {
+      List<IStatement> copy = new ArrayList<IStatement>(node.getStatements());
+      for (IStatement e : copy) {
+        e.accept(this);
+      }
+    }
+    if (node.getExp() != null) {
+      node.getExp().accept(this);
+    }
+    Type retType = getType(node.getType());
+    mSTE.setSignature(new Signature(mTypeList, retType));
     ST.popScope();
   }
 

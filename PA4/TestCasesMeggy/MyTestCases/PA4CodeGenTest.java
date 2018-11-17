@@ -17,6 +17,9 @@ class PA4CodeGenTest {
     if (1 < 2) { Meggy.setPixel(1, 2, Meggy.Color.GREEN); }
     if ((byte)1 < 2) { Meggy.setPixel(1, 2, Meggy.Color.GREEN); }
     if ((byte)2 < (byte)1) { Meggy.setPixel(1, 2, Meggy.Color.RED); }
+    if (new Class1().func2((byte)1, 2) == 0) {
+      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
+    }
   }
 }
 

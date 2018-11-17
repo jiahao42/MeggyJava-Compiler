@@ -7,7 +7,7 @@ import java.util.*;
 import ast.visitor.*;
 
 @SuppressWarnings("nls")
-public final class CallStatement extends IStatement
+public final class CallStatement extends IStatement implements FuncCall
 {
     private IExp _exp_;
     private String _id_;

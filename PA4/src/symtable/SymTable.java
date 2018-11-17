@@ -23,6 +23,9 @@ public class SymTable {
     }
 
     public void setExpType(Node exp, Type t) {
+        if (t == null) {
+            System.err.println("Cannot set type to null!");
+        }
         this.mExpType.put(exp, t);
     }
 
