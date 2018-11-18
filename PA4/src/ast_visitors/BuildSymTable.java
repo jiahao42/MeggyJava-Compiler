@@ -135,7 +135,7 @@ public class BuildSymTable extends DepthFirstVisitor {
     assert (ST.getCurrentScope() == ST.getGlobalScope());
     ClassSTE classSTE = new ClassSTE(node.getName(), true, null, new Scope(node.getName(), Scope.classScope));
     if (!ST.insert(classSTE)) {
-      throw new SemanticException("Class " + classSTE.getName() + " already exists in current scope!", node.getLine(),
+      throw new SemanticException("Class [" + classSTE.getName() + "] is already defined in current scope!", node.getLine(),
           node.getPos());
     }
     debugInfo("Insert class [" + node.getName() + "] under scope " + ST.getCurrentScope().getName());
@@ -152,7 +152,7 @@ public class BuildSymTable extends DepthFirstVisitor {
     assert (ST.getCurrentScope() == ST.getGlobalScope());
     ClassSTE classSTE = new ClassSTE(node.getName(), false, null, new Scope(node.getName(), Scope.classScope));
     if (!ST.insert(classSTE)) {
-      throw new SemanticException("Class " + classSTE.getName() + " already exists in scope " + ST.getCurrentScope().getName(), node.getLine(),
+      throw new SemanticException("Class [" + classSTE.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), node.getLine(),
           node.getPos());
     }
     debugInfo("Insert class [" + node.getName() + "] under scope " + ST.getCurrentScope().getName());
@@ -170,7 +170,7 @@ public class BuildSymTable extends DepthFirstVisitor {
     String name = node.getName();
     MethodSTE methodSTE = new MethodSTE(name, new Scope(name, Scope.methodScope));
     if (!ST.insert(methodSTE)) {
-      throw new SemanticException("Method " + methodSTE.getName() + " already exists in scope " + ST.getCurrentScope().getName(), node.getLine(),
+      throw new SemanticException("Method [" + methodSTE.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), node.getLine(),
           node.getPos());
     }
     ST.pushScope(methodSTE.getScope());
@@ -193,7 +193,7 @@ public class BuildSymTable extends DepthFirstVisitor {
         if (ST.getCurrentScope().insert(varSTE)) {
           debugInfo("Insert formal [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
         } else {
-          throw new SemanticException("Formal " + e.getName() + " already exists in scope " + ST.getCurrentScope().getName(), node.getLine(),
+          throw new SemanticException("Formal [" + e.getName() + "] is  already defined in scope " + ST.getCurrentScope().getName(), node.getLine(),
           node.getPos());
         }
       }
@@ -208,7 +208,7 @@ public class BuildSymTable extends DepthFirstVisitor {
         if (methodSTE.getScope().insert(varSTE)) {
           debugInfo("Insert var [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
         } else {
-          throw new SemanticException("Var " + e.getName() + " already exists in scope " + ST.getCurrentScope().getName(), node.getLine(),
+          throw new SemanticException("Var [" + e.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), node.getLine(),
           node.getPos());
         }
       }
