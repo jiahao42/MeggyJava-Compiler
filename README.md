@@ -10,7 +10,7 @@ UVA CS6620 Compiler
 
 Dear Mary and TA:
 
-This compiler can pass all the testcases under `PA4/TestCasesMeggy/WorkingTestCases`, including:
+This compiler can pass all the testcases under `PA4/TestCasesMeggy/WorkingTestCases` and `PA4/TestCasesMeggy/WorkingErrorTestCases`, including:
 
 ```
 WorkingTestCases
@@ -44,7 +44,7 @@ Also, it can detect undefined functions/variables and multi-defined functions/va
 
 * Problem about the original Compiler
 
-There is 26 registers in total (r0 - r25), which means a method can have at most 13 parameters (including `this`), but the orginal compiler doesn't check it. 
+There are 26 registers in total (r0 - r25), which means a method can have at most 13 parameters (including `this`), but the orginal compiler doesn't check it. 
 
 Giving the following code
 
@@ -80,7 +80,7 @@ It will generate wrong code:
 My compiler will generate error message for the function above:
 
 ```
-[27,14] Method [func1(BYTE,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT) returns INT] has too many parameters (at most 12)
+[19,14] Method [func1(BYTE,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT) returns INT] under scope Class1has too many parameters (at most 12)
 ```
 
 
