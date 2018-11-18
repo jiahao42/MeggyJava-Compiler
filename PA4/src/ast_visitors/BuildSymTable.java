@@ -183,12 +183,12 @@ public class BuildSymTable extends DepthFirstVisitor {
     int offset = 1;
     VarSTE thisSTE = new VarSTE("this", Type.getOrCreateType(ST.getInnermostClassName()), offset);
     methodSTE.getScope().insert(thisSTE);
+    offset += 2;
     /* Insert formal parameters to current scope */
     {
       List<Formal> copy = new ArrayList<Formal>(node.getFormals());
       for (Formal e : copy) {
         e.accept(this);
-        offset += 2;
         VarSTE varSTE = new VarSTE(e.getName(), getType(e.getType()), offset);
         if (ST.getCurrentScope().insert(varSTE)) {
           debugInfo("Insert formal [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
@@ -196,6 +196,7 @@ public class BuildSymTable extends DepthFirstVisitor {
           throw new SemanticException("Formal [" + e.getName() + "] is  already defined in scope " + ST.getCurrentScope().getName(), node.getLine(),
           node.getPos());
         }
+        offset += getType(e.getType()).getAVRTypeSize();
       }
     }
     /* Insert local variables to current scope */
@@ -203,7 +204,6 @@ public class BuildSymTable extends DepthFirstVisitor {
       List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
       for (VarDecl e : copy) {
         e.accept(this);
-        offset += 2;
         VarSTE varSTE = new VarSTE(e.getName(), getType(e), offset);
         if (methodSTE.getScope().insert(varSTE)) {
           debugInfo("Insert var [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
@@ -211,6 +211,7 @@ public class BuildSymTable extends DepthFirstVisitor {
           throw new SemanticException("Var [" + e.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), node.getLine(),
           node.getPos());
         }
+        offset += getType(e.getType()).getAVRTypeSize();
       }
     }
     /* Traverse statements */
