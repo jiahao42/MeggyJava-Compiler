@@ -406,7 +406,7 @@ public class CheckTypes extends DepthFirstVisitor {
 	}
 
 	@Override
-	public void outMethodDecl(MethodDecl node) {
+	public void visitMethodDecl(MethodDecl node) {
 		assert (mCurrentST.getCurrentScope().getScopeType() == Scope.classScope);
 		STE ste = mCurrentST.lookup(node.getName());
 		if (ste != null && ste instanceof MethodSTE) {
@@ -418,17 +418,29 @@ public class CheckTypes extends DepthFirstVisitor {
 				node.getLine(),
 				node.getPos());
 		}
-		Type declareExpType = getType(node.getType());
-		Type retExpType = Type.VOID;
-		if (declareExpType != Type.VOID) {
-			retExpType = getType(node.getExp());
+		if (node.getType() != null) {
+			node.getType().accept(this);
 		}
-		// System.out.println(node.getName());
-		if (declareExpType != retExpType) {
-			throw new SemanticException(
-				"Method " + node.getName() + " has incorrect return type, expect: " + declareExpType.toString() + ", actual: " + retExpType.toString(),
-				node.getLine(),
-				node.getPos());
+		{
+			List<Formal> copy = new ArrayList<Formal>(node.getFormals());
+			for (Formal e : copy) {
+				e.accept(this);
+			}
+		}
+		{
+			List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
+			for (VarDecl e : copy) {
+				e.accept(this);
+			}
+		}
+		{
+			List<IStatement> copy = new ArrayList<IStatement>(node.getStatements());
+			for (IStatement e : copy) {
+				e.accept(this);
+			}
+		}
+		if (node.getExp() != null) {
+			node.getExp().accept(this);
 		}
 		mCurrentST.popScope();
 	}
