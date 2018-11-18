@@ -7,6 +7,37 @@
 
 ## Info about PA4
 
+Dear Mary and TA:
+
+This compiler can pass all the testcases under `PA4/TestCasesMeggy/WorkingTestCases`, including:
+
+```
+WorkingTestCases
+├── PA4MazeSolver.java
+├── PA4Test1.java
+├── PA4Test2.java
+├── PA4Test3.java
+├── PA4bluedot.java
+└── PA4raindrop.java
+
+0 directories, 8 files
+
+WorkingErrorTestCases
+├── PA4doubleDef.java
+├── PA4noDef.java
+├── PA4tooManyParams.java
+└── PA4varNoDef.java
+
+0 directories, 4 files
+```
+
+Also, it can detect undefined functions/variables and multi-defined functions/variables, it will generate error messages like:
+
+```
+[14,2] Method setPix is not defined under scope C
+[25,17] Method [setP] is already defined in scope C
+[21,16] ID [z] is not defined under scope setP
+```
 
 ### Hightlight
 
@@ -34,36 +65,7 @@ It will generate wrong code:
     # load a two byte expression off stack
     pop    r0
     pop    r1
-    # load a two byte expression off stack
-    pop    r2
-    pop    r3
-    # load a two byte expression off stack
-    pop    r4
-    pop    r5
-    # load a two byte expression off stack
-    pop    r6
-    pop    r7
-    # load a two byte expression off stack
-    pop    r8
-    pop    r9
-    # load a two byte expression off stack
-    pop    r10
-    pop    r11
-    # load a two byte expression off stack
-    pop    r12
-    pop    r13
-    # load a two byte expression off stack
-    pop    r14
-    pop    r15
-    # load a two byte expression off stack
-    pop    r16
-    pop    r17
-    # load a two byte expression off stack
-    pop    r18
-    pop    r19
-    # load a two byte expression off stack
-    pop    r20
-    pop    r21
+    ......
     # load a one byte expression off stack
     pop    r22
     # receiver will be passed as first param
@@ -73,3 +75,10 @@ It will generate wrong code:
 
     call    Class1_func1
 ```
+
+My compiler will generate error message for the function above:
+
+```
+[27,14] Method [func1(BYTE,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT,INT) returns INT] has too many parameters (at most 12)
+```
+

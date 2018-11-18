@@ -87,7 +87,7 @@ public class CheckTypes extends DepthFirstVisitor {
 			setType(node, varSTE.getType());
 		} else {
 			throw new SemanticException(
-				"Name [" + node.getLexeme() + "] is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
+				"ID [" + node.getLexeme() + "] is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
 				node.getLine(),
 				node.getPos());
 		}
@@ -370,7 +370,7 @@ public class CheckTypes extends DepthFirstVisitor {
 			setType(node, mSTE.getSignature().getReturnType());
 		} else {
 			throw new SemanticException(
-				"Method " + node.getId() + " is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
+				"Method [" + node.getId() + "] is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
 				node.getLine(),
 				node.getPos());
 		}
@@ -394,7 +394,7 @@ public class CheckTypes extends DepthFirstVisitor {
 			setType(node, mSTE.getSignature().getReturnType());
 		} else {
 			throw new SemanticException(
-				"Method " + node.getId() + " is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
+				"Method [" + node.getId() + "] is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
 				node.getLine(),
 				node.getPos());
 		}
@@ -413,7 +413,7 @@ public class CheckTypes extends DepthFirstVisitor {
 			mCurrentST.pushScope(methodSTE.getScope());
 		} else {
 			throw new SemanticException(
-				"Method " + node.getName() + " is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
+				"Method [" + node.getName() + "] is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
 				node.getLine(),
 				node.getPos());
 		}
@@ -433,7 +433,7 @@ public class CheckTypes extends DepthFirstVisitor {
 			mCurrentST.pushScope(classSTE.getScope());
 		} else {
 			throw new SemanticException(
-				"Class " + node.getName() + " is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
+				"Class [" + node.getName() + "] is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
 				node.getLine(),
 				node.getPos());
 		}
@@ -454,7 +454,7 @@ public class CheckTypes extends DepthFirstVisitor {
 			mCurrentST.pushScope(classSTE.getScope());
 		} else {
 			throw new SemanticException(
-				"Class " + node.getName() + " is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
+				"Class [" + node.getName() + "] is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
 				node.getLine(),
 				node.getPos());
 		}

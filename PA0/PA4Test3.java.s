@@ -190,8 +190,8 @@ MJ_L1:
     pop    r25
     push   r24
 
-    # Color expression Meggy.Color.ORANGE
-    ldi    r22,2
+    # Color expression Meggy.Color.GREEN
+    ldi    r22,4
     # push one byte expression onto stack
     push   r22
 
@@ -325,6 +325,90 @@ MJ_L3:
     pop    r24
     pop    r25
     call   _Z8delay_msj
+
+    # Load constant int 1
+    ldi    r24,lo8(1)
+    ldi    r25,hi8(1)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Load constant int 0
+    ldi    r24,lo8(0)
+    ldi    r25,hi8(0)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+    # load a two byte expression off stack
+    pop    r18
+    pop    r19
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+
+    # Do add operation
+    add    r24, r18
+    adc    r25, r19
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Casting int to byte by popping
+    # 2 bytes off stack and only pushing low order bits
+    # back on.  Low order bits are on top of stack.
+    pop    r24
+    pop    r25
+    push   r24
+
+    # Load constant int 3
+    ldi    r24,lo8(3)
+    ldi    r25,hi8(3)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Load constant int 1
+    ldi    r24,lo8(1)
+    ldi    r25,hi8(1)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+    # load a two byte expression off stack
+    pop    r18
+    pop    r19
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+
+    # Do INT sub operation
+    sub    r24, r18
+    sbc    r25, r19
+    # push hi order byte first
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Casting int to byte by popping
+    # 2 bytes off stack and only pushing low order bits
+    # back on.  Low order bits are on top of stack.
+    pop    r24
+    pop    r25
+    push   r24
+
+    # Color expression Meggy.Color.RED
+    ldi    r22,1
+    # push one byte expression onto stack
+    push   r22
+
+    ### Meggy.setPixel(x,y,color) call
+    # load a one byte expression off stack
+    pop    r20
+    # load a one byte expression off stack
+    pop    r22
+    # load a one byte expression off stack
+    pop    r24
+    call   _Z6DrawPxhhh
+    call   _Z12DisplaySlatev
 
     # jump to while test
     jmp    MJ_L2

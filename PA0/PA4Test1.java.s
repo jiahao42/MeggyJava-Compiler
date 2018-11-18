@@ -57,6 +57,8 @@ main:
 
     call    TestParameters_testAll
 
+    #### if statement
+
     # NewExp
     ldi    r24, lo8(0)
     ldi    r25, hi8(0)
@@ -76,76 +78,7 @@ main:
 
     call    TestLessThan_testLessThan
 
-    # Load constant int 1
-    ldi    r24,lo8(1)
-    ldi    r25,hi8(1)
-    # push two byte expression onto stack
-    push   r25
-    push   r24
-
-    # Casting int to byte by popping
-    # 2 bytes off stack and only pushing low order bits
-    # back on.  Low order bits are on top of stack.
-    pop    r24
-    pop    r25
-    push   r24
-
-    # Load constant int 2
-    ldi    r24,lo8(2)
-    ldi    r25,hi8(2)
-    # push two byte expression onto stack
-    push   r25
-    push   r24
-
-    # Casting int to byte by popping
-    # 2 bytes off stack and only pushing low order bits
-    # back on.  Low order bits are on top of stack.
-    pop    r24
-    pop    r25
-    push   r24
-
-    # Color expression Meggy.Color.RED
-    ldi    r22,1
-    # push one byte expression onto stack
-    push   r22
-
-    ### Meggy.setPixel(x,y,color) call
-    # load a one byte expression off stack
-    pop    r20
-    # load a one byte expression off stack
-    pop    r22
-    # load a one byte expression off stack
-    pop    r24
-    call   _Z6DrawPxhhh
-    call   _Z12DisplaySlatev
-
-    # Load constant int 5
-    ldi    r24,lo8(5)
-    ldi    r25,hi8(5)
-    # push two byte expression onto stack
-    push   r25
-    push   r24
-
-    ### Meggy.delay() call
-    # load delay parameter
-    # load a two byte expression off stack
-    pop    r24
-    pop    r25
-    call   _Z8delay_msj
-
-    #### if statement
-
-    ### MeggyCheckButton
-    call    _Z16CheckButtonsDownv
-    lds    r24, Button_Down
-    # if button value is zero, push 0 else push 1
-    tst    r24
-    breq   MJ_L3
-MJ_L4:
-    ldi    r24, 1
-    jmp    MJ_L5
-MJ_L3:
-MJ_L5:
+    # handle return value
     # push one byte expression onto stack
     push   r24
 
@@ -160,19 +93,19 @@ MJ_L5:
     # load a one byte expression off stack
     pop    r24
     cp    r24, r18
-    breq MJ_L7
+    breq MJ_L4
 
     # result is false
-MJ_L6:
+MJ_L3:
     ldi     r24, 0
-    jmp      MJ_L8
+    jmp      MJ_L5
 
     # result is true
-MJ_L7:
+MJ_L4:
     ldi     r24, 1
 
     # store result of equal expression
-MJ_L8:
+MJ_L5:
     # push one byte expression onto stack
     push   r24
 
@@ -219,8 +152,8 @@ MJ_L1:
     pop    r25
     push   r24
 
-    # Color expression Meggy.Color.BLUE
-    ldi    r22,5
+    # Color expression Meggy.Color.GREEN
+    ldi    r22,4
     # push one byte expression onto stack
     push   r22
 
@@ -240,6 +173,171 @@ MJ_L0:
 
     # done label for if
 MJ_L2:
+
+    # Load constant int 1
+    ldi    r24,lo8(1)
+    ldi    r25,hi8(1)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Casting int to byte by popping
+    # 2 bytes off stack and only pushing low order bits
+    # back on.  Low order bits are on top of stack.
+    pop    r24
+    pop    r25
+    push   r24
+
+    # Load constant int 2
+    ldi    r24,lo8(2)
+    ldi    r25,hi8(2)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Casting int to byte by popping
+    # 2 bytes off stack and only pushing low order bits
+    # back on.  Low order bits are on top of stack.
+    pop    r24
+    pop    r25
+    push   r24
+
+    # Color expression Meggy.Color.GREEN
+    ldi    r22,4
+    # push one byte expression onto stack
+    push   r22
+
+    ### Meggy.setPixel(x,y,color) call
+    # load a one byte expression off stack
+    pop    r20
+    # load a one byte expression off stack
+    pop    r22
+    # load a one byte expression off stack
+    pop    r24
+    call   _Z6DrawPxhhh
+    call   _Z12DisplaySlatev
+
+    # Load constant int 5
+    ldi    r24,lo8(5)
+    ldi    r25,hi8(5)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    ### Meggy.delay() call
+    # load delay parameter
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+    call   _Z8delay_msj
+
+    #### if statement
+
+    ### MeggyCheckButton
+    call    _Z16CheckButtonsDownv
+    lds    r24, Button_Down
+    # if button value is zero, push 0 else push 1
+    tst    r24
+    breq   MJ_L9
+MJ_L10:
+    ldi    r24, 1
+    jmp    MJ_L11
+MJ_L9:
+MJ_L11:
+    # push one byte expression onto stack
+    push   r24
+
+    # True/1 expression
+    ldi    r22, 1
+    # push one byte expression onto stack
+    push   r22
+
+    # equality check expression
+    # load a one byte expression off stack
+    pop    r18
+    # load a one byte expression off stack
+    pop    r24
+    cp    r24, r18
+    breq MJ_L13
+
+    # result is false
+MJ_L12:
+    ldi     r24, 0
+    jmp      MJ_L14
+
+    # result is true
+MJ_L13:
+    ldi     r24, 1
+
+    # store result of equal expression
+MJ_L14:
+    # push one byte expression onto stack
+    push   r24
+
+    # load condition and branch if false
+    # load a one byte expression off stack
+    pop    r24
+    #load zero into reg
+    ldi    r25, 0
+
+    #use cp to set SREG
+    cp     r24, r25
+    #WANT breq MJ_L6
+    brne   MJ_L7
+    jmp    MJ_L6
+
+    # then label for if
+MJ_L7:
+
+    # Load constant int 1
+    ldi    r24,lo8(1)
+    ldi    r25,hi8(1)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Casting int to byte by popping
+    # 2 bytes off stack and only pushing low order bits
+    # back on.  Low order bits are on top of stack.
+    pop    r24
+    pop    r25
+    push   r24
+
+    # Load constant int 2
+    ldi    r24,lo8(2)
+    ldi    r25,hi8(2)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Casting int to byte by popping
+    # 2 bytes off stack and only pushing low order bits
+    # back on.  Low order bits are on top of stack.
+    pop    r24
+    pop    r25
+    push   r24
+
+    # Color expression Meggy.Color.RED
+    ldi    r22,1
+    # push one byte expression onto stack
+    push   r22
+
+    ### Meggy.setPixel(x,y,color) call
+    # load a one byte expression off stack
+    pop    r20
+    # load a one byte expression off stack
+    pop    r22
+    # load a one byte expression off stack
+    pop    r24
+    call   _Z6DrawPxhhh
+    call   _Z12DisplaySlatev
+    jmp    MJ_L8
+
+    # else label for if
+MJ_L6:
+
+    # done label for if
+MJ_L8:
 
 
 /* epilogue start */
@@ -289,6 +387,80 @@ TestReturnValue_testAll:
     pop    r25
 
     call    TestReturnValue_testBoolean
+
+    #### if statement
+
+
+    # loading the implicit "this"
+
+    # load a two byte variable from base+offset
+    ldd    r31, Y + 2
+    ldd    r30, Y + 1
+    # push two byte expression onto stack
+    push   r31
+    push   r30
+
+    #### function call
+    # put parameter values into appropriate registers
+    # receiver will be passed as first param
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+
+    call    TestReturnValue_testBoolean
+
+    # handle return value
+    # push one byte expression onto stack
+    push   r24
+
+    # True/1 expression
+    ldi    r22, 1
+    # push one byte expression onto stack
+    push   r22
+
+    # equality check expression
+    # load a one byte expression off stack
+    pop    r18
+    # load a one byte expression off stack
+    pop    r24
+    cp    r24, r18
+    breq MJ_L19
+
+    # result is false
+MJ_L18:
+    ldi     r24, 0
+    jmp      MJ_L20
+
+    # result is true
+MJ_L19:
+    ldi     r24, 1
+
+    # store result of equal expression
+MJ_L20:
+    # push one byte expression onto stack
+    push   r24
+
+    # load condition and branch if false
+    # load a one byte expression off stack
+    pop    r24
+    #load zero into reg
+    ldi    r25, 0
+
+    #use cp to set SREG
+    cp     r24, r25
+    #WANT breq MJ_L15
+    brne   MJ_L16
+    jmp    MJ_L15
+
+    # then label for if
+MJ_L16:
+    jmp    MJ_L17
+
+    # else label for if
+MJ_L15:
+
+    # done label for if
+MJ_L17:
 
 
     # loading the implicit "this"
@@ -448,12 +620,12 @@ TestReturnValue_testBoolean:
     pop    r24
     # promoting a byte to an int
     tst     r24
-    brlt     MJ_L9
+    brlt     MJ_L21
     ldi    r25, 0
-    jmp    MJ_L10
-MJ_L9:
+    jmp    MJ_L22
+MJ_L21:
     ldi    r25, hi8(-1)
-MJ_L10:
+MJ_L22:
     # pop space off stack for parameters and locals
     pop    r30
     pop    r30
@@ -505,12 +677,12 @@ TestReturnValue_testByte:
     pop    r24
     # promoting a byte to an int
     tst     r24
-    brlt     MJ_L11
+    brlt     MJ_L23
     ldi    r25, 0
-    jmp    MJ_L12
-MJ_L11:
+    jmp    MJ_L24
+MJ_L23:
     ldi    r25, hi8(-1)
-MJ_L12:
+MJ_L24:
     # pop space off stack for parameters and locals
     pop    r30
     pop    r30
@@ -629,12 +801,12 @@ TestReturnValue_testColor:
     pop    r24
     # promoting a byte to an int
     tst     r24
-    brlt     MJ_L13
+    brlt     MJ_L25
     ldi    r25, 0
-    jmp    MJ_L14
-MJ_L13:
+    jmp    MJ_L26
+MJ_L25:
     ldi    r25, hi8(-1)
-MJ_L14:
+MJ_L26:
     # pop space off stack for parameters and locals
     pop    r30
     pop    r30
@@ -672,12 +844,12 @@ TestReturnValue_testButton:
     pop    r24
     # promoting a byte to an int
     tst     r24
-    brlt     MJ_L15
+    brlt     MJ_L27
     ldi    r25, 0
-    jmp    MJ_L16
-MJ_L15:
+    jmp    MJ_L28
+MJ_L27:
     ldi    r25, hi8(-1)
-MJ_L16:
+MJ_L28:
     # pop space off stack for parameters and locals
     pop    r30
     pop    r30
@@ -1027,6 +1199,46 @@ TestParameters_testInt:
 /* done with function TestParameters_testInt prologue */
 
 
+    # IdExp
+    # load value for variable i
+    # variable is a local or param variable
+
+    # load a two byte variable from base+offset
+    ldd    r25, Y + 4
+    ldd    r24, Y + 3
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    # Load constant int 1
+    ldi    r24,lo8(1)
+    ldi    r25,hi8(1)
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+    # load a two byte expression off stack
+    pop    r18
+    pop    r19
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+
+    # Do add operation
+    add    r24, r18
+    adc    r25, r19
+    # push two byte expression onto stack
+    push   r25
+    push   r24
+
+    ### AssignStatement
+    # load rhs exp
+    # load a two byte expression off stack
+    pop    r24
+    pop    r25
+    # store rhs into var i
+    std    Y + 4, r25
+    std    Y + 3, r24
+
 /* epilogue start for TestParameters_testInt */
     # no return value
     # pop space off stack for parameters and locals
@@ -1196,19 +1408,19 @@ TestLessThan_testLessThan:
     pop    r25
     cp    r24, r18
     cpc   r25, r19
-    brlt MJ_L18
+    brlt MJ_L30
 
     # load false
-MJ_L17:
+MJ_L29:
     ldi     r24, 0
-    jmp      MJ_L19
+    jmp      MJ_L31
 
     # load true
-MJ_L18:
+MJ_L30:
     ldi    r24, 1
 
     # push result of less than
-MJ_L19:
+MJ_L31:
     # push one byte expression onto stack
     push   r24
 
@@ -1218,12 +1430,12 @@ MJ_L19:
     pop    r24
     # promoting a byte to an int
     tst     r24
-    brlt     MJ_L20
+    brlt     MJ_L32
     ldi    r25, 0
-    jmp    MJ_L21
-MJ_L20:
+    jmp    MJ_L33
+MJ_L32:
     ldi    r25, hi8(-1)
-MJ_L21:
+MJ_L33:
     # pop space off stack for parameters and locals
     pop    r30
     pop    r30

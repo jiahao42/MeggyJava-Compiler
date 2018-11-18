@@ -240,6 +240,10 @@ public class BuildSymTable extends DepthFirstVisitor {
     Signature mSignature = new Signature(mTypeList, retType);
     methodSTE.setSignature(mSignature);
     ST.popScope();
+    if (node.getFormals().size() > 12) { // 12 formal parameters at most
+      throw new SemanticException("Method [" + node.getName() + mSignature.toString() + "] has too many parameters (at most 12)", node.getLine(),
+          node.getPos());
+    }
     debugInfo("Insert method [" + node.getName() + mSignature.toString() + "] under scope " + ST.getCurrentScope().getName());
   }
 

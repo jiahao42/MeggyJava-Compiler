@@ -18,11 +18,13 @@ class PA4Test1 {
   public static void main(String[] parameters) {
     new TestReturnValue().testAll();
     new TestParameters().testAll();
-    new TestLessThan().testLessThan();
-    Meggy.setPixel((byte)1, (byte)2, Meggy.Color.RED);
+    if (new TestLessThan().testLessThan() == true) {
+      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
+    }
+    Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
     Meggy.delay(5);
     if (Meggy.checkButton(Meggy.Button.Down) == true) {
-      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.BLUE);
+      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.RED);
     }
   }
 }
@@ -30,6 +32,7 @@ class PA4Test1 {
 class TestReturnValue {
   public void testAll() {
     this.testBoolean();
+    if (this.testBoolean() == true) {}
     this.testByte();
     this.testInt();
     this.testVoid();
@@ -87,6 +90,6 @@ class TestParameters {
 
 class TestLessThan {
   public boolean testLessThan() {
-      return 1 < 2;
+    return 1 < 2;
   }
 }
