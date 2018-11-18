@@ -421,7 +421,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     if (size == 1) {
       write2File(
         "\n\t# load a one byte variable from base+offset" + 
-        "\n\tldd r24, " + varSTE.getBase() + " + " + int2String(varSTE.getOffset()) + 
+        "\n\tldd r24, " + varSTE.getBase() + " + " + int2String(varSTE.getOffset() + 1) + 
         "\n\t# push one byte expression onto stack" + 
         "\n\tpush r24"
       );
