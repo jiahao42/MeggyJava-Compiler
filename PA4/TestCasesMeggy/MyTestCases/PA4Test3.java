@@ -32,7 +32,7 @@ class PA4Test3 {
       }
     }
     // Meggy.setPixel((byte)(3 * 4), (byte)3, Meggy.Color.RED);
-    while (true) {
+    while (!(Meggy.getPixel((byte)1, (byte)2) == Meggy.Color.GREEN)) {
       new MixedTest().SetLineColor(1, Meggy.Color.RED);
       Meggy.toneStart(Meggy.Tone.Cs3, (byte)10 + (byte)3 + (byte)30);
       Meggy.toneStart(Meggy.Tone.Ds3, 10 + 3 + 20);
@@ -45,6 +45,7 @@ class PA4Test3 {
         new MixedTest().safeSetPixel((byte)1, (byte)2, Meggy.Color.RED);
         new MixedTest().SetLineColor(7, Meggy.Color.GREEN);
       }
+      Meggy.setPixel((byte)1, (byte)2, Meggy.Color.GREEN);
     }
   }
 }

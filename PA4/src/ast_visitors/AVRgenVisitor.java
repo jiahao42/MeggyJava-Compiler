@@ -309,12 +309,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       write2File(
         "\n\t# push two byte expression onto stack" + 
         "\n\tpush r25" + 
-        "\n\tpush r24"
+        "\n\tpush r24\n"
       );
     } else {
       write2File(
         "\n\t# push one byte expression onto stack" + 
-        "\n\tpush r24"
+        "\n\tpush r24\n"
       );
     }
   }
