@@ -79,6 +79,21 @@ public class CheckTypes extends DepthFirstVisitor {
 
 	/** Type check for Experssions **/
 
+	@Override
+  public void outIdLiteral(IdLiteral node) {
+		STE ste = mCurrentST.lookup(node.getLexeme());
+		if (ste != null && ste instanceof VarSTE) {
+			VarSTE varSTE = (VarSTE)ste;
+			setType(node, varSTE.getType());
+		} else {
+			throw new SemanticException(
+				"Symbol " + node.getLexeme() + " not exists under scope " + mCurrentST.getCurrentScope().getName(), 
+				node.getLine(),
+				node.getPos());
+		}
+	}
+	
+
 	/* Functions */
 
 	@Override

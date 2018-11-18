@@ -166,7 +166,7 @@ public class BuildSymTable extends DepthFirstVisitor {
 
   @Override
   public void visitMethodDecl(MethodDecl node) {
-    // System.out.println(node.getType());
+    /* Insert MethodSTE */
     String name = node.getName();
     MethodSTE methodSTE = new MethodSTE(name, new Scope(name, Scope.methodScope));
     if (!ST.insert(methodSTE)) {
@@ -176,21 +176,29 @@ public class BuildSymTable extends DepthFirstVisitor {
     ST.pushScope(methodSTE.getScope());
     if (node.getType() != null) {
       node.getType().accept(this);
-    }
+    }    
+    /* The true return type depends on the return stmt */
     setType(node, getType(node.getType()));
+    /* Insert the this pointer to current scope */
+    int offset = 1;
+    VarSTE thisSTE = new VarSTE("this", Type.getOrCreateType(ST.getInnermostClassName()), offset);
+    methodSTE.getScope().insert(thisSTE);
+    /* Insert formal parameters to current scope */
     {
       List<Formal> copy = new ArrayList<Formal>(node.getFormals());
       for (Formal e : copy) {
         e.accept(this);
+        offset += 2;
+        VarSTE varSTE = new VarSTE(e.getName(), getType(e.getType()), offset);
+        if (ST.getCurrentScope().insert(varSTE)) {
+          debugInfo("Insert formal [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
+        } else {
+          throw new SemanticException("Formal " + e.getName() + " already exists in scope " + ST.getCurrentScope().getName(), node.getLine(),
+          node.getPos());
+        }
       }
     }
-    List<Type> mTypeList = new LinkedList<>();
-    for (Formal e : node.getFormals()) {
-      mTypeList.add(getType(e.getType()));
-    }
-    int offset = 1;
-    VarSTE thisSTE = new VarSTE("this", Type.getOrCreateType(ST.getInnermostClassName()), offset);
-    methodSTE.getScope().insert(thisSTE);
+    /* Insert local variables to current scope */
     {
       List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
       for (VarDecl e : copy) {
@@ -205,6 +213,7 @@ public class BuildSymTable extends DepthFirstVisitor {
         }
       }
     }
+    /* Traverse statements */
     {
       List<IStatement> copy = new ArrayList<IStatement>(node.getStatements());
       for (IStatement e : copy) {
@@ -218,10 +227,14 @@ public class BuildSymTable extends DepthFirstVisitor {
     } else {
       setType(node.getExp(), Type.VOID);
     }
+    /* Generate function signature */
     // It is possible that this type has never been seen before
     // TODO: now we just consider native types in PA4
     Type retType = getType(node.getType());
-
+    List<Type> mTypeList = new LinkedList<>();
+    for (Formal e : node.getFormals()) {
+      mTypeList.add(getType(e.getType()));
+    }
     // debugInfo(node.getName());
     Signature mSignature = new Signature(mTypeList, retType);
     methodSTE.setSignature(mSignature);

@@ -410,16 +410,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void outFalseExp(FalseLiteral node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inIdLiteral(IdLiteral node) {
-    defaultIn(node);
-  }
-
-  @Override
   public void outIdLiteral(IdLiteral node) {
     defaultOut(node);
   }
@@ -427,7 +417,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void inIfStatement(IfStatement node) {
     defaultIn(node);
-     write2File("\n#### if statement");
+    write2File("\n#### if statement");
   }
 
   @Override

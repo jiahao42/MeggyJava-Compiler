@@ -82,9 +82,7 @@ class TestParameters {
   }
   public void testBoolean(boolean b){}
   public void testByte(byte b){}
-  public void testInt(int i){
-    i = i + 1;
-  }
+  public void testInt(int i){}
   public void testColor(Meggy.Color c){}
   public void testButton(Meggy.Button b){}
   public void testTone(Meggy.Tone t){}
