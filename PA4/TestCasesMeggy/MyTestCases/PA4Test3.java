@@ -15,9 +15,26 @@ import meggy.Meggy;
 
 class PA4Test3 {
   public static void main(String[] parameters) {
+    Meggy.setPixel( (byte)( (byte)(0 - - -6) * (byte)(-1)), (byte)(10+-(byte)5), Meggy.Color.GREEN);
+    while (!(Meggy.getPixel((byte)1, (byte)2) == Meggy.Color.RED)) {
+      Meggy.delay(4 + 10);
+      // break here
+      Meggy.setPixel((byte)(1 + 0), (byte)(3 - 1), Meggy.Color.RED);
+    }
+    Meggy.delay(10);
+    // Meggy.setPixel((byte)(2 - 3), (byte)3, Meggy.Color.RED);
+    if (Meggy.getPixel((byte)1, (byte)2) == Meggy.Color.RED && Meggy.getPixel((byte)2, (byte)3) == Meggy.Color.GREEN) {
+
+    }
+    if (Meggy.getPixel((byte)1, (byte)2) == Meggy.Color.RED) {
+      if (Meggy.checkButton(Meggy.Button.Left) == true) {
+
+      }
+    }
+    // Meggy.setPixel((byte)(3 * 4), (byte)3, Meggy.Color.RED);
     while (true) {
       new MixedTest().SetLineColor(1, Meggy.Color.RED);
-      Meggy.toneStart(Meggy.Tone.Cs3, 10 + 3 + 30);
+      Meggy.toneStart(Meggy.Tone.Cs3, (byte)10 + (byte)3 + (byte)30);
       Meggy.toneStart(Meggy.Tone.Ds3, 10 + 3 + 20);
       Meggy.toneStart(Meggy.Tone.B3, 10 + 3 + 10);
       if (Meggy.checkButton(Meggy.Button.Left) == true) {

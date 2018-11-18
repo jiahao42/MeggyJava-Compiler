@@ -411,12 +411,34 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outIdLiteral(IdLiteral node) {
-    defaultOut(node);
+    write2File(
+      "\n\t# IdExp" + 
+      "\n\t# load value for variable " + node.getLexeme() + 
+      "\n\t# variable is a local or param variable"
+    );
+    VarSTE varSTE = (VarSTE)(ST.lookup(node.getLexeme()));
+    int size = varSTE.getSize();
+    if (size == 1) {
+      write2File(
+        "\n\t# load a one byte variable from base+offset" + 
+        "\n\tldd r24, " + varSTE.getBase() + " + " + int2String(varSTE.getOffset()) + 
+        "\n\t# push one byte expression onto stack" + 
+        "\n\tpush r24"
+      );
+    } else { // only 1 and 2
+      write2File(
+        "\n\t# load a two byte variable from base+offset" +
+        "\n\tldd r25, " + varSTE.getBase() + " + " + int2String(varSTE.getOffset() + 1) +
+        "\n\tldd r24, " + varSTE.getBase() + " + " + int2String(varSTE.getOffset()) + 
+        "\n\t# push two byte expression onto stack" +
+        "\n\tpush r25" +
+        "\n\tpush r24"
+      );
+    }
   }
 
   @Override
   public void inIfStatement(IfStatement node) {
-    defaultIn(node);
     write2File("\n#### if statement");
   }
 
