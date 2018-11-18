@@ -220,8 +220,6 @@ public class CheckTypes extends DepthFirstVisitor {
 	
 	@Override
 	public void outLtExp(LtExp node) {
-		System.out.println(node.getLExp());
-		System.out.println(node.getRExp());
 		if (!isIntOrByte(getType(node.getLExp()))) {
 			throw new SemanticException(
 				"Invalid left operand type for operator <, expect: INT or BYTE, actual: " + getType(node.getLExp()).toString(), 
@@ -405,8 +403,9 @@ public class CheckTypes extends DepthFirstVisitor {
 		}
 	}
 
+
 	@Override
-	public void visitMethodDecl(MethodDecl node) {
+	public void inMethodDecl(MethodDecl node) {
 		assert (mCurrentST.getCurrentScope().getScopeType() == Scope.classScope);
 		STE ste = mCurrentST.lookup(node.getName());
 		if (ste != null && ste instanceof MethodSTE) {
@@ -418,53 +417,53 @@ public class CheckTypes extends DepthFirstVisitor {
 				node.getLine(),
 				node.getPos());
 		}
-		if (node.getType() != null) {
-			node.getType().accept(this);
-		}
-		{
-			List<Formal> copy = new ArrayList<Formal>(node.getFormals());
-			for (Formal e : copy) {
-				e.accept(this);
-			}
-		}
-		{
-			List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
-			for (VarDecl e : copy) {
-				e.accept(this);
-			}
-		}
-		{
-			List<IStatement> copy = new ArrayList<IStatement>(node.getStatements());
-			for (IStatement e : copy) {
-				e.accept(this);
-			}
-		}
-		if (node.getExp() != null) {
-			node.getExp().accept(this);
-		}
+	}
+
+	@Override
+	public void outMethodDecl(MethodDecl node) {
 		mCurrentST.popScope();
 	}
 	
 	@Override
   public void inTopClassDecl(TopClassDecl node) {
 		assert (mCurrentST.getCurrentScope() == mCurrentST.getGlobalScope());
-		STE mSTE = mCurrentST.lookup(node.getName());
-		mCurrentST.pushScope(mSTE.getScope());
+		STE ste = mCurrentST.lookup(node.getName());
+		if (ste != null && ste instanceof ClassSTE) {
+			ClassSTE classSTE = (ClassSTE)ste;
+			mCurrentST.pushScope(classSTE.getScope());
+		} else {
+			throw new SemanticException(
+				"Class " + node.getName() + " is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
+				node.getLine(),
+				node.getPos());
+		}
+		mCurrentST.pushScope(ste.getScope());
 	}
 
   @Override
   public void outTopClassDecl(TopClassDecl node) {
     mCurrentST.popScope();
-  }
-
-	@Override
-	public void outBlockStatement(BlockStatement node) {
-		
 	}
 
 	@Override
+  public void inMainClass(MainClass node) {
+		assert (mCurrentST.getCurrentScope() == mCurrentST.getGlobalScope());
+		STE ste = mCurrentST.lookup(node.getName());
+		if (ste != null && ste instanceof ClassSTE) {
+			ClassSTE classSTE = (ClassSTE)ste;
+			mCurrentST.pushScope(classSTE.getScope());
+		} else {
+			throw new SemanticException(
+				"Class " + node.getName() + " is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
+				node.getLine(),
+				node.getPos());
+		}
+		mCurrentST.pushScope(ste.getScope());
+	}
+	
+	@Override
   public void outMainClass(MainClass node) {
-    
+    mCurrentST.popScope();
 	}
 	
 	@Override
