@@ -410,6 +410,14 @@ public class CheckTypes extends DepthFirstVisitor {
 		STE ste = mCurrentST.lookup(node.getName());
 		if (ste != null && ste instanceof MethodSTE) {
 			MethodSTE methodSTE = (MethodSTE)ste;
+			Type declarType = methodSTE.getSignature().getReturnType();
+			Type retType = getType(node.getExp());
+			if (retType != declarType) {
+				throw new SemanticException(
+					"Invalid return type for Method[" + node.getLine() + "], expect: " + declarType.toString() + ", actual: " + retType.toString(), 
+					node.getLine(),
+					node.getPos());
+			}
 			mCurrentST.pushScope(methodSTE.getScope());
 		} else {
 			throw new SemanticException(

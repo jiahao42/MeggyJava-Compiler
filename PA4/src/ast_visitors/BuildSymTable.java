@@ -18,6 +18,7 @@ import exceptions.SemanticException;
 public class BuildSymTable extends DepthFirstVisitor {
   SymTable ST;
   boolean mDebug;
+  public static final int maxParamNum = 12; // 12 formal parameters at most
 
   public BuildSymTable() {
     ST = new SymTable();
@@ -170,8 +171,9 @@ public class BuildSymTable extends DepthFirstVisitor {
     String name = node.getName();
     MethodSTE methodSTE = new MethodSTE(name, new Scope(name, Scope.methodScope));
     if (!ST.insert(methodSTE)) {
-      throw new SemanticException("Method [" + methodSTE.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), node.getLine(),
-          node.getPos());
+      throw new SemanticException("Method [" + methodSTE.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), 
+        node.getLine(),
+        node.getPos());
     }
     ST.pushScope(methodSTE.getScope());
     if (node.getType() != null) {
@@ -193,8 +195,9 @@ public class BuildSymTable extends DepthFirstVisitor {
         if (ST.getCurrentScope().insert(varSTE)) {
           debugInfo("Insert formal [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
         } else {
-          throw new SemanticException("Formal [" + e.getName() + "] is  already defined in scope " + ST.getCurrentScope().getName(), node.getLine(),
-          node.getPos());
+          throw new SemanticException("Formal [" + e.getName() + "] is  already defined in scope " + ST.getCurrentScope().getName(), 
+            node.getLine(),
+            node.getPos());
         }
         offset += getType(e.getType()).getAVRTypeSize();
       }
@@ -240,9 +243,10 @@ public class BuildSymTable extends DepthFirstVisitor {
     Signature mSignature = new Signature(mTypeList, retType);
     methodSTE.setSignature(mSignature);
     ST.popScope();
-    if (node.getFormals().size() > 12) { // 12 formal parameters at most
-      throw new SemanticException("Method [" + node.getName() + mSignature.toString() + "] under scope " + ST.getCurrentScope().getName() + " has too many parameters (at most 12)", node.getLine(),
-          node.getPos());
+    if (node.getFormals().size() > maxParamNum) { // 12 formal parameters at most
+      throw new SemanticException("Method [" + node.getName() + mSignature.toString() + "] under scope " + ST.getCurrentScope().getName() + " has too many parameters (at most 12)", 
+        node.getLine(),
+        node.getPos());
     }
     debugInfo("Insert method [" + node.getName() + mSignature.toString() + "] under scope " + ST.getCurrentScope().getName());
   }
