@@ -33,18 +33,24 @@ WorkingErrorTestCases
 ```
 
 Also, it can detect syntax error and generate error message, for example:
-* undefined functions/variables, e.g.
+* undefined class/functions/variables, e.g.
+    * `[23,5] Name [Custom] is not defined under scope PA4RubricTest`
     * `[14,2] Method setPix is not defined under scope C`
     * `[21,16] ID [z] is not defined under scope setP`
-* multi-defined functions/variables, e.g.
+* multi-defined class/functions/variables, e.g.
+    * `[50,7] Class [Custom] is already defined in scope global`
     * `[25,17] Method [setP] is already defined in scope C`
     * `[30,15] Formal [d] is  already defined in scope func1`
-* conflict between declared return type and the actual return type in a method, e.g.
-    * `[35,14] Invalid return type for Method[35], expect: INT, actual: VOID`
 * invalid operand type for operator, e.g.
     * `[31,11] Invalid operands type for operator ==, expect same type on left and right, left: INT, right: BOOL`
-* invalid parameter types for method, e.g.
+* invalid parameter types for built-in method, e.g.
     * `[38,7] Invalid parameter types for Meggy.setPixel, expect: (BYTE, BYTE, COLOR), actual: (BYTE, BYTE, TONE)`
+* invalid number of parameters for custom method, e.g.
+    * `[36,20] Calling method [func1] with wrong number of parameters, expect: (INT,INT,BYTE,BYTE), actual: (INT,INT,BYTE)`
+* invalid type of parameters for custom method, e.g.
+    * `[36,20] Calling method [func1] with wrong type of parameters, expect: (INT,INT,BYTE,BYTE), actual: (INT,INT,BYTE,INT)`
+* conflict between declared return type and the actual return type in a method, e.g.
+    * `[35,14] Invalid return type for Method[35], expect: INT, actual: VOID`
 
 ### Hightlight
 

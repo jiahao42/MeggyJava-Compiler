@@ -370,6 +370,7 @@ public class CheckTypes extends DepthFirstVisitor {
 		ste = mCurrentST.lookup(node.getId());
 		if (ste != null && ste instanceof MethodSTE) {
 			MethodSTE mSTE = (MethodSTE)ste;
+			checkMethodParameters(node, mSTE);
 			setType(node, mSTE.getSignature().getReturnType());
 		} else {
 			throw new SemanticException(
@@ -394,7 +395,7 @@ public class CheckTypes extends DepthFirstVisitor {
 		ste = mCurrentST.lookup(node.getId());
 		if (ste != null && ste instanceof MethodSTE) {
 			MethodSTE mSTE = (MethodSTE)ste;
-			
+			checkMethodParameters(node, mSTE);
 			setType(node, mSTE.getSignature().getReturnType());
 		} else {
 			throw new SemanticException(
@@ -407,22 +408,49 @@ public class CheckTypes extends DepthFirstVisitor {
 		}
 	}
 
-
-	@Override
-	public void inMethodDecl(MethodDecl node) {
-		assert (mCurrentST.getCurrentScope().getScopeType() == Scope.classScope);
-		STE ste = mCurrentST.lookup(node.getName());
-		if (ste != null && ste instanceof MethodSTE) {
-			MethodSTE methodSTE = (MethodSTE)ste;
-			/* Check for conflict in ret type */
-			Type declaredType = methodSTE.getSignature().getReturnType();
-			Type retType = getType(node.getExp());
-			if (retType != declaredType) {
+	private void checkMethodParameters(FuncCall node, MethodSTE mSTE) {
+		/* Check if the parameters are valid */
+		List<Type> expectedTypes = mSTE.getSignature().getParamTypes();
+		List<Type> actualTypes = new LinkedList<>();
+		for (IExp e : node.getArgs()) {
+			actualTypes.add(getType(e));
+		}
+		String actualTypeString = typeList2String(actualTypes);
+		String expectTypeString = typeList2String(expectedTypes);
+		if (expectedTypes.size() != actualTypes.size()) {
+			throw new SemanticException(
+				"Calling method [" + node.getId() + "] with wrong number of parameters, expect: " + expectTypeString + ", actual: " + actualTypeString,
+				node.getLine(),
+				node.getPos());
+		}
+		for (int i = 0; i < actualTypes.size(); i++) {
+			if (actualTypes.get(i) != expectedTypes.get(i)) {
 				throw new SemanticException(
-					"Invalid return type for Method[" + node.getLine() + "], expect: " + declaredType.toString() + ", actual: " + retType.toString(), 
+					"Calling method [" + node.getId() + "] with wrong type of parameters, expect: " + expectTypeString + ", actual: " + actualTypeString,
 					node.getLine(),
 					node.getPos());
 			}
+		}
+	}
+
+	private String typeList2String(List<Type> list) {
+		if (list.size() == 0) return "()";
+		String s = "(";
+		for (Type t : list) {
+			s += t.toString() + ",";
+		}
+		s = s.substring(0, s.lastIndexOf(","));
+		s += ")";
+		return s;
+	}
+
+	@Override
+	public void visitMethodDecl(MethodDecl node) {
+		assert (mCurrentST.getCurrentScope().getScopeType() == Scope.classScope);
+		STE ste = mCurrentST.lookup(node.getName());
+		MethodSTE methodSTE;
+		if (ste != null && ste instanceof MethodSTE) {
+			methodSTE = (MethodSTE)ste;
 			mCurrentST.pushScope(methodSTE.getScope());
 		} else {
 			throw new SemanticException(
@@ -430,10 +458,42 @@ public class CheckTypes extends DepthFirstVisitor {
 				node.getLine(),
 				node.getPos());
 		}
-	}
-
-	@Override
-	public void outMethodDecl(MethodDecl node) {
+		if (node.getType() != null) {
+			node.getType().accept(this);
+		}
+		{
+			List<Formal> copy = new ArrayList<Formal>(node.getFormals());
+			for (Formal e : copy) {
+				e.accept(this);
+			}
+		}
+		{
+			List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
+			for (VarDecl e : copy) {
+				e.accept(this);
+			}
+		}
+		{
+			List<IStatement> copy = new ArrayList<IStatement>(node.getStatements());
+			for (IStatement e : copy) {
+				e.accept(this);
+			}
+		}
+		if (node.getExp() != null) {
+			node.getExp().accept(this);
+		}
+		/* Check for conflict in ret type */
+		Type declaredType = methodSTE.getSignature().getReturnType();
+		Type retType = getType(node.getExp());
+		// System.out.println(node.getName());
+		// System.out.println(declaredType.toString());
+		// System.out.println(retType.toString() + "yo");
+		if (retType != declaredType) {
+			throw new SemanticException(
+				"Invalid return type for Method[" + node.getName() + "], expect: " + declaredType.toString() + ", actual: " + retType.toString(), 
+				node.getLine(),
+				node.getPos());
+		}
 		mCurrentST.popScope();
 	}
 	

@@ -28,12 +28,12 @@ class PA4RubricTest {
 class Custom {
   // test parameters
   public byte func1(int a, int b, byte c, byte d) {
-    return (byte)(a + b + c);
+    return (byte)(a + b + c * d);
   }
 
   // test return value and call expr
   public int func2() {
-    Meggy.setPixel(this.func1(1, 2, (byte)1, (byte)2), this.func1(2, 1, (byte)2, (byte)2), Meggy.Color.GREEN);
+    Meggy.setPixel(this.func1(1, 2, (byte)1, 2), this.func1(2, 1, (byte)2, (byte)2), Meggy.Color.GREEN);
     if (this.func1(1, 2, (byte)3, (byte)4) == (byte)14) {
       Meggy.setPixel((byte)2, (byte)1, Meggy.Color.GREEN);
     }
@@ -46,5 +46,4 @@ class Custom {
     new Custom().func2();
   }
 }
-
 

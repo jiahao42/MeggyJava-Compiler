@@ -127,6 +127,11 @@ public class BuildSymTable extends DepthFirstVisitor {
   public void outLtExp(LtExp node) {
     setType(node, Type.BOOL);
   }
+  
+  @Override
+  public void outAndExp(AndExp node) {
+    setType(node, Type.BOOL);
+  }
 
   @Override
   public void outThisExp(ThisLiteral node) {

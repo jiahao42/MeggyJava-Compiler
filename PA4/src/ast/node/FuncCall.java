@@ -9,4 +9,6 @@ public interface FuncCall{
   public IExp getExp();
   public String getId();
   public LinkedList<IExp> getArgs();
+  public int getLine();
+  public int getPos();
 }
