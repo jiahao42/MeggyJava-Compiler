@@ -28,7 +28,7 @@ class PA4RubricTest {
 class Custom {
   // test parameters
   public byte func1(int a, int b, byte c, byte d) {
-    return (byte)(a + b + c);
+    return (byte)(a + b + c * d);
   }
 
   // test return value and call expr

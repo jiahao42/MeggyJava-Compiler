@@ -14,13 +14,14 @@ This compiler can pass all the testcases under `PA4/TestCasesMeggy/WorkingTestCa
 ```
 WorkingTestCases
 ├── PA4MazeSolver.java
+├── PA4RubricTest.java
 ├── PA4Test1.java
 ├── PA4Test2.java
 ├── PA4Test3.java
 ├── PA4bluedot.java
 └── PA4raindrop.java
 
-0 directories, 8 files
+0 directories, 7 files
 
 WorkingErrorTestCases
 ├── PA4doubleDef.java
@@ -31,13 +32,19 @@ WorkingErrorTestCases
 0 directories, 4 files
 ```
 
-Also, it can detect undefined functions/variables and multi-defined functions/variables, it will generate error messages like:
-
-```
-[14,2] Method setPix is not defined under scope C
-[25,17] Method [setP] is already defined in scope C
-[21,16] ID [z] is not defined under scope setP
-```
+Also, it can detect syntax error and generate error message, for example:
+* undefined functions/variables, e.g.
+    * `[14,2] Method setPix is not defined under scope C`
+    * `[21,16] ID [z] is not defined under scope setP`
+* multi-defined functions/variables, e.g.
+    * `[25,17] Method [setP] is already defined in scope C`
+    * `[30,15] Formal [d] is  already defined in scope func1`
+* conflict between declared return type and the actual return type in a method, e.g.
+    * `[35,14] Invalid return type for Method[35], expect: INT, actual: VOID`
+* invalid operand type for operator, e.g.
+    * `[31,11] Invalid operands type for operator ==, expect same type on left and right, left: INT, right: BOOL`
+* invalid parameter types for method, e.g.
+    * `[38,7] Invalid parameter types for Meggy.setPixel, expect: (BYTE, BYTE, COLOR), actual: (BYTE, BYTE, TONE)`
 
 ### Hightlight
 

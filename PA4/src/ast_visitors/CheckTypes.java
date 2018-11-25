@@ -63,6 +63,9 @@ public class CheckTypes extends DepthFirstVisitor {
 	}
 
 	private Type getType(Node node) {
+		if (node == null) {
+			return Type.VOID;
+		}
 		return this.mCurrentST.getExpType(node);
 	}
 
@@ -391,6 +394,7 @@ public class CheckTypes extends DepthFirstVisitor {
 		ste = mCurrentST.lookup(node.getId());
 		if (ste != null && ste instanceof MethodSTE) {
 			MethodSTE mSTE = (MethodSTE)ste;
+			
 			setType(node, mSTE.getSignature().getReturnType());
 		} else {
 			throw new SemanticException(
@@ -410,11 +414,12 @@ public class CheckTypes extends DepthFirstVisitor {
 		STE ste = mCurrentST.lookup(node.getName());
 		if (ste != null && ste instanceof MethodSTE) {
 			MethodSTE methodSTE = (MethodSTE)ste;
-			Type declarType = methodSTE.getSignature().getReturnType();
+			/* Check for conflict in ret type */
+			Type declaredType = methodSTE.getSignature().getReturnType();
 			Type retType = getType(node.getExp());
-			if (retType != declarType) {
+			if (retType != declaredType) {
 				throw new SemanticException(
-					"Invalid return type for Method[" + node.getLine() + "], expect: " + declarType.toString() + ", actual: " + retType.toString(), 
+					"Invalid return type for Method[" + node.getLine() + "], expect: " + declaredType.toString() + ", actual: " + retType.toString(), 
 					node.getLine(),
 					node.getPos());
 			}

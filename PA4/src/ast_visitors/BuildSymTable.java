@@ -41,6 +41,9 @@ public class BuildSymTable extends DepthFirstVisitor {
   }
 
   private Type getType(Node node) {
+    if (node == null) {
+      return Type.VOID;
+    }
     return this.ST.getExpType(node);
   }
 
@@ -195,7 +198,7 @@ public class BuildSymTable extends DepthFirstVisitor {
         if (ST.getCurrentScope().insert(varSTE)) {
           debugInfo("Insert formal [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
         } else {
-          throw new SemanticException("Formal [" + e.getName() + "] is  already defined in scope " + ST.getCurrentScope().getName(), 
+          throw new SemanticException("Formal [" + e.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), 
             node.getLine(),
             node.getPos());
         }

@@ -36,4 +36,32 @@ public class Signature {
         paramTypesLiteral += ") returns " + mReturnType.toString();
         return paramTypesLiteral;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Signature) {
+            Signature other = (Signature)obj;
+            // Compare the number of parameters
+            if (other.getParamTypes().size() != this.getParamTypes().size()) {
+                return false;
+            }
+            // Compare the type of parameters one by one
+            List<Type> types1 = this.getParamTypes();
+            List<Type> types2 = other.getParamTypes();
+            for (int i = 0; i < this.getParamTypes().size(); i++) {
+                if (types1.get(i) != types2.get(i)) {
+                    return false;
+                }
+            }
+            if (other.getReturnType() != this.getReturnType()) {
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
