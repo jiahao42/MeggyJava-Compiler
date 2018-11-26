@@ -97,7 +97,7 @@ non terminal VarDecl var_declaration;
 non terminal LinkedList<VarDecl> var_declaration_list;
 non terminal AssignStatement assign;
 non terminal Formal formal_param;
-non terminal LinkedList<Formal> param_list;
+non terminal LinkedList<Formal> formal_param_list;
 non terminal IExp return_stmt;
 non terminal LinkedList<IExp> exp_args_list;
 non terminal IExp exp_arg;
@@ -158,14 +158,14 @@ class_declaration_list ::=
     ;
 
 class_declaration ::=
-    CLASS identifier:id LBRACE method_declaration_list:methods RBRACE
+    CLASS identifier:id LBRACE var_declaration_list:vars method_declaration_list:methods RBRACE
     {:
-        RESULT = new TopClassDecl(id.getLine(), id.getPos(), id.getLexeme(), new LinkedList<VarDecl>(), methods);
+        RESULT = new TopClassDecl(id.getLine(), id.getPos(), id.getLexeme(), vars, methods);
     :}
     ;
 
-param_list ::=
-    param_list:list COMMA formal_param:param
+formal_param_list ::=
+    formal_param_list:list COMMA formal_param:param
     {:
         if (param != null) {
             list.add(param);
@@ -192,9 +192,9 @@ formal_param ::=
     ;
 
 method_declaration ::=
-    PUBLIC type:t identifier:id LPAREN param_list:p_list RPAREN LBRACE statement_list:s_list return_stmt:rt RBRACE 
+    PUBLIC type:t identifier:id LPAREN formal_param_list:params RPAREN LBRACE var_declaration_list:vars statement_list:stmts return_stmt:ret RBRACE 
     {:
-        RESULT = new MethodDecl(id.getLine(), id.getPos(), t, id.getLexeme(), p_list, new LinkedList<VarDecl>(), s_list, rt);
+        RESULT = new MethodDecl(id.getLine(), id.getPos(), t, id.getLexeme(), params, vars, stmts, ret);
     :}
     ;
 
