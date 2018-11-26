@@ -94,6 +94,8 @@ non terminal LinkedList<IClassDecl> class_declaration_list;
 non terminal MethodDecl method_declaration;
 non terminal LinkedList<MethodDecl> method_declaration_list;
 non terminal VarDecl var_declaration;
+non terminal LinkedList<VarDecl> var_declaration_list;
+non terminal AssignStatement assign;
 non terminal Formal formal_param;
 non terminal LinkedList<Formal> param_list;
 non terminal IExp return_stmt;
@@ -162,13 +164,6 @@ class_declaration ::=
     :}
     ;
 
-identifier ::=
-    ID:i
-    {:
-        RESULT = new IdLiteral(i.line, i.pos, i.lexeme);
-    :}
-    ;
-
 param_list ::=
     param_list:list COMMA formal_param:param
     {:
@@ -231,7 +226,21 @@ return_stmt ::=
 var_declaration ::=
     type:t identifier:id SEMI
     {:
-        RESULT = new VarDecl(id.line, id.pos, t, id.lexeme);
+        RESULT = new VarDecl(id.getLine(), id.getPos(), t, id.getLexeme());
+    :}
+    ;
+
+var_declaration_list ::=
+    var_declaration_list:list var_declaration:v
+    {:
+        if (v != null) {
+            list.add(v);
+        }
+        RESULT = list;
+    :}
+    | /* Empty */
+    {:
+        RESULT = new LinkedList<VarDecl>();
     :}
     ;
 
@@ -266,7 +275,7 @@ type ::=
     :}
     | identifier:id
     {:
-        RESULT = new ClassType(id.line, id.pos, id.lexeme);
+        RESULT = new ClassType(id.getLine(), id.getPos(), id.getLexeme());
     :}
     ;
 
@@ -302,6 +311,10 @@ statement ::=
     | block_statement:blk
     {:
         RESULT = blk;
+    :}
+    | identifier:id EQUAL exp:e SEMI
+    {:
+        RESULT = new AssignStatement(id.getLine(), id.getPos(), id.getLexeme(), e);
     :}
     ;
 
