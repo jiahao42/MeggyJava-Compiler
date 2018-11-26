@@ -93,6 +93,7 @@ non terminal TopClassDecl class_declaration;
 non terminal LinkedList<IClassDecl> class_declaration_list;
 non terminal MethodDecl method_declaration;
 non terminal LinkedList<MethodDecl> method_declaration_list;
+non terminal VarDecl var_declaration;
 non terminal Formal formal_param;
 non terminal LinkedList<Formal> param_list;
 non terminal IExp return_stmt;
@@ -227,6 +228,13 @@ return_stmt ::=
     :}
     ;
 
+var_declaration ::=
+    type:t identifier:id SEMI
+    {:
+        RESULT = new VarDecl(id.line, id.pos, t, id.lexeme);
+    :}
+    ;
+
 type ::=
     BOOLEAN:b
     {:
@@ -255,6 +263,10 @@ type ::=
     | MEGGYTONE:m
     {:
         RESULT = new ToneType(m.line, m.pos);
+    :}
+    | identifier:id
+    {:
+        RESULT = new ClassType(id.line, id.pos, id.lexeme);
     :}
     ;
 
