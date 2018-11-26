@@ -122,6 +122,7 @@ precedence right UMINUS;
 precedence left RBRACKET, RBRACKET, DOT, LPAREN, RPAREN;
 precedence left ELSE;
 precedence left COMMA;
+precedence left identifier;
 
 
 
@@ -136,9 +137,9 @@ main_class ::=
         CLASS ID:c
         LBRACE PUBLIC STATIC VOID MAIN:m
         LPAREN STRING LBRACKET RBRACKET ID:param RPAREN
-        block_statement:blk
+        block_statement:stmts
           {:
-            RESULT = new MainClass(m.line, m.pos, c.lexeme, param.lexeme, blk);
+            RESULT = new MainClass(m.line, m.pos, c.lexeme, param.lexeme, stmts);
           :}
         RBRACE
     ;
@@ -212,17 +213,6 @@ method_declaration_list ::=
     :}
     ;
 
-return_stmt ::=
-    RETURN exp:e SEMI
-    {:
-        RESULT = e;
-    :}
-    | /* Empty */
-    {:
-        RESULT = null;
-    :}
-    ;
-
 var_declaration ::=
     type:t identifier:id SEMI
     {:
@@ -241,6 +231,17 @@ var_declaration_list ::=
     | /* Empty */
     {:
         RESULT = new LinkedList<VarDecl>();
+    :}
+    ;
+
+return_stmt ::=
+    RETURN exp:e SEMI
+    {:
+        RESULT = e;
+    :}
+    | /* Empty */
+    {:
+        RESULT = null;
     :}
     ;
 
@@ -312,7 +313,7 @@ statement ::=
     {:
         RESULT = blk;
     :}
-    | identifier:id EQUAL exp:e SEMI
+    | identifier:id ASSIGN exp:e SEMI
     {:
         RESULT = new AssignStatement(id.getLine(), id.getPos(), id.getLexeme(), e);
     :}
@@ -451,4 +452,9 @@ exp ::=
     :}
     ;
 
-
+identifier ::=
+    ID:i
+    {:
+        RESULT = new IdLiteral(i.line, i.pos, i.lexeme);
+    :}
+    ;

@@ -29,16 +29,16 @@ class TestVarDecl {
   Meggy.Tone tone;
   TestVarDecl t; // class type
   public int func(CustomType yo) {
-    int aa;
-    byte bb;
-    boolean cc;
-    Meggy.Color ccolor;
-    Meggy.Button bbtt;
-    Meggy.Tone ttone;
-    TestVarDecl tt; // class type
-    aa = 1;
-    bb = (byte)1;
-    cc = true;
+    // int aa;
+    // byte bb;
+    // boolean cc;
+    // Meggy.Color ccolor;
+    // Meggy.Button bbtt;
+    // Meggy.Tone ttone;
+    // TestVarDecl tt; // class type
+    // aa = 1;
+    // bb = (byte)1;
+    // cc = true;
     ccolor = Meggy.Color.GREEN;
     // bbtt = Meggy.Button.Up;
     ttone = Meggy.Tone.Cs3;

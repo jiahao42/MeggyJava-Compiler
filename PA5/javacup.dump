@@ -1,18 +1,10 @@
+Precedence declaration: Can't find terminal identifier
 Warning : Terminal "UMINUS" was declared but never used
-Warning : Terminal "ASSIGN" was declared but never used
 Warning : Terminal "MEGGYSETAUXLEDS" was declared but never used
 Warning : Terminal "EXTENDS" was declared but never used
 Warning : Terminal "LENGTH" was declared but never used
 Warning : Non terminal "assign" was declared but never used
 Warning : Non terminal "exp_arg" was declared but never used
-Warning : *** Production "type ::= identifier " never reduced
-Warning : *** Production "type ::= MEGGYTONE " never reduced
-Warning : *** Production "type ::= MEGGYBUTTON " never reduced
-Warning : *** Production "type ::= MEGGYCOLOR " never reduced
-Warning : *** Production "type ::= VOID " never reduced
-Warning : *** Production "type ::= INT " never reduced
-Warning : *** Production "type ::= BYTE " never reduced
-Warning : *** Production "type ::= BOOLEAN " never reduced
 ===== Terminals =====
 [0]EOF [1]error [2]PLUS [3]MINUS [4]TIMES 
 [5]LPAREN [6]RPAREN [7]LBRACE [8]RBRACE [9]BOOLEAN 
@@ -31,7 +23,7 @@ Warning : *** Production "type ::= BOOLEAN " never reduced
 [0]program [1]exp [2]statement [3]statement_list [4]block_statement 
 [5]main_class [6]type [7]class_declaration [8]class_declaration_list [9]method_declaration 
 [10]method_declaration_list [11]var_declaration [12]var_declaration_list [13]assign [14]formal_param 
-[15]param_list [16]return_stmt [17]exp_args_list [18]exp_arg [19]identifier 
+[15]formal_param_list [16]return_stmt [17]exp_args_list [18]exp_arg [19]identifier 
 [20]NT$0 
 
 ===== Productions =====
@@ -42,18 +34,18 @@ Warning : *** Production "type ::= BOOLEAN " never reduced
 [4] class_declaration_list ::= class_declaration_list class_declaration 
 [5] class_declaration_list ::= 
 [6] class_declaration ::= CLASS identifier LBRACE var_declaration_list method_declaration_list RBRACE 
-[7] param_list ::= param_list COMMA formal_param 
-[8] param_list ::= formal_param 
-[9] param_list ::= 
+[7] formal_param_list ::= formal_param_list COMMA formal_param 
+[8] formal_param_list ::= formal_param 
+[9] formal_param_list ::= 
 [10] formal_param ::= type identifier 
-[11] method_declaration ::= PUBLIC type identifier LPAREN param_list RPAREN LBRACE var_declaration_list statement_list return_stmt RBRACE 
+[11] method_declaration ::= PUBLIC type identifier LPAREN formal_param_list RPAREN LBRACE statement_list return_stmt RBRACE 
 [12] method_declaration_list ::= method_declaration_list method_declaration 
 [13] method_declaration_list ::= 
-[14] return_stmt ::= RETURN exp SEMI 
-[15] return_stmt ::= 
-[16] var_declaration ::= type identifier SEMI 
-[17] var_declaration_list ::= var_declaration_list var_declaration 
-[18] var_declaration_list ::= 
+[14] var_declaration ::= type identifier SEMI 
+[15] var_declaration_list ::= var_declaration_list var_declaration 
+[16] var_declaration_list ::= 
+[17] return_stmt ::= RETURN exp SEMI 
+[18] return_stmt ::= 
 [19] type ::= BOOLEAN 
 [20] type ::= BYTE 
 [21] type ::= INT 
@@ -70,7 +62,7 @@ Warning : *** Production "type ::= BOOLEAN " never reduced
 [32] statement ::= IF LPAREN exp RPAREN statement ELSE statement 
 [33] statement ::= WHILE LPAREN exp RPAREN statement 
 [34] statement ::= block_statement 
-[35] statement ::= identifier EQUAL exp SEMI 
+[35] statement ::= identifier ASSIGN exp SEMI 
 [36] statement_list ::= statement_list statement 
 [37] statement_list ::= 
 [38] block_statement ::= LBRACE statement_list RBRACE 
@@ -99,6 +91,7 @@ Warning : *** Production "type ::= BOOLEAN " never reduced
 [61] exp ::= identifier 
 [62] exp ::= THIS 
 [63] exp ::= NEW identifier LPAREN RPAREN 
+[64] identifier ::= ID 
 
 ===== Viable Prefix Recognizer =====
 START lalr_state [0]: {
@@ -159,9 +152,11 @@ transition on CLASS to state [8]
 
 -------------------
 lalr_state [8]: {
+  [identifier ::= (*) ID , {LBRACE }]
   [class_declaration ::= CLASS (*) identifier LBRACE var_declaration_list method_declaration_list RBRACE , {EOF CLASS }]
 }
-transition on identifier to state [10]
+transition on identifier to state [11]
+transition on ID to state [10]
 
 -------------------
 lalr_state [9]: {
@@ -170,313 +165,305 @@ lalr_state [9]: {
 
 -------------------
 lalr_state [10]: {
-  [class_declaration ::= CLASS identifier (*) LBRACE var_declaration_list method_declaration_list RBRACE , {EOF CLASS }]
+  [identifier ::= ID (*) , {PLUS MINUS TIMES LPAREN RPAREN LBRACE LT EQUAL AND COMMA DOT SEMI ASSIGN ID }]
 }
-transition on LBRACE to state [11]
 
 -------------------
 lalr_state [11]: {
-  [var_declaration_list ::= (*) , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE }]
-  [class_declaration ::= CLASS identifier LBRACE (*) var_declaration_list method_declaration_list RBRACE , {EOF CLASS }]
-  [var_declaration_list ::= (*) var_declaration_list var_declaration , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE }]
+  [class_declaration ::= CLASS identifier (*) LBRACE var_declaration_list method_declaration_list RBRACE , {EOF CLASS }]
 }
-transition on var_declaration_list to state [12]
+transition on LBRACE to state [12]
 
 -------------------
 lalr_state [12]: {
-  [var_declaration_list ::= var_declaration_list (*) var_declaration , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE }]
-  [type ::= (*) BYTE , {}]
-  [type ::= (*) MEGGYTONE , {}]
-  [type ::= (*) VOID , {}]
-  [type ::= (*) BOOLEAN , {}]
-  [var_declaration ::= (*) type identifier SEMI , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE }]
-  [method_declaration_list ::= (*) , {RBRACE PUBLIC }]
-  [type ::= (*) MEGGYBUTTON , {}]
-  [type ::= (*) INT , {}]
-  [class_declaration ::= CLASS identifier LBRACE var_declaration_list (*) method_declaration_list RBRACE , {EOF CLASS }]
-  [method_declaration_list ::= (*) method_declaration_list method_declaration , {RBRACE PUBLIC }]
-  [type ::= (*) identifier , {}]
-  [type ::= (*) MEGGYCOLOR , {}]
+  [var_declaration_list ::= (*) , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE ID }]
+  [var_declaration_list ::= (*) var_declaration_list var_declaration , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE ID }]
+  [class_declaration ::= CLASS identifier LBRACE (*) var_declaration_list method_declaration_list RBRACE , {EOF CLASS }]
 }
-transition on BYTE to state [23]
-transition on var_declaration to state [22]
-transition on type to state [21]
-transition on MEGGYCOLOR to state [20]
-transition on MEGGYBUTTON to state [19]
-transition on identifier to state [18]
-transition on MEGGYTONE to state [17]
-transition on VOID to state [16]
-transition on BOOLEAN to state [15]
-transition on method_declaration_list to state [14]
-transition on INT to state [13]
+transition on var_declaration_list to state [13]
 
 -------------------
 lalr_state [13]: {
-  [type ::= INT (*) , {}]
+  [type ::= (*) BYTE , {ID }]
+  [var_declaration ::= (*) type identifier SEMI , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE ID }]
+  [type ::= (*) MEGGYTONE , {ID }]
+  [type ::= (*) VOID , {ID }]
+  [type ::= (*) BOOLEAN , {ID }]
+  [method_declaration_list ::= (*) , {RBRACE PUBLIC }]
+  [type ::= (*) MEGGYBUTTON , {ID }]
+  [type ::= (*) INT , {ID }]
+  [identifier ::= (*) ID , {ID }]
+  [var_declaration_list ::= var_declaration_list (*) var_declaration , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE ID }]
+  [class_declaration ::= CLASS identifier LBRACE var_declaration_list (*) method_declaration_list RBRACE , {EOF CLASS }]
+  [method_declaration_list ::= (*) method_declaration_list method_declaration , {RBRACE PUBLIC }]
+  [type ::= (*) identifier , {ID }]
+  [type ::= (*) MEGGYCOLOR , {ID }]
 }
+transition on BYTE to state [24]
+transition on var_declaration to state [23]
+transition on type to state [22]
+transition on MEGGYCOLOR to state [21]
+transition on ID to state [10]
+transition on MEGGYBUTTON to state [20]
+transition on identifier to state [19]
+transition on MEGGYTONE to state [18]
+transition on VOID to state [17]
+transition on BOOLEAN to state [16]
+transition on method_declaration_list to state [15]
+transition on INT to state [14]
 
 -------------------
 lalr_state [14]: {
-  [class_declaration ::= CLASS identifier LBRACE var_declaration_list method_declaration_list (*) RBRACE , {EOF CLASS }]
-  [method_declaration_list ::= method_declaration_list (*) method_declaration , {RBRACE PUBLIC }]
-  [method_declaration ::= (*) PUBLIC type identifier LPAREN param_list RPAREN LBRACE var_declaration_list statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
+  [type ::= INT (*) , {ID }]
 }
-transition on method_declaration to state [28]
-transition on PUBLIC to state [27]
-transition on RBRACE to state [26]
 
 -------------------
 lalr_state [15]: {
-  [type ::= BOOLEAN (*) , {}]
+  [class_declaration ::= CLASS identifier LBRACE var_declaration_list method_declaration_list (*) RBRACE , {EOF CLASS }]
+  [method_declaration_list ::= method_declaration_list (*) method_declaration , {RBRACE PUBLIC }]
+  [method_declaration ::= (*) PUBLIC type identifier LPAREN formal_param_list RPAREN LBRACE statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
 }
+transition on method_declaration to state [29]
+transition on PUBLIC to state [28]
+transition on RBRACE to state [27]
 
 -------------------
 lalr_state [16]: {
-  [type ::= VOID (*) , {}]
+  [type ::= BOOLEAN (*) , {ID }]
 }
 
 -------------------
 lalr_state [17]: {
-  [type ::= MEGGYTONE (*) , {}]
+  [type ::= VOID (*) , {ID }]
 }
 
 -------------------
 lalr_state [18]: {
-  [type ::= identifier (*) , {}]
+  [type ::= MEGGYTONE (*) , {ID }]
 }
 
 -------------------
 lalr_state [19]: {
-  [type ::= MEGGYBUTTON (*) , {}]
+  [type ::= identifier (*) , {ID }]
 }
 
 -------------------
 lalr_state [20]: {
-  [type ::= MEGGYCOLOR (*) , {}]
+  [type ::= MEGGYBUTTON (*) , {ID }]
 }
 
 -------------------
 lalr_state [21]: {
-  [var_declaration ::= type (*) identifier SEMI , {MINUS LPAREN LBRACE RBRACE BOOLEAN INT BYTE IF NOT WHILE NEW PUBLIC RETURN VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [type ::= MEGGYCOLOR (*) , {ID }]
 }
-transition on identifier to state [24]
 
 -------------------
 lalr_state [22]: {
-  [var_declaration_list ::= var_declaration_list var_declaration (*) , {MINUS LPAREN LBRACE RBRACE BOOLEAN INT BYTE IF NOT WHILE NEW PUBLIC RETURN VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [identifier ::= (*) ID , {SEMI }]
+  [var_declaration ::= type (*) identifier SEMI , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE ID }]
 }
+transition on identifier to state [25]
+transition on ID to state [10]
 
 -------------------
 lalr_state [23]: {
-  [type ::= BYTE (*) , {}]
+  [var_declaration_list ::= var_declaration_list var_declaration (*) , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE ID }]
 }
 
 -------------------
 lalr_state [24]: {
-  [var_declaration ::= type identifier (*) SEMI , {MINUS LPAREN LBRACE RBRACE BOOLEAN INT BYTE IF NOT WHILE NEW PUBLIC RETURN VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [type ::= BYTE (*) , {ID }]
 }
-transition on SEMI to state [25]
 
 -------------------
 lalr_state [25]: {
-  [var_declaration ::= type identifier SEMI (*) , {MINUS LPAREN LBRACE RBRACE BOOLEAN INT BYTE IF NOT WHILE NEW PUBLIC RETURN VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [var_declaration ::= type identifier (*) SEMI , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE ID }]
 }
+transition on SEMI to state [26]
 
 -------------------
 lalr_state [26]: {
-  [class_declaration ::= CLASS identifier LBRACE var_declaration_list method_declaration_list RBRACE (*) , {EOF CLASS }]
+  [var_declaration ::= type identifier SEMI (*) , {RBRACE BOOLEAN INT BYTE PUBLIC VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE ID }]
 }
 
 -------------------
 lalr_state [27]: {
-  [type ::= (*) BYTE , {}]
-  [method_declaration ::= PUBLIC (*) type identifier LPAREN param_list RPAREN LBRACE var_declaration_list statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
-  [type ::= (*) MEGGYTONE , {}]
-  [type ::= (*) VOID , {}]
-  [type ::= (*) BOOLEAN , {}]
-  [type ::= (*) MEGGYBUTTON , {}]
-  [type ::= (*) INT , {}]
-  [type ::= (*) identifier , {}]
-  [type ::= (*) MEGGYCOLOR , {}]
+  [class_declaration ::= CLASS identifier LBRACE var_declaration_list method_declaration_list RBRACE (*) , {EOF CLASS }]
 }
-transition on BYTE to state [23]
-transition on type to state [29]
-transition on MEGGYCOLOR to state [20]
-transition on MEGGYBUTTON to state [19]
-transition on identifier to state [18]
-transition on MEGGYTONE to state [17]
-transition on VOID to state [16]
-transition on BOOLEAN to state [15]
-transition on INT to state [13]
 
 -------------------
 lalr_state [28]: {
+  [type ::= (*) BYTE , {ID }]
+  [method_declaration ::= PUBLIC (*) type identifier LPAREN formal_param_list RPAREN LBRACE statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
+  [type ::= (*) MEGGYTONE , {ID }]
+  [type ::= (*) VOID , {ID }]
+  [type ::= (*) BOOLEAN , {ID }]
+  [type ::= (*) MEGGYBUTTON , {ID }]
+  [type ::= (*) INT , {ID }]
+  [identifier ::= (*) ID , {ID }]
+  [type ::= (*) identifier , {ID }]
+  [type ::= (*) MEGGYCOLOR , {ID }]
+}
+transition on BYTE to state [24]
+transition on type to state [30]
+transition on MEGGYCOLOR to state [21]
+transition on ID to state [10]
+transition on MEGGYBUTTON to state [20]
+transition on identifier to state [19]
+transition on MEGGYTONE to state [18]
+transition on VOID to state [17]
+transition on BOOLEAN to state [16]
+transition on INT to state [14]
+
+-------------------
+lalr_state [29]: {
   [method_declaration_list ::= method_declaration_list method_declaration (*) , {RBRACE PUBLIC }]
 }
 
 -------------------
-lalr_state [29]: {
-  [method_declaration ::= PUBLIC type (*) identifier LPAREN param_list RPAREN LBRACE var_declaration_list statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
-}
-transition on identifier to state [30]
-
--------------------
 lalr_state [30]: {
-  [method_declaration ::= PUBLIC type identifier (*) LPAREN param_list RPAREN LBRACE var_declaration_list statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
+  [identifier ::= (*) ID , {LPAREN }]
+  [method_declaration ::= PUBLIC type (*) identifier LPAREN formal_param_list RPAREN LBRACE statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
 }
-transition on LPAREN to state [31]
+transition on identifier to state [31]
+transition on ID to state [10]
 
 -------------------
 lalr_state [31]: {
-  [type ::= (*) BYTE , {}]
-  [param_list ::= (*) formal_param , {RPAREN COMMA }]
-  [type ::= (*) MEGGYTONE , {}]
-  [type ::= (*) VOID , {}]
-  [type ::= (*) BOOLEAN , {}]
-  [formal_param ::= (*) type identifier , {RPAREN COMMA }]
-  [param_list ::= (*) param_list COMMA formal_param , {RPAREN COMMA }]
-  [type ::= (*) MEGGYBUTTON , {}]
-  [type ::= (*) INT , {}]
-  [param_list ::= (*) , {RPAREN COMMA }]
-  [type ::= (*) identifier , {}]
-  [type ::= (*) MEGGYCOLOR , {}]
-  [method_declaration ::= PUBLIC type identifier LPAREN (*) param_list RPAREN LBRACE var_declaration_list statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
+  [method_declaration ::= PUBLIC type identifier (*) LPAREN formal_param_list RPAREN LBRACE statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
 }
-transition on param_list to state [34]
-transition on BYTE to state [23]
-transition on formal_param to state [33]
-transition on type to state [32]
-transition on MEGGYCOLOR to state [20]
-transition on MEGGYBUTTON to state [19]
-transition on identifier to state [18]
-transition on MEGGYTONE to state [17]
-transition on VOID to state [16]
-transition on BOOLEAN to state [15]
-transition on INT to state [13]
+transition on LPAREN to state [32]
 
 -------------------
 lalr_state [32]: {
-  [formal_param ::= type (*) identifier , {RPAREN COMMA }]
+  [type ::= (*) BYTE , {ID }]
+  [formal_param_list ::= (*) formal_param , {RPAREN COMMA }]
+  [type ::= (*) MEGGYTONE , {ID }]
+  [type ::= (*) VOID , {ID }]
+  [type ::= (*) BOOLEAN , {ID }]
+  [formal_param ::= (*) type identifier , {RPAREN COMMA }]
+  [formal_param_list ::= (*) formal_param_list COMMA formal_param , {RPAREN COMMA }]
+  [type ::= (*) MEGGYBUTTON , {ID }]
+  [type ::= (*) INT , {ID }]
+  [identifier ::= (*) ID , {ID }]
+  [formal_param_list ::= (*) , {RPAREN COMMA }]
+  [type ::= (*) identifier , {ID }]
+  [type ::= (*) MEGGYCOLOR , {ID }]
+  [method_declaration ::= PUBLIC type identifier LPAREN (*) formal_param_list RPAREN LBRACE statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
 }
-transition on identifier to state [147]
+transition on BYTE to state [24]
+transition on formal_param_list to state [35]
+transition on formal_param to state [34]
+transition on type to state [33]
+transition on MEGGYCOLOR to state [21]
+transition on MEGGYBUTTON to state [20]
+transition on ID to state [10]
+transition on identifier to state [19]
+transition on MEGGYTONE to state [18]
+transition on VOID to state [17]
+transition on BOOLEAN to state [16]
+transition on INT to state [14]
 
 -------------------
 lalr_state [33]: {
-  [param_list ::= formal_param (*) , {RPAREN COMMA }]
+  [formal_param ::= type (*) identifier , {RPAREN COMMA }]
+  [identifier ::= (*) ID , {RPAREN COMMA }]
 }
+transition on identifier to state [147]
+transition on ID to state [10]
 
 -------------------
 lalr_state [34]: {
-  [param_list ::= param_list (*) COMMA formal_param , {RPAREN COMMA }]
-  [method_declaration ::= PUBLIC type identifier LPAREN param_list (*) RPAREN LBRACE var_declaration_list statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
+  [formal_param_list ::= formal_param (*) , {RPAREN COMMA }]
 }
-transition on RPAREN to state [36]
-transition on COMMA to state [35]
 
 -------------------
 lalr_state [35]: {
-  [type ::= (*) BYTE , {}]
-  [type ::= (*) MEGGYTONE , {}]
-  [type ::= (*) VOID , {}]
-  [type ::= (*) BOOLEAN , {}]
-  [param_list ::= param_list COMMA (*) formal_param , {RPAREN COMMA }]
-  [formal_param ::= (*) type identifier , {RPAREN COMMA }]
-  [type ::= (*) MEGGYBUTTON , {}]
-  [type ::= (*) INT , {}]
-  [type ::= (*) identifier , {}]
-  [type ::= (*) MEGGYCOLOR , {}]
+  [formal_param_list ::= formal_param_list (*) COMMA formal_param , {RPAREN COMMA }]
+  [method_declaration ::= PUBLIC type identifier LPAREN formal_param_list (*) RPAREN LBRACE statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
 }
-transition on BYTE to state [23]
-transition on formal_param to state [146]
-transition on type to state [32]
-transition on MEGGYCOLOR to state [20]
-transition on MEGGYBUTTON to state [19]
-transition on identifier to state [18]
-transition on MEGGYTONE to state [17]
-transition on VOID to state [16]
-transition on BOOLEAN to state [15]
-transition on INT to state [13]
+transition on RPAREN to state [37]
+transition on COMMA to state [36]
 
 -------------------
 lalr_state [36]: {
-  [method_declaration ::= PUBLIC type identifier LPAREN param_list RPAREN (*) LBRACE var_declaration_list statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
+  [type ::= (*) BYTE , {ID }]
+  [type ::= (*) MEGGYTONE , {ID }]
+  [type ::= (*) VOID , {ID }]
+  [type ::= (*) BOOLEAN , {ID }]
+  [formal_param_list ::= formal_param_list COMMA (*) formal_param , {RPAREN COMMA }]
+  [formal_param ::= (*) type identifier , {RPAREN COMMA }]
+  [type ::= (*) MEGGYBUTTON , {ID }]
+  [type ::= (*) INT , {ID }]
+  [identifier ::= (*) ID , {ID }]
+  [type ::= (*) identifier , {ID }]
+  [type ::= (*) MEGGYCOLOR , {ID }]
 }
-transition on LBRACE to state [37]
+transition on BYTE to state [24]
+transition on formal_param to state [146]
+transition on type to state [33]
+transition on MEGGYCOLOR to state [21]
+transition on MEGGYBUTTON to state [20]
+transition on ID to state [10]
+transition on identifier to state [19]
+transition on MEGGYTONE to state [18]
+transition on VOID to state [17]
+transition on BOOLEAN to state [16]
+transition on INT to state [14]
 
 -------------------
 lalr_state [37]: {
-  [method_declaration ::= PUBLIC type identifier LPAREN param_list RPAREN LBRACE (*) var_declaration_list statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
-  [var_declaration_list ::= (*) , {MINUS LPAREN LBRACE RBRACE BOOLEAN INT BYTE IF NOT WHILE NEW RETURN VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [var_declaration_list ::= (*) var_declaration_list var_declaration , {MINUS LPAREN LBRACE RBRACE BOOLEAN INT BYTE IF NOT WHILE NEW RETURN VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [method_declaration ::= PUBLIC type identifier LPAREN formal_param_list RPAREN (*) LBRACE statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
 }
-transition on var_declaration_list to state [38]
+transition on LBRACE to state [38]
 
 -------------------
 lalr_state [38]: {
-  [var_declaration_list ::= var_declaration_list (*) var_declaration , {MINUS LPAREN LBRACE RBRACE BOOLEAN INT BYTE IF NOT WHILE NEW RETURN VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [type ::= (*) BYTE , {}]
-  [statement_list ::= (*) , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [type ::= (*) MEGGYTONE , {}]
-  [type ::= (*) VOID , {}]
-  [type ::= (*) BOOLEAN , {}]
-  [var_declaration ::= (*) type identifier SEMI , {MINUS LPAREN LBRACE RBRACE BOOLEAN INT BYTE IF NOT WHILE NEW RETURN VOID MEGGYCOLOR MEGGYBUTTON MEGGYTONE MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement_list ::= (*) statement_list statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [type ::= (*) MEGGYBUTTON , {}]
-  [type ::= (*) INT , {}]
-  [method_declaration ::= PUBLIC type identifier LPAREN param_list RPAREN LBRACE var_declaration_list (*) statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
-  [type ::= (*) identifier , {}]
-  [type ::= (*) MEGGYCOLOR , {}]
+  [method_declaration ::= PUBLIC type identifier LPAREN formal_param_list RPAREN LBRACE (*) statement_list return_stmt RBRACE , {RBRACE PUBLIC }]
+  [statement_list ::= (*) , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement_list ::= (*) statement_list statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
-transition on BYTE to state [23]
 transition on statement_list to state [39]
-transition on var_declaration to state [22]
-transition on type to state [21]
-transition on MEGGYCOLOR to state [20]
-transition on MEGGYBUTTON to state [19]
-transition on identifier to state [18]
-transition on MEGGYTONE to state [17]
-transition on VOID to state [16]
-transition on BOOLEAN to state [15]
-transition on INT to state [13]
 
 -------------------
 lalr_state [39]: {
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [return_stmt ::= (*) RETURN exp SEMI , {RBRACE }]
+  [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES LT EQUAL AND DOT ASSIGN }]
   [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) WHILE LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [return_stmt ::= (*) , {RBRACE }]
-  [method_declaration ::= PUBLIC type identifier LPAREN param_list RPAREN LBRACE var_declaration_list statement_list (*) return_stmt RBRACE , {RBRACE PUBLIC }]
+  [statement ::= (*) WHILE LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [method_declaration ::= PUBLIC type identifier LPAREN formal_param_list RPAREN LBRACE statement_list (*) return_stmt RBRACE , {RBRACE PUBLIC }]
   [exp ::= (*) TONE_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [block_statement ::= (*) LBRACE statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [block_statement ::= (*) LBRACE statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) identifier , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp LT exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) block_statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) block_statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) TRUE , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MINUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) THIS , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) identifier EQUAL exp SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) identifier ASSIGN exp SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [return_stmt ::= (*) RETURN exp SEMI , {RBRACE }]
   [exp ::= (*) FALSE , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) IF LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) IF LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) NEW identifier LPAREN RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement_list ::= statement_list (*) statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement_list ::= statement_list (*) statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [return_stmt ::= (*) , {RBRACE }]
 }
 transition on MEGGYGETPIXEL to state [64]
 transition on MEGGYDELAY to state [63]
@@ -491,6 +478,7 @@ transition on COLOR_LITERAL to state [55]
 transition on MEGGYSETPIXEL to state [54]
 transition on INT_LITERAL to state [53]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on LBRACE to state [51]
 transition on LPAREN to state [50]
 transition on IF to state [49]
@@ -506,25 +494,25 @@ transition on MEGGYTONESTART to state [40]
 
 -------------------
 lalr_state [40]: {
-  [statement ::= MEGGYTONESTART (*) LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYTONESTART (*) LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on LPAREN to state [140]
 
 -------------------
 lalr_state [41]: {
-  [statement_list ::= statement_list statement (*) , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement_list ::= statement_list statement (*) , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 
 -------------------
 lalr_state [42]: {
-  [statement ::= identifier (*) EQUAL exp SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= identifier (*) ASSIGN exp SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= identifier (*) , {PLUS MINUS TIMES LT EQUAL AND DOT }]
 }
-transition on EQUAL to state [137]
+transition on ASSIGN to state [137]
 
 -------------------
 lalr_state [43]: {
-  [statement ::= WHILE (*) LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= WHILE (*) LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on LPAREN to state [133]
 
@@ -551,6 +539,7 @@ lalr_state [44]: {
   [exp ::= NOT (*) exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
 }
@@ -560,6 +549,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -587,12 +577,13 @@ lalr_state [45]: {
   [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) TONE_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
-  [return_stmt ::= RETURN (*) exp SEMI , {RBRACE }]
   [exp ::= (*) identifier , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
+  [return_stmt ::= RETURN (*) exp SEMI , {RBRACE }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
 }
@@ -602,6 +593,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -621,7 +613,7 @@ lalr_state [46]: {
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= exp (*) DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= exp (*) DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on DOT to state [124]
 transition on TIMES to state [74]
@@ -643,8 +635,8 @@ lalr_state [48]: {
 
 -------------------
 lalr_state [49]: {
-  [statement ::= IF (*) LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= IF (*) LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= IF (*) LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= IF (*) LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on LPAREN to state [118]
 
@@ -671,6 +663,7 @@ lalr_state [50]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= LPAREN (*) BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
@@ -682,6 +675,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -694,9 +688,9 @@ transition on MINUS to state [59]
 
 -------------------
 lalr_state [51]: {
-  [block_statement ::= LBRACE (*) statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement_list ::= (*) , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement_list ::= (*) statement_list statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [block_statement ::= LBRACE (*) statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement_list ::= (*) , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement_list ::= (*) statement_list statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on statement_list to state [111]
 
@@ -712,7 +706,7 @@ lalr_state [53]: {
 
 -------------------
 lalr_state [54]: {
-  [statement ::= MEGGYSETPIXEL (*) LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYSETPIXEL (*) LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on LPAREN to state [103]
 
@@ -723,7 +717,7 @@ lalr_state [55]: {
 
 -------------------
 lalr_state [56]: {
-  [method_declaration ::= PUBLIC type identifier LPAREN param_list RPAREN LBRACE var_declaration_list statement_list return_stmt (*) RBRACE , {RBRACE PUBLIC }]
+  [method_declaration ::= PUBLIC type identifier LPAREN formal_param_list RPAREN LBRACE statement_list return_stmt (*) RBRACE , {RBRACE PUBLIC }]
 }
 transition on RBRACE to state [102]
 
@@ -761,6 +755,7 @@ lalr_state [59]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
 }
@@ -770,6 +765,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -787,18 +783,20 @@ lalr_state [60]: {
 
 -------------------
 lalr_state [61]: {
-  [statement ::= block_statement (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= block_statement (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 
 -------------------
 lalr_state [62]: {
+  [identifier ::= (*) ID , {LPAREN }]
   [exp ::= NEW (*) identifier LPAREN RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
 }
 transition on identifier to state [95]
+transition on ID to state [10]
 
 -------------------
 lalr_state [63]: {
-  [statement ::= MEGGYDELAY (*) LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYDELAY (*) LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on LPAREN to state [91]
 
@@ -831,6 +829,7 @@ lalr_state [65]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
 }
@@ -840,6 +839,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -898,6 +898,7 @@ lalr_state [68]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
 }
@@ -907,6 +908,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -940,6 +942,7 @@ lalr_state [69]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
 }
@@ -949,6 +952,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -981,6 +985,7 @@ lalr_state [70]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= exp AND (*) exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
@@ -991,6 +996,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1024,6 +1030,7 @@ lalr_state [71]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
 }
@@ -1033,6 +1040,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1066,6 +1074,7 @@ lalr_state [72]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
 }
@@ -1075,6 +1084,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1108,6 +1118,7 @@ lalr_state [73]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
 }
@@ -1117,6 +1128,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1149,6 +1161,7 @@ lalr_state [74]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= exp TIMES (*) exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
@@ -1159,6 +1172,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1171,9 +1185,11 @@ transition on MINUS to state [59]
 
 -------------------
 lalr_state [75]: {
+  [identifier ::= (*) ID , {LPAREN }]
   [exp ::= exp DOT (*) identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
 }
 transition on identifier to state [76]
+transition on ID to state [10]
 
 -------------------
 lalr_state [76]: {
@@ -1207,6 +1223,7 @@ lalr_state [77]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
 }
@@ -1217,6 +1234,7 @@ transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on exp_args_list to state [79]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1277,6 +1295,7 @@ lalr_state [80]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
 }
@@ -1286,6 +1305,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1477,11 +1497,12 @@ lalr_state [91]: {
   [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) TONE_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) identifier , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
-  [statement ::= MEGGYDELAY LPAREN (*) exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYDELAY LPAREN (*) exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
 }
@@ -1491,6 +1512,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1504,7 +1526,7 @@ transition on MINUS to state [59]
 -------------------
 lalr_state [92]: {
   [exp ::= exp (*) DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
-  [statement ::= MEGGYDELAY LPAREN exp (*) RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYDELAY LPAREN exp (*) RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) LT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
@@ -1523,13 +1545,13 @@ transition on LT to state [69]
 
 -------------------
 lalr_state [93]: {
-  [statement ::= MEGGYDELAY LPAREN exp RPAREN (*) SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYDELAY LPAREN exp RPAREN (*) SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on SEMI to state [94]
 
 -------------------
 lalr_state [94]: {
-  [statement ::= MEGGYDELAY LPAREN exp RPAREN SEMI (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYDELAY LPAREN exp RPAREN SEMI (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 
 -------------------
@@ -1591,6 +1613,7 @@ lalr_state [99]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
 }
@@ -1600,6 +1623,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1637,7 +1661,7 @@ lalr_state [101]: {
 
 -------------------
 lalr_state [102]: {
-  [method_declaration ::= PUBLIC type identifier LPAREN param_list RPAREN LBRACE var_declaration_list statement_list return_stmt RBRACE (*) , {RBRACE PUBLIC }]
+  [method_declaration ::= PUBLIC type identifier LPAREN formal_param_list RPAREN LBRACE statement_list return_stmt RBRACE (*) , {RBRACE PUBLIC }]
 }
 
 -------------------
@@ -1662,7 +1686,8 @@ lalr_state [103]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
-  [statement ::= MEGGYSETPIXEL LPAREN (*) exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
+  [statement ::= MEGGYSETPIXEL LPAREN (*) exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
 }
@@ -1672,6 +1697,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1690,7 +1716,7 @@ lalr_state [104]: {
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
-  [statement ::= MEGGYSETPIXEL LPAREN exp (*) COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYSETPIXEL LPAREN exp (*) COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
 }
 transition on DOT to state [75]
@@ -1722,9 +1748,10 @@ lalr_state [105]: {
   [exp ::= (*) identifier , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
-  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA (*) exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA (*) exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
 }
@@ -1734,6 +1761,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1751,7 +1779,7 @@ lalr_state [106]: {
   [exp ::= exp (*) LT exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
-  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp (*) COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp (*) COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
 }
@@ -1783,10 +1811,11 @@ lalr_state [107]: {
   [exp ::= (*) TONE_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) identifier , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
-  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA (*) exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA (*) exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
 }
@@ -1796,6 +1825,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -1811,7 +1841,7 @@ lalr_state [108]: {
   [exp ::= exp (*) DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) LT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
-  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp (*) RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp (*) RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
@@ -1828,13 +1858,13 @@ transition on LT to state [69]
 
 -------------------
 lalr_state [109]: {
-  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN (*) SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN (*) SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on SEMI to state [110]
 
 -------------------
 lalr_state [110]: {
-  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 
 -------------------
@@ -1842,35 +1872,36 @@ lalr_state [111]: {
   [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) TRUE , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) THIS , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) identifier EQUAL exp SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) identifier ASSIGN exp SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [block_statement ::= LBRACE statement_list (*) RBRACE , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) WHILE LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [block_statement ::= (*) LBRACE statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [block_statement ::= LBRACE statement_list (*) RBRACE , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) WHILE LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [block_statement ::= (*) LBRACE statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp LT exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MINUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) FALSE , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) NEW identifier LPAREN RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement_list ::= statement_list (*) statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) IF LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement_list ::= statement_list (*) statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) IF LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) TONE_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) identifier , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) block_statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) block_statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES LT EQUAL AND DOT ASSIGN }]
+  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF NOT WHILE NEW MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
 }
@@ -1886,6 +1917,7 @@ transition on COLOR_LITERAL to state [55]
 transition on MEGGYSETPIXEL to state [54]
 transition on INT_LITERAL to state [53]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on LBRACE to state [51]
 transition on LPAREN to state [50]
 transition on IF to state [49]
@@ -1901,7 +1933,7 @@ transition on MEGGYTONESTART to state [40]
 
 -------------------
 lalr_state [112]: {
-  [block_statement ::= LBRACE statement_list RBRACE (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [block_statement ::= LBRACE statement_list RBRACE (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 
 -------------------
@@ -1952,6 +1984,7 @@ lalr_state [115]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= LPAREN BYTE RPAREN (*) exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT SEMI }]
@@ -1962,6 +1995,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -2010,7 +2044,7 @@ lalr_state [118]: {
   [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) FALSE , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) NEW identifier LPAREN RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
-  [statement ::= IF LPAREN (*) exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= IF LPAREN (*) exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) TONE_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
@@ -2019,7 +2053,8 @@ lalr_state [118]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
-  [statement ::= IF LPAREN (*) exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
+  [statement ::= IF LPAREN (*) exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
 }
@@ -2029,6 +2064,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -2041,12 +2077,12 @@ transition on MINUS to state [59]
 
 -------------------
 lalr_state [119]: {
-  [statement ::= IF LPAREN exp (*) RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= IF LPAREN exp (*) RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
-  [statement ::= IF LPAREN exp (*) RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= IF LPAREN exp (*) RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp (*) DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) LT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
@@ -2065,35 +2101,36 @@ lalr_state [120]: {
   [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) TRUE , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) THIS , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) identifier EQUAL exp SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) identifier ASSIGN exp SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) WHILE LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [block_statement ::= (*) LBRACE statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) WHILE LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [block_statement ::= (*) LBRACE statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp LT exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MINUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) FALSE , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= IF LPAREN exp RPAREN (*) statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= IF LPAREN exp RPAREN (*) statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) NEW identifier LPAREN RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) IF LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) IF LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) TONE_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) identifier , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) block_statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) block_statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= IF LPAREN exp RPAREN (*) statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= IF LPAREN exp RPAREN (*) statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES LT EQUAL AND DOT ASSIGN }]
+  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
 }
@@ -2109,6 +2146,7 @@ transition on COLOR_LITERAL to state [55]
 transition on MEGGYSETPIXEL to state [54]
 transition on INT_LITERAL to state [53]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on LBRACE to state [51]
 transition on LPAREN to state [50]
 transition on IF to state [49]
@@ -2123,8 +2161,8 @@ transition on MEGGYTONESTART to state [40]
 
 -------------------
 lalr_state [121]: {
-  [statement ::= IF LPAREN exp RPAREN statement (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= IF LPAREN exp RPAREN statement (*) ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= IF LPAREN exp RPAREN statement (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= IF LPAREN exp RPAREN statement (*) ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on ELSE to state [122]
 
@@ -2133,34 +2171,35 @@ lalr_state [122]: {
   [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) TRUE , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) THIS , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) identifier EQUAL exp SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) identifier ASSIGN exp SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) WHILE LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [block_statement ::= (*) LBRACE statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) WHILE LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [block_statement ::= (*) LBRACE statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp LT exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MINUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) FALSE , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) NEW identifier LPAREN RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) IF LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) IF LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) TONE_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) identifier , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) block_statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) block_statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= IF LPAREN exp RPAREN statement ELSE (*) statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= IF LPAREN exp RPAREN statement ELSE (*) statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES LT EQUAL AND DOT ASSIGN }]
+  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
 }
@@ -2176,6 +2215,7 @@ transition on COLOR_LITERAL to state [55]
 transition on MEGGYSETPIXEL to state [54]
 transition on INT_LITERAL to state [53]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on LBRACE to state [51]
 transition on LPAREN to state [50]
 transition on IF to state [49]
@@ -2190,19 +2230,21 @@ transition on MEGGYTONESTART to state [40]
 
 -------------------
 lalr_state [123]: {
-  [statement ::= IF LPAREN exp RPAREN statement ELSE statement (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= IF LPAREN exp RPAREN statement ELSE statement (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 
 -------------------
 lalr_state [124]: {
-  [statement ::= exp DOT (*) identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [identifier ::= (*) ID , {LPAREN }]
+  [statement ::= exp DOT (*) identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp DOT (*) identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
 }
 transition on identifier to state [125]
+transition on ID to state [10]
 
 -------------------
 lalr_state [125]: {
-  [statement ::= exp DOT identifier (*) LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= exp DOT identifier (*) LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp DOT identifier (*) LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
 }
 transition on LPAREN to state [126]
@@ -2210,7 +2252,7 @@ transition on LPAREN to state [126]
 -------------------
 lalr_state [126]: {
   [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
-  [statement ::= exp DOT identifier LPAREN (*) exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= exp DOT identifier LPAREN (*) exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) TRUE , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) THIS , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp_args_list ::= (*) exp , {RPAREN COMMA }]
@@ -2234,6 +2276,7 @@ lalr_state [126]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND COMMA DOT }]
 }
@@ -2244,6 +2287,7 @@ transition on NOT to state [44]
 transition on exp_args_list to state [127]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -2256,7 +2300,7 @@ transition on MINUS to state [59]
 
 -------------------
 lalr_state [127]: {
-  [statement ::= exp DOT identifier LPAREN exp_args_list (*) RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= exp DOT identifier LPAREN exp_args_list (*) RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp_args_list ::= exp_args_list (*) COMMA exp , {RPAREN COMMA }]
   [exp ::= exp DOT identifier LPAREN exp_args_list (*) RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
 }
@@ -2265,14 +2309,14 @@ transition on COMMA to state [80]
 
 -------------------
 lalr_state [128]: {
-  [statement ::= exp DOT identifier LPAREN exp_args_list RPAREN (*) SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= exp DOT identifier LPAREN exp_args_list RPAREN (*) SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp DOT identifier LPAREN exp_args_list RPAREN (*) , {PLUS MINUS TIMES LT EQUAL AND DOT }]
 }
 transition on SEMI to state [129]
 
 -------------------
 lalr_state [129]: {
-  [statement ::= exp DOT identifier LPAREN exp_args_list RPAREN SEMI (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= exp DOT identifier LPAREN exp_args_list RPAREN SEMI (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 
 -------------------
@@ -2328,7 +2372,7 @@ lalr_state [133]: {
   [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
-  [statement ::= WHILE LPAREN (*) exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= WHILE LPAREN (*) exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp LT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
@@ -2342,6 +2386,7 @@ lalr_state [133]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
 }
@@ -2351,6 +2396,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -2368,7 +2414,7 @@ lalr_state [134]: {
   [exp ::= exp (*) LT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
-  [statement ::= WHILE LPAREN exp (*) RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= WHILE LPAREN exp (*) RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
 }
@@ -2386,34 +2432,35 @@ lalr_state [135]: {
   [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) TRUE , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) THIS , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) identifier EQUAL exp SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) identifier ASSIGN exp SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= WHILE LPAREN exp RPAREN (*) statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) WHILE LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [block_statement ::= (*) LBRACE statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= WHILE LPAREN exp RPAREN (*) statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) WHILE LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [block_statement ::= (*) LBRACE statement_list RBRACE , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp LT exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MINUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) FALSE , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) NEW identifier LPAREN RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) IF LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) IF LPAREN exp RPAREN statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp MINUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYCHECKBUTTON LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) TONE_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) identifier , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) block_statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) MEGGYDELAY LPAREN exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) block_statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp EQUAL exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
-  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
-  [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES LT EQUAL AND DOT ASSIGN }]
+  [statement ::= (*) MEGGYSETPIXEL LPAREN exp COMMA exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= (*) IF LPAREN exp RPAREN statement ELSE statement , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES LT EQUAL AND DOT }]
 }
@@ -2429,6 +2476,7 @@ transition on COLOR_LITERAL to state [55]
 transition on MEGGYSETPIXEL to state [54]
 transition on INT_LITERAL to state [53]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on LBRACE to state [51]
 transition on LPAREN to state [50]
 transition on IF to state [49]
@@ -2443,7 +2491,7 @@ transition on MEGGYTONESTART to state [40]
 
 -------------------
 lalr_state [136]: {
-  [statement ::= WHILE LPAREN exp RPAREN statement (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= WHILE LPAREN exp RPAREN statement (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 
 -------------------
@@ -2451,7 +2499,7 @@ lalr_state [137]: {
   [exp ::= (*) LPAREN BYTE RPAREN exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) TRUE , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) THIS , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
-  [statement ::= identifier EQUAL (*) exp SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= identifier ASSIGN (*) exp SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
@@ -2469,6 +2517,7 @@ lalr_state [137]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
 }
@@ -2478,6 +2527,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -2497,7 +2547,7 @@ lalr_state [138]: {
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
   [exp ::= exp (*) EQUAL exp , {PLUS MINUS TIMES LT EQUAL AND DOT SEMI }]
-  [statement ::= identifier EQUAL exp (*) SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= identifier ASSIGN exp (*) SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on DOT to state [75]
 transition on TIMES to state [74]
@@ -2510,7 +2560,7 @@ transition on LT to state [69]
 
 -------------------
 lalr_state [139]: {
-  [statement ::= identifier EQUAL exp SEMI (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= identifier ASSIGN exp SEMI (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 
 -------------------
@@ -2522,7 +2572,7 @@ lalr_state [140]: {
   [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
-  [statement ::= MEGGYTONESTART LPAREN (*) exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYTONESTART LPAREN (*) exp COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) exp LT exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) MINUS exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) INT_LITERAL , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
@@ -2536,6 +2586,7 @@ lalr_state [140]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
 }
@@ -2545,6 +2596,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -2560,7 +2612,7 @@ lalr_state [141]: {
   [exp ::= exp (*) DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= exp (*) LT exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
-  [statement ::= MEGGYTONESTART LPAREN exp (*) COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYTONESTART LPAREN exp (*) COMMA exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES LT EQUAL AND COMMA DOT }]
@@ -2583,7 +2635,7 @@ lalr_state [142]: {
   [exp ::= (*) exp PLUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) MEGGYGETPIXEL LPAREN exp COMMA exp RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) BUTTON_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
-  [statement ::= MEGGYTONESTART LPAREN exp COMMA (*) exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYTONESTART LPAREN exp COMMA (*) exp RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= (*) LPAREN exp RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp LT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) MINUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
@@ -2598,6 +2650,7 @@ lalr_state [142]: {
   [exp ::= (*) exp DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) COLOR_LITERAL , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) NOT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
+  [identifier ::= (*) ID , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= (*) exp TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
 }
@@ -2607,6 +2660,7 @@ transition on COLOR_LITERAL to state [55]
 transition on NOT to state [44]
 transition on TONE_LITERAL to state [48]
 transition on THIS to state [52]
+transition on ID to state [10]
 transition on MEGGYGETPIXEL to state [64]
 transition on FALSE to state [58]
 transition on identifier to state [67]
@@ -2622,7 +2676,7 @@ lalr_state [143]: {
   [exp ::= exp (*) DOT identifier LPAREN exp_args_list RPAREN , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) MINUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) LT exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
-  [statement ::= MEGGYTONESTART LPAREN exp COMMA exp (*) RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYTONESTART LPAREN exp COMMA exp (*) RPAREN SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
   [exp ::= exp (*) PLUS exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) AND exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
   [exp ::= exp (*) TIMES exp , {PLUS MINUS TIMES RPAREN LT EQUAL AND DOT }]
@@ -2639,18 +2693,18 @@ transition on LT to state [69]
 
 -------------------
 lalr_state [144]: {
-  [statement ::= MEGGYTONESTART LPAREN exp COMMA exp RPAREN (*) SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYTONESTART LPAREN exp COMMA exp RPAREN (*) SEMI , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 transition on SEMI to state [145]
 
 -------------------
 lalr_state [145]: {
-  [statement ::= MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
+  [statement ::= MEGGYTONESTART LPAREN exp COMMA exp RPAREN SEMI (*) , {MINUS LPAREN LBRACE RBRACE IF ELSE NOT WHILE NEW RETURN MEGGYSETPIXEL MEGGYTONESTART MEGGYDELAY MEGGYGETPIXEL MEGGYCHECKBUTTON INT_LITERAL ID TRUE FALSE COLOR_LITERAL BUTTON_LITERAL TONE_LITERAL THIS }]
 }
 
 -------------------
 lalr_state [146]: {
-  [param_list ::= param_list COMMA formal_param (*) , {RPAREN COMMA }]
+  [formal_param_list ::= formal_param_list COMMA formal_param (*) , {RPAREN COMMA }]
 }
 
 -------------------
@@ -2774,139 +2828,121 @@ From state #6
 From state #7
  [term 0:REDUCE(with prod 1)] [term 29:SHIFT(to state 8)]
 From state #8
+ [term 47:SHIFT(to state 10)]
 From state #9
  [term 0:REDUCE(with prod 4)] [term 29:REDUCE(with prod 4)]
 From state #10
- [term 7:SHIFT(to state 11)]
+ [term 2:REDUCE(with prod 64)] [term 3:REDUCE(with prod 64)]
+ [term 4:REDUCE(with prod 64)] [term 5:REDUCE(with prod 64)]
+ [term 6:REDUCE(with prod 64)] [term 7:REDUCE(with prod 64)]
+ [term 16:REDUCE(with prod 64)] [term 17:REDUCE(with prod 64)]
+ [term 18:REDUCE(with prod 64)] [term 21:REDUCE(with prod 64)]
+ [term 22:REDUCE(with prod 64)] [term 34:REDUCE(with prod 64)]
+ [term 35:REDUCE(with prod 64)] [term 47:REDUCE(with prod 64)]
 From state #11
- [term 8:REDUCE(with prod 18)] [term 9:REDUCE(with prod 18)]
- [term 10:REDUCE(with prod 18)] [term 11:REDUCE(with prod 18)]
- [term 24:REDUCE(with prod 18)] [term 28:REDUCE(with prod 18)]
- [term 37:REDUCE(with prod 18)] [term 38:REDUCE(with prod 18)]
- [term 39:REDUCE(with prod 18)]
+ [term 7:SHIFT(to state 12)]
 From state #12
- [term 8:REDUCE(with prod 13)] [term 9:SHIFT(to state 15)]
- [term 10:SHIFT(to state 13)] [term 11:SHIFT(to state 23)]
- [term 24:REDUCE(with prod 13)] [term 28:SHIFT(to state 16)]
- [term 37:SHIFT(to state 20)] [term 38:SHIFT(to state 19)]
- [term 39:SHIFT(to state 17)]
-From state #13
-From state #14
- [term 8:SHIFT(to state 26)] [term 24:SHIFT(to state 27)]
-From state #15
-From state #16
-From state #17
-From state #18
-From state #19
-From state #20
-From state #21
-From state #22
- [term 3:REDUCE(with prod 17)] [term 5:REDUCE(with prod 17)]
- [term 7:REDUCE(with prod 17)] [term 8:REDUCE(with prod 17)]
- [term 9:REDUCE(with prod 17)] [term 10:REDUCE(with prod 17)]
- [term 11:REDUCE(with prod 17)] [term 14:REDUCE(with prod 17)]
- [term 19:REDUCE(with prod 17)] [term 20:REDUCE(with prod 17)]
- [term 23:REDUCE(with prod 17)] [term 24:REDUCE(with prod 17)]
- [term 25:REDUCE(with prod 17)] [term 28:REDUCE(with prod 17)]
- [term 37:REDUCE(with prod 17)] [term 38:REDUCE(with prod 17)]
- [term 39:REDUCE(with prod 17)] [term 40:REDUCE(with prod 17)]
- [term 42:REDUCE(with prod 17)] [term 43:REDUCE(with prod 17)]
- [term 44:REDUCE(with prod 17)] [term 45:REDUCE(with prod 17)]
- [term 46:REDUCE(with prod 17)] [term 48:REDUCE(with prod 17)]
- [term 49:REDUCE(with prod 17)] [term 50:REDUCE(with prod 17)]
- [term 51:REDUCE(with prod 17)] [term 52:REDUCE(with prod 17)]
- [term 53:REDUCE(with prod 17)]
-From state #23
-From state #24
- [term 34:SHIFT(to state 25)]
-From state #25
- [term 3:REDUCE(with prod 16)] [term 5:REDUCE(with prod 16)]
- [term 7:REDUCE(with prod 16)] [term 8:REDUCE(with prod 16)]
- [term 9:REDUCE(with prod 16)] [term 10:REDUCE(with prod 16)]
- [term 11:REDUCE(with prod 16)] [term 14:REDUCE(with prod 16)]
- [term 19:REDUCE(with prod 16)] [term 20:REDUCE(with prod 16)]
- [term 23:REDUCE(with prod 16)] [term 24:REDUCE(with prod 16)]
- [term 25:REDUCE(with prod 16)] [term 28:REDUCE(with prod 16)]
+ [term 8:REDUCE(with prod 16)] [term 9:REDUCE(with prod 16)]
+ [term 10:REDUCE(with prod 16)] [term 11:REDUCE(with prod 16)]
+ [term 24:REDUCE(with prod 16)] [term 28:REDUCE(with prod 16)]
  [term 37:REDUCE(with prod 16)] [term 38:REDUCE(with prod 16)]
- [term 39:REDUCE(with prod 16)] [term 40:REDUCE(with prod 16)]
- [term 42:REDUCE(with prod 16)] [term 43:REDUCE(with prod 16)]
- [term 44:REDUCE(with prod 16)] [term 45:REDUCE(with prod 16)]
- [term 46:REDUCE(with prod 16)] [term 48:REDUCE(with prod 16)]
- [term 49:REDUCE(with prod 16)] [term 50:REDUCE(with prod 16)]
- [term 51:REDUCE(with prod 16)] [term 52:REDUCE(with prod 16)]
- [term 53:REDUCE(with prod 16)]
+ [term 39:REDUCE(with prod 16)] [term 47:REDUCE(with prod 16)]
+From state #13
+ [term 8:REDUCE(with prod 13)] [term 9:SHIFT(to state 16)]
+ [term 10:SHIFT(to state 14)] [term 11:SHIFT(to state 24)]
+ [term 24:REDUCE(with prod 13)] [term 28:SHIFT(to state 17)]
+ [term 37:SHIFT(to state 21)] [term 38:SHIFT(to state 20)]
+ [term 39:SHIFT(to state 18)] [term 47:SHIFT(to state 10)]
+From state #14
+ [term 47:REDUCE(with prod 21)]
+From state #15
+ [term 8:SHIFT(to state 27)] [term 24:SHIFT(to state 28)]
+From state #16
+ [term 47:REDUCE(with prod 19)]
+From state #17
+ [term 47:REDUCE(with prod 22)]
+From state #18
+ [term 47:REDUCE(with prod 25)]
+From state #19
+ [term 47:REDUCE(with prod 26)]
+From state #20
+ [term 47:REDUCE(with prod 24)]
+From state #21
+ [term 47:REDUCE(with prod 23)]
+From state #22
+ [term 47:SHIFT(to state 10)]
+From state #23
+ [term 8:REDUCE(with prod 15)] [term 9:REDUCE(with prod 15)]
+ [term 10:REDUCE(with prod 15)] [term 11:REDUCE(with prod 15)]
+ [term 24:REDUCE(with prod 15)] [term 28:REDUCE(with prod 15)]
+ [term 37:REDUCE(with prod 15)] [term 38:REDUCE(with prod 15)]
+ [term 39:REDUCE(with prod 15)] [term 47:REDUCE(with prod 15)]
+From state #24
+ [term 47:REDUCE(with prod 20)]
+From state #25
+ [term 34:SHIFT(to state 26)]
 From state #26
- [term 0:REDUCE(with prod 6)] [term 29:REDUCE(with prod 6)]
+ [term 8:REDUCE(with prod 14)] [term 9:REDUCE(with prod 14)]
+ [term 10:REDUCE(with prod 14)] [term 11:REDUCE(with prod 14)]
+ [term 24:REDUCE(with prod 14)] [term 28:REDUCE(with prod 14)]
+ [term 37:REDUCE(with prod 14)] [term 38:REDUCE(with prod 14)]
+ [term 39:REDUCE(with prod 14)] [term 47:REDUCE(with prod 14)]
 From state #27
- [term 9:SHIFT(to state 15)] [term 10:SHIFT(to state 13)]
- [term 11:SHIFT(to state 23)] [term 28:SHIFT(to state 16)]
- [term 37:SHIFT(to state 20)] [term 38:SHIFT(to state 19)]
- [term 39:SHIFT(to state 17)]
+ [term 0:REDUCE(with prod 6)] [term 29:REDUCE(with prod 6)]
 From state #28
- [term 8:REDUCE(with prod 12)] [term 24:REDUCE(with prod 12)]
+ [term 9:SHIFT(to state 16)] [term 10:SHIFT(to state 14)]
+ [term 11:SHIFT(to state 24)] [term 28:SHIFT(to state 17)]
+ [term 37:SHIFT(to state 21)] [term 38:SHIFT(to state 20)]
+ [term 39:SHIFT(to state 18)] [term 47:SHIFT(to state 10)]
 From state #29
+ [term 8:REDUCE(with prod 12)] [term 24:REDUCE(with prod 12)]
 From state #30
- [term 5:SHIFT(to state 31)]
+ [term 47:SHIFT(to state 10)]
 From state #31
- [term 6:REDUCE(with prod 9)] [term 9:SHIFT(to state 15)]
- [term 10:SHIFT(to state 13)] [term 11:SHIFT(to state 23)]
- [term 21:REDUCE(with prod 9)] [term 28:SHIFT(to state 16)]
- [term 37:SHIFT(to state 20)] [term 38:SHIFT(to state 19)]
- [term 39:SHIFT(to state 17)]
+ [term 5:SHIFT(to state 32)]
 From state #32
+ [term 6:REDUCE(with prod 9)] [term 9:SHIFT(to state 16)]
+ [term 10:SHIFT(to state 14)] [term 11:SHIFT(to state 24)]
+ [term 21:REDUCE(with prod 9)] [term 28:SHIFT(to state 17)]
+ [term 37:SHIFT(to state 21)] [term 38:SHIFT(to state 20)]
+ [term 39:SHIFT(to state 18)] [term 47:SHIFT(to state 10)]
 From state #33
- [term 6:REDUCE(with prod 8)] [term 21:REDUCE(with prod 8)]
+ [term 47:SHIFT(to state 10)]
 From state #34
- [term 6:SHIFT(to state 36)] [term 21:SHIFT(to state 35)]
+ [term 6:REDUCE(with prod 8)] [term 21:REDUCE(with prod 8)]
 From state #35
- [term 9:SHIFT(to state 15)] [term 10:SHIFT(to state 13)]
- [term 11:SHIFT(to state 23)] [term 28:SHIFT(to state 16)]
- [term 37:SHIFT(to state 20)] [term 38:SHIFT(to state 19)]
- [term 39:SHIFT(to state 17)]
+ [term 6:SHIFT(to state 37)] [term 21:SHIFT(to state 36)]
 From state #36
- [term 7:SHIFT(to state 37)]
+ [term 9:SHIFT(to state 16)] [term 10:SHIFT(to state 14)]
+ [term 11:SHIFT(to state 24)] [term 28:SHIFT(to state 17)]
+ [term 37:SHIFT(to state 21)] [term 38:SHIFT(to state 20)]
+ [term 39:SHIFT(to state 18)] [term 47:SHIFT(to state 10)]
 From state #37
- [term 3:REDUCE(with prod 18)] [term 5:REDUCE(with prod 18)]
- [term 7:REDUCE(with prod 18)] [term 8:REDUCE(with prod 18)]
- [term 9:REDUCE(with prod 18)] [term 10:REDUCE(with prod 18)]
- [term 11:REDUCE(with prod 18)] [term 14:REDUCE(with prod 18)]
- [term 19:REDUCE(with prod 18)] [term 20:REDUCE(with prod 18)]
- [term 23:REDUCE(with prod 18)] [term 25:REDUCE(with prod 18)]
- [term 28:REDUCE(with prod 18)] [term 37:REDUCE(with prod 18)]
- [term 38:REDUCE(with prod 18)] [term 39:REDUCE(with prod 18)]
- [term 40:REDUCE(with prod 18)] [term 42:REDUCE(with prod 18)]
- [term 43:REDUCE(with prod 18)] [term 44:REDUCE(with prod 18)]
- [term 45:REDUCE(with prod 18)] [term 46:REDUCE(with prod 18)]
- [term 48:REDUCE(with prod 18)] [term 49:REDUCE(with prod 18)]
- [term 50:REDUCE(with prod 18)] [term 51:REDUCE(with prod 18)]
- [term 52:REDUCE(with prod 18)] [term 53:REDUCE(with prod 18)]
+ [term 7:SHIFT(to state 38)]
 From state #38
  [term 3:REDUCE(with prod 37)] [term 5:REDUCE(with prod 37)]
  [term 7:REDUCE(with prod 37)] [term 8:REDUCE(with prod 37)]
- [term 9:SHIFT(to state 15)] [term 10:SHIFT(to state 13)]
- [term 11:SHIFT(to state 23)] [term 14:REDUCE(with prod 37)]
- [term 19:REDUCE(with prod 37)] [term 20:REDUCE(with prod 37)]
- [term 23:REDUCE(with prod 37)] [term 25:REDUCE(with prod 37)]
- [term 28:SHIFT(to state 16)] [term 37:SHIFT(to state 20)]
- [term 38:SHIFT(to state 19)] [term 39:SHIFT(to state 17)]
- [term 40:REDUCE(with prod 37)] [term 42:REDUCE(with prod 37)]
- [term 43:REDUCE(with prod 37)] [term 44:REDUCE(with prod 37)]
- [term 45:REDUCE(with prod 37)] [term 46:REDUCE(with prod 37)]
+ [term 14:REDUCE(with prod 37)] [term 19:REDUCE(with prod 37)]
+ [term 20:REDUCE(with prod 37)] [term 23:REDUCE(with prod 37)]
+ [term 25:REDUCE(with prod 37)] [term 40:REDUCE(with prod 37)]
+ [term 42:REDUCE(with prod 37)] [term 43:REDUCE(with prod 37)]
+ [term 44:REDUCE(with prod 37)] [term 45:REDUCE(with prod 37)]
+ [term 46:REDUCE(with prod 37)] [term 47:REDUCE(with prod 37)]
  [term 48:REDUCE(with prod 37)] [term 49:REDUCE(with prod 37)]
  [term 50:REDUCE(with prod 37)] [term 51:REDUCE(with prod 37)]
  [term 52:REDUCE(with prod 37)] [term 53:REDUCE(with prod 37)]
 From state #39
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
- [term 7:SHIFT(to state 51)] [term 8:REDUCE(with prod 15)]
+ [term 7:SHIFT(to state 51)] [term 8:REDUCE(with prod 18)]
  [term 14:SHIFT(to state 49)] [term 19:SHIFT(to state 44)]
  [term 20:SHIFT(to state 43)] [term 23:SHIFT(to state 62)]
  [term 25:SHIFT(to state 45)] [term 40:SHIFT(to state 54)]
  [term 42:SHIFT(to state 40)] [term 43:SHIFT(to state 63)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #40
  [term 5:SHIFT(to state 140)]
 From state #41
@@ -2917,33 +2953,33 @@ From state #41
  [term 25:REDUCE(with prod 36)] [term 40:REDUCE(with prod 36)]
  [term 42:REDUCE(with prod 36)] [term 43:REDUCE(with prod 36)]
  [term 44:REDUCE(with prod 36)] [term 45:REDUCE(with prod 36)]
- [term 46:REDUCE(with prod 36)] [term 48:REDUCE(with prod 36)]
- [term 49:REDUCE(with prod 36)] [term 50:REDUCE(with prod 36)]
- [term 51:REDUCE(with prod 36)] [term 52:REDUCE(with prod 36)]
- [term 53:REDUCE(with prod 36)]
+ [term 46:REDUCE(with prod 36)] [term 47:REDUCE(with prod 36)]
+ [term 48:REDUCE(with prod 36)] [term 49:REDUCE(with prod 36)]
+ [term 50:REDUCE(with prod 36)] [term 51:REDUCE(with prod 36)]
+ [term 52:REDUCE(with prod 36)] [term 53:REDUCE(with prod 36)]
 From state #42
  [term 2:REDUCE(with prod 61)] [term 3:REDUCE(with prod 61)]
  [term 4:REDUCE(with prod 61)] [term 16:REDUCE(with prod 61)]
- [term 17:SHIFT(to state 137)] [term 18:REDUCE(with prod 61)]
- [term 22:REDUCE(with prod 61)]
+ [term 17:REDUCE(with prod 61)] [term 18:REDUCE(with prod 61)]
+ [term 22:REDUCE(with prod 61)] [term 35:SHIFT(to state 137)]
 From state #43
  [term 5:SHIFT(to state 133)]
 From state #44
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #45
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #46
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 16:SHIFT(to state 69)]
@@ -2968,9 +3004,10 @@ From state #50
  [term 11:SHIFT(to state 114)] [term 19:SHIFT(to state 44)]
  [term 23:SHIFT(to state 62)] [term 44:SHIFT(to state 64)]
  [term 45:SHIFT(to state 57)] [term 46:SHIFT(to state 53)]
- [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
- [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
- [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
+ [term 47:SHIFT(to state 10)] [term 48:SHIFT(to state 47)]
+ [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
+ [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
+ [term 53:SHIFT(to state 52)]
 From state #51
  [term 3:REDUCE(with prod 37)] [term 5:REDUCE(with prod 37)]
  [term 7:REDUCE(with prod 37)] [term 8:REDUCE(with prod 37)]
@@ -2979,9 +3016,10 @@ From state #51
  [term 40:REDUCE(with prod 37)] [term 42:REDUCE(with prod 37)]
  [term 43:REDUCE(with prod 37)] [term 44:REDUCE(with prod 37)]
  [term 45:REDUCE(with prod 37)] [term 46:REDUCE(with prod 37)]
- [term 48:REDUCE(with prod 37)] [term 49:REDUCE(with prod 37)]
- [term 50:REDUCE(with prod 37)] [term 51:REDUCE(with prod 37)]
- [term 52:REDUCE(with prod 37)] [term 53:REDUCE(with prod 37)]
+ [term 47:REDUCE(with prod 37)] [term 48:REDUCE(with prod 37)]
+ [term 49:REDUCE(with prod 37)] [term 50:REDUCE(with prod 37)]
+ [term 51:REDUCE(with prod 37)] [term 52:REDUCE(with prod 37)]
+ [term 53:REDUCE(with prod 37)]
 From state #52
  [term 2:REDUCE(with prod 62)] [term 3:REDUCE(with prod 62)]
  [term 4:REDUCE(with prod 62)] [term 6:REDUCE(with prod 62)]
@@ -3016,10 +3054,10 @@ From state #59
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #60
  [term 2:REDUCE(with prod 55)] [term 3:REDUCE(with prod 55)]
  [term 4:REDUCE(with prod 55)] [term 6:REDUCE(with prod 55)]
@@ -3035,10 +3073,12 @@ From state #61
  [term 40:REDUCE(with prod 34)] [term 42:REDUCE(with prod 34)]
  [term 43:REDUCE(with prod 34)] [term 44:REDUCE(with prod 34)]
  [term 45:REDUCE(with prod 34)] [term 46:REDUCE(with prod 34)]
- [term 48:REDUCE(with prod 34)] [term 49:REDUCE(with prod 34)]
- [term 50:REDUCE(with prod 34)] [term 51:REDUCE(with prod 34)]
- [term 52:REDUCE(with prod 34)] [term 53:REDUCE(with prod 34)]
+ [term 47:REDUCE(with prod 34)] [term 48:REDUCE(with prod 34)]
+ [term 49:REDUCE(with prod 34)] [term 50:REDUCE(with prod 34)]
+ [term 51:REDUCE(with prod 34)] [term 52:REDUCE(with prod 34)]
+ [term 53:REDUCE(with prod 34)]
 From state #62
+ [term 47:SHIFT(to state 10)]
 From state #63
  [term 5:SHIFT(to state 91)]
 From state #64
@@ -3047,10 +3087,10 @@ From state #65
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #66
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 16:SHIFT(to state 69)]
@@ -3066,59 +3106,60 @@ From state #68
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #69
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #70
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #71
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #72
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #73
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #74
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #75
+ [term 47:SHIFT(to state 10)]
 From state #76
  [term 5:SHIFT(to state 77)]
 From state #77
@@ -3126,10 +3167,10 @@ From state #77
  [term 6:REDUCE(with prod 41)] [term 19:SHIFT(to state 44)]
  [term 21:REDUCE(with prod 41)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #78
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 6:REDUCE(with prod 40)]
@@ -3142,10 +3183,10 @@ From state #80
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #81
  [term 2:REDUCE(with prod 49)] [term 3:REDUCE(with prod 49)]
  [term 4:REDUCE(with prod 49)] [term 6:REDUCE(with prod 49)]
@@ -3209,10 +3250,10 @@ From state #91
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #92
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 6:SHIFT(to state 93)]
@@ -3229,9 +3270,10 @@ From state #94
  [term 40:REDUCE(with prod 29)] [term 42:REDUCE(with prod 29)]
  [term 43:REDUCE(with prod 29)] [term 44:REDUCE(with prod 29)]
  [term 45:REDUCE(with prod 29)] [term 46:REDUCE(with prod 29)]
- [term 48:REDUCE(with prod 29)] [term 49:REDUCE(with prod 29)]
- [term 50:REDUCE(with prod 29)] [term 51:REDUCE(with prod 29)]
- [term 52:REDUCE(with prod 29)] [term 53:REDUCE(with prod 29)]
+ [term 47:REDUCE(with prod 29)] [term 48:REDUCE(with prod 29)]
+ [term 49:REDUCE(with prod 29)] [term 50:REDUCE(with prod 29)]
+ [term 51:REDUCE(with prod 29)] [term 52:REDUCE(with prod 29)]
+ [term 53:REDUCE(with prod 29)]
 From state #95
  [term 5:SHIFT(to state 96)]
 From state #96
@@ -3252,10 +3294,10 @@ From state #99
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #100
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 6:SHIFT(to state 101)]
@@ -3273,10 +3315,10 @@ From state #103
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #104
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 16:SHIFT(to state 69)]
@@ -3286,10 +3328,10 @@ From state #105
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #106
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 16:SHIFT(to state 69)]
@@ -3299,10 +3341,10 @@ From state #107
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #108
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 6:SHIFT(to state 109)]
@@ -3319,9 +3361,10 @@ From state #110
  [term 40:REDUCE(with prod 27)] [term 42:REDUCE(with prod 27)]
  [term 43:REDUCE(with prod 27)] [term 44:REDUCE(with prod 27)]
  [term 45:REDUCE(with prod 27)] [term 46:REDUCE(with prod 27)]
- [term 48:REDUCE(with prod 27)] [term 49:REDUCE(with prod 27)]
- [term 50:REDUCE(with prod 27)] [term 51:REDUCE(with prod 27)]
- [term 52:REDUCE(with prod 27)] [term 53:REDUCE(with prod 27)]
+ [term 47:REDUCE(with prod 27)] [term 48:REDUCE(with prod 27)]
+ [term 49:REDUCE(with prod 27)] [term 50:REDUCE(with prod 27)]
+ [term 51:REDUCE(with prod 27)] [term 52:REDUCE(with prod 27)]
+ [term 53:REDUCE(with prod 27)]
 From state #111
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 7:SHIFT(to state 51)] [term 8:SHIFT(to state 112)]
@@ -3330,9 +3373,10 @@ From state #111
  [term 40:SHIFT(to state 54)] [term 42:SHIFT(to state 40)]
  [term 43:SHIFT(to state 63)] [term 44:SHIFT(to state 64)]
  [term 45:SHIFT(to state 57)] [term 46:SHIFT(to state 53)]
- [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
- [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
- [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
+ [term 47:SHIFT(to state 10)] [term 48:SHIFT(to state 47)]
+ [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
+ [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
+ [term 53:SHIFT(to state 52)]
 From state #112
  [term 3:REDUCE(with prod 38)] [term 5:REDUCE(with prod 38)]
  [term 7:REDUCE(with prod 38)] [term 8:REDUCE(with prod 38)]
@@ -3342,9 +3386,10 @@ From state #112
  [term 40:REDUCE(with prod 38)] [term 42:REDUCE(with prod 38)]
  [term 43:REDUCE(with prod 38)] [term 44:REDUCE(with prod 38)]
  [term 45:REDUCE(with prod 38)] [term 46:REDUCE(with prod 38)]
- [term 48:REDUCE(with prod 38)] [term 49:REDUCE(with prod 38)]
- [term 50:REDUCE(with prod 38)] [term 51:REDUCE(with prod 38)]
- [term 52:REDUCE(with prod 38)] [term 53:REDUCE(with prod 38)]
+ [term 47:REDUCE(with prod 38)] [term 48:REDUCE(with prod 38)]
+ [term 49:REDUCE(with prod 38)] [term 50:REDUCE(with prod 38)]
+ [term 51:REDUCE(with prod 38)] [term 52:REDUCE(with prod 38)]
+ [term 53:REDUCE(with prod 38)]
 From state #113
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 6:SHIFT(to state 117)]
@@ -3356,10 +3401,10 @@ From state #115
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #116
  [term 2:REDUCE(with prod 52)] [term 3:REDUCE(with prod 52)]
  [term 4:REDUCE(with prod 52)] [term 6:REDUCE(with prod 52)]
@@ -3376,10 +3421,10 @@ From state #118
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #119
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 6:SHIFT(to state 120)]
@@ -3392,10 +3437,10 @@ From state #120
  [term 23:SHIFT(to state 62)] [term 40:SHIFT(to state 54)]
  [term 42:SHIFT(to state 40)] [term 43:SHIFT(to state 63)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #121
  [term 3:REDUCE(with prod 31)] [term 5:REDUCE(with prod 31)]
  [term 7:REDUCE(with prod 31)] [term 8:REDUCE(with prod 31)]
@@ -3405,9 +3450,10 @@ From state #121
  [term 40:REDUCE(with prod 31)] [term 42:REDUCE(with prod 31)]
  [term 43:REDUCE(with prod 31)] [term 44:REDUCE(with prod 31)]
  [term 45:REDUCE(with prod 31)] [term 46:REDUCE(with prod 31)]
- [term 48:REDUCE(with prod 31)] [term 49:REDUCE(with prod 31)]
- [term 50:REDUCE(with prod 31)] [term 51:REDUCE(with prod 31)]
- [term 52:REDUCE(with prod 31)] [term 53:REDUCE(with prod 31)]
+ [term 47:REDUCE(with prod 31)] [term 48:REDUCE(with prod 31)]
+ [term 49:REDUCE(with prod 31)] [term 50:REDUCE(with prod 31)]
+ [term 51:REDUCE(with prod 31)] [term 52:REDUCE(with prod 31)]
+ [term 53:REDUCE(with prod 31)]
 From state #122
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 7:SHIFT(to state 51)] [term 14:SHIFT(to state 49)]
@@ -3415,10 +3461,10 @@ From state #122
  [term 23:SHIFT(to state 62)] [term 40:SHIFT(to state 54)]
  [term 42:SHIFT(to state 40)] [term 43:SHIFT(to state 63)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #123
  [term 3:REDUCE(with prod 32)] [term 5:REDUCE(with prod 32)]
  [term 7:REDUCE(with prod 32)] [term 8:REDUCE(with prod 32)]
@@ -3428,10 +3474,12 @@ From state #123
  [term 40:REDUCE(with prod 32)] [term 42:REDUCE(with prod 32)]
  [term 43:REDUCE(with prod 32)] [term 44:REDUCE(with prod 32)]
  [term 45:REDUCE(with prod 32)] [term 46:REDUCE(with prod 32)]
- [term 48:REDUCE(with prod 32)] [term 49:REDUCE(with prod 32)]
- [term 50:REDUCE(with prod 32)] [term 51:REDUCE(with prod 32)]
- [term 52:REDUCE(with prod 32)] [term 53:REDUCE(with prod 32)]
+ [term 47:REDUCE(with prod 32)] [term 48:REDUCE(with prod 32)]
+ [term 49:REDUCE(with prod 32)] [term 50:REDUCE(with prod 32)]
+ [term 51:REDUCE(with prod 32)] [term 52:REDUCE(with prod 32)]
+ [term 53:REDUCE(with prod 32)]
 From state #124
+ [term 47:SHIFT(to state 10)]
 From state #125
  [term 5:SHIFT(to state 126)]
 From state #126
@@ -3439,10 +3487,10 @@ From state #126
  [term 6:REDUCE(with prod 41)] [term 19:SHIFT(to state 44)]
  [term 21:REDUCE(with prod 41)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #127
  [term 6:SHIFT(to state 128)] [term 21:SHIFT(to state 80)]
 From state #128
@@ -3459,16 +3507,17 @@ From state #129
  [term 40:REDUCE(with prod 30)] [term 42:REDUCE(with prod 30)]
  [term 43:REDUCE(with prod 30)] [term 44:REDUCE(with prod 30)]
  [term 45:REDUCE(with prod 30)] [term 46:REDUCE(with prod 30)]
- [term 48:REDUCE(with prod 30)] [term 49:REDUCE(with prod 30)]
- [term 50:REDUCE(with prod 30)] [term 51:REDUCE(with prod 30)]
- [term 52:REDUCE(with prod 30)] [term 53:REDUCE(with prod 30)]
+ [term 47:REDUCE(with prod 30)] [term 48:REDUCE(with prod 30)]
+ [term 49:REDUCE(with prod 30)] [term 50:REDUCE(with prod 30)]
+ [term 51:REDUCE(with prod 30)] [term 52:REDUCE(with prod 30)]
+ [term 53:REDUCE(with prod 30)]
 From state #130
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 16:SHIFT(to state 69)]
  [term 17:SHIFT(to state 72)] [term 18:SHIFT(to state 70)]
  [term 22:SHIFT(to state 75)] [term 34:SHIFT(to state 131)]
 From state #131
- [term 8:REDUCE(with prod 14)]
+ [term 8:REDUCE(with prod 17)]
 From state #132
  [term 2:REDUCE(with prod 59)] [term 3:REDUCE(with prod 59)]
  [term 4:REDUCE(with prod 59)] [term 6:REDUCE(with prod 59)]
@@ -3479,10 +3528,10 @@ From state #133
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #134
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 6:SHIFT(to state 135)]
@@ -3495,10 +3544,10 @@ From state #135
  [term 23:SHIFT(to state 62)] [term 40:SHIFT(to state 54)]
  [term 42:SHIFT(to state 40)] [term 43:SHIFT(to state 63)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #136
  [term 3:REDUCE(with prod 33)] [term 5:REDUCE(with prod 33)]
  [term 7:REDUCE(with prod 33)] [term 8:REDUCE(with prod 33)]
@@ -3508,17 +3557,18 @@ From state #136
  [term 40:REDUCE(with prod 33)] [term 42:REDUCE(with prod 33)]
  [term 43:REDUCE(with prod 33)] [term 44:REDUCE(with prod 33)]
  [term 45:REDUCE(with prod 33)] [term 46:REDUCE(with prod 33)]
- [term 48:REDUCE(with prod 33)] [term 49:REDUCE(with prod 33)]
- [term 50:REDUCE(with prod 33)] [term 51:REDUCE(with prod 33)]
- [term 52:REDUCE(with prod 33)] [term 53:REDUCE(with prod 33)]
+ [term 47:REDUCE(with prod 33)] [term 48:REDUCE(with prod 33)]
+ [term 49:REDUCE(with prod 33)] [term 50:REDUCE(with prod 33)]
+ [term 51:REDUCE(with prod 33)] [term 52:REDUCE(with prod 33)]
+ [term 53:REDUCE(with prod 33)]
 From state #137
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #138
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 16:SHIFT(to state 69)]
@@ -3533,17 +3583,18 @@ From state #139
  [term 40:REDUCE(with prod 35)] [term 42:REDUCE(with prod 35)]
  [term 43:REDUCE(with prod 35)] [term 44:REDUCE(with prod 35)]
  [term 45:REDUCE(with prod 35)] [term 46:REDUCE(with prod 35)]
- [term 48:REDUCE(with prod 35)] [term 49:REDUCE(with prod 35)]
- [term 50:REDUCE(with prod 35)] [term 51:REDUCE(with prod 35)]
- [term 52:REDUCE(with prod 35)] [term 53:REDUCE(with prod 35)]
+ [term 47:REDUCE(with prod 35)] [term 48:REDUCE(with prod 35)]
+ [term 49:REDUCE(with prod 35)] [term 50:REDUCE(with prod 35)]
+ [term 51:REDUCE(with prod 35)] [term 52:REDUCE(with prod 35)]
+ [term 53:REDUCE(with prod 35)]
 From state #140
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #141
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 16:SHIFT(to state 69)]
@@ -3553,10 +3604,10 @@ From state #142
  [term 3:SHIFT(to state 59)] [term 5:SHIFT(to state 50)]
  [term 19:SHIFT(to state 44)] [term 23:SHIFT(to state 62)]
  [term 44:SHIFT(to state 64)] [term 45:SHIFT(to state 57)]
- [term 46:SHIFT(to state 53)] [term 48:SHIFT(to state 47)]
- [term 49:SHIFT(to state 58)] [term 50:SHIFT(to state 55)]
- [term 51:SHIFT(to state 60)] [term 52:SHIFT(to state 48)]
- [term 53:SHIFT(to state 52)]
+ [term 46:SHIFT(to state 53)] [term 47:SHIFT(to state 10)]
+ [term 48:SHIFT(to state 47)] [term 49:SHIFT(to state 58)]
+ [term 50:SHIFT(to state 55)] [term 51:SHIFT(to state 60)]
+ [term 52:SHIFT(to state 48)] [term 53:SHIFT(to state 52)]
 From state #143
  [term 2:SHIFT(to state 71)] [term 3:SHIFT(to state 73)]
  [term 4:SHIFT(to state 74)] [term 6:SHIFT(to state 144)]
@@ -3573,9 +3624,10 @@ From state #145
  [term 40:REDUCE(with prod 28)] [term 42:REDUCE(with prod 28)]
  [term 43:REDUCE(with prod 28)] [term 44:REDUCE(with prod 28)]
  [term 45:REDUCE(with prod 28)] [term 46:REDUCE(with prod 28)]
- [term 48:REDUCE(with prod 28)] [term 49:REDUCE(with prod 28)]
- [term 50:REDUCE(with prod 28)] [term 51:REDUCE(with prod 28)]
- [term 52:REDUCE(with prod 28)] [term 53:REDUCE(with prod 28)]
+ [term 47:REDUCE(with prod 28)] [term 48:REDUCE(with prod 28)]
+ [term 49:REDUCE(with prod 28)] [term 50:REDUCE(with prod 28)]
+ [term 51:REDUCE(with prod 28)] [term 52:REDUCE(with prod 28)]
+ [term 53:REDUCE(with prod 28)]
 From state #146
  [term 6:REDUCE(with prod 7)] [term 21:REDUCE(with prod 7)]
 From state #147
@@ -3627,51 +3679,49 @@ From state #6
 From state #7
  [non term 7->state 9]
 From state #8
- [non term 19->state 10]
+ [non term 19->state 11]
 From state #9
 From state #10
 From state #11
- [non term 12->state 12]
 From state #12
- [non term 6->state 21] [non term 10->state 14] [non term 11->state 22]
- [non term 19->state 18]
+ [non term 12->state 13]
 From state #13
+ [non term 6->state 22] [non term 10->state 15] [non term 11->state 23]
+ [non term 19->state 19]
 From state #14
- [non term 9->state 28]
 From state #15
+ [non term 9->state 29]
 From state #16
 From state #17
 From state #18
 From state #19
 From state #20
 From state #21
- [non term 19->state 24]
 From state #22
+ [non term 19->state 25]
 From state #23
 From state #24
 From state #25
 From state #26
 From state #27
- [non term 6->state 29] [non term 19->state 18]
 From state #28
+ [non term 6->state 30] [non term 19->state 19]
 From state #29
- [non term 19->state 30]
 From state #30
+ [non term 19->state 31]
 From state #31
- [non term 6->state 32] [non term 14->state 33] [non term 15->state 34]
- [non term 19->state 18]
 From state #32
- [non term 19->state 147]
+ [non term 6->state 33] [non term 14->state 34] [non term 15->state 35]
+ [non term 19->state 19]
 From state #33
+ [non term 19->state 147]
 From state #34
 From state #35
- [non term 6->state 32] [non term 14->state 146] [non term 19->state 18]
 From state #36
+ [non term 6->state 33] [non term 14->state 146] [non term 19->state 19]
 From state #37
- [non term 12->state 38]
 From state #38
- [non term 3->state 39] [non term 6->state 21] [non term 11->state 22]
- [non term 19->state 18]
+ [non term 3->state 39]
 From state #39
  [non term 1->state 46] [non term 2->state 41] [non term 4->state 61]
  [non term 16->state 56] [non term 19->state 42]
@@ -3841,10 +3891,10 @@ From state #162
 From state #163
 -----------------------------
 ------- CUP v0.11a beta 20060608 Parser Generation Summary -------
-  0 errors and 15 warnings
-  55 terminals, 21 non-terminals, and 64 productions declared, 
+  0 errors and 6 warnings
+  55 terminals, 21 non-terminals, and 65 productions declared, 
   producing 164 unique parse states.
-  7 terminals declared but not used.
+  6 terminals declared but not used.
   0 non-terminals declared but not used.
   0 productions never reduced.
   0 conflicts detected (0 expected).
