@@ -283,31 +283,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void outColorExp(ColorLiteral node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inColorArrayType(ColorArrayType node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outColorArrayType(ColorArrayType node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inColorType(ColorType node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outColorType(ColorType node) {
-    defaultOut(node);
-  }
-
-  @Override
   public void inEqualExp(EqualExp node) {
     defaultIn(node);
      write2File("\n\t# start equality check");
@@ -340,8 +315,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
     write2File(
       "\n\t# compare the operands" +
-      "\n\tcp    r24, r18" + 
-      "\n\tcpc   r25, r19" + 
+      "\n\tcp r24, r18" + 
+      "\n\tcpc r25, r19" + 
       "\n\tbreq " + trueBranch + " # goto true branch" + 
       "\n" + falseBranch + ": # false branch" + 
       "\n\tldi r24, 0" + 
@@ -545,10 +520,10 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     write2File(
       "\n\tpop r25 # get button literal" + 
       "\n\t### MeggyCheckButton" +
-      "\n\tcall    _Z16CheckButtonsDownv" +
-      "\n\tlds    r24, " + avrButton +
+      "\n\tcall _Z16CheckButtonsDownv" +
+      "\n\tlds r24, " + avrButton +
       "\n\t# if button value is zero, push 0 else push 1" +
-      "\n\ttst    r24 # Test for Zero or Minus" + 
+      "\n\ttst r24 # Test for Zero or Minus" + 
       "\n\tbreq " + falseBranch + " # goto false branch" + 
       "\n" + trueBranch + ": # if true" + 
       "\n\tldi r24, 1" + 
@@ -580,9 +555,9 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\t### Meggy.delay() call" +
       "\n\t# load delay parameter" +
       "\n\t# load a two byte expression off stack" +
-      "\n\tpop    r24" +
-      "\n\tpop    r25" +
-      "\n\tcall   _Z8delay_msj"
+      "\n\tpop r24" +
+      "\n\tpop r25" +
+      "\n\tcall _Z8delay_msj"
     );
   }
 
@@ -607,12 +582,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     write2File(
       "\n\t### Meggy.getPixel(x,y) call" +
       "\n\t# load a one byte expression off stack" +
-      "\n\tpop    r22" +
+      "\n\tpop r22" +
       "\n\t# load a one byte expression off stack" +
-      "\n\tpop    r24" +
-      "\n\tcall   _Z6ReadPxhh" +
+      "\n\tpop r24" +
+      "\n\tcall _Z6ReadPxhh" +
       "\n\t# push one byte expression onto stack" +
-      "\n\tpush   r24");
+      "\n\tpush r24");
   }
 
   @Override
@@ -644,8 +619,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         "\n\tpop r22" + 
         "\n\t# load a one byte expression off stack" + 
         "\n\tpop r24" + 
-        "\n\tcall   _Z6DrawPxhhh" + 
-        "\n\tcall   _Z12DisplaySlatev\n");
+        "\n\tcall _Z6DrawPxhhh" + 
+        "\n\tcall _Z12DisplaySlatev\n");
   }
 
   @Override
@@ -667,12 +642,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     write2File(
       "\n\n\t### Meggy.toneStart(tone, time_ms) call" + 
       "\n\t# load a two byte expression off stack" + 
-      "\n\tpop    r22" + 
-      "\n\tpop    r23" + 
+      "\n\tpop r22" + 
+      "\n\tpop r23" + 
       "\n\t# load a two byte expression off stack" + 
-      "\n\tpop    r24" + 
-      "\n\tpop    r25" + 
-      "\n\tcall   _Z10Tone_Startjj"
+      "\n\tpop r24" + 
+      "\n\tpop r25" + 
+      "\n\tcall _Z10Tone_Startjj"
     );
   }
 
@@ -775,13 +750,13 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     } else if (retSize == 1) {
       write2File(
         "\n\t# load a one byte expression off stack" + 
-        "\n\tpop    r25"
+        "\n\tpop r25"
       );
     } else {
       write2File(
         "\n\t# load a two byte expression off stack" + 
-        "\n\tpop    r24" + 
-        "\n\tpop    r25"
+        "\n\tpop r24" + 
+        "\n\tpop r25"
       );
     }
     write2File("\n\t# pop space off stack for parameters and locals");
@@ -790,8 +765,8 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     }
     write2File(
       "\n\t# restoring the frame pointer" + 
-      "\n\tpop    r28" + 
-      "\n\tpop    r29" + 
+      "\n\tpop r28" + 
+      "\n\tpop r29" + 
       "\n\tret" +
       "\n\t.size " + methodName + ", .-" + methodName + "\n\n"
     );
@@ -823,11 +798,11 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tpop r24 # lower bits of x" +
       "\n\tpop r25 # higher bits of x" +
       "\n\t# Do INT sub operation" +
-      "\n\tsub    r24, r18" +
-      "\n\tsbc    r25, r19" +
+      "\n\tsub r24, r18" +
+      "\n\tsbc r25, r19" +
       "\n\t# push two byte expression onto stack" +
-      "\n\tpush   r25 # higher bits" +
-      "\n\tpush   r24 # lower bits");
+      "\n\tpush r25 # higher bits" +
+      "\n\tpush r24 # lower bits");
   }
 
   @Override
@@ -849,21 +824,21 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     write2File(
       "\n\n\t# MulExp, only works for byte" + 
       "\n\t# load a one byte expression off stack" + 
-      "\n\tpop    r18" + 
+      "\n\tpop r18" + 
       "\n\t# load a one byte expression off stack" + 
-      "\n\tpop    r22" + 
+      "\n\tpop r22" + 
       "\n\t# move low byte src into dest reg" + 
-      "\n\tmov    r24, r18" + 
+      "\n\tmov r24, r18" + 
       "\n\t# move low byte src into dest reg" + 
-      "\n\tmov    r26, r22" + 
+      "\n\tmov r26, r22" + 
       "\n\t# Do mul operation of two input bytes" + 
-      "\n\tmuls   r24, r26" + 
+      "\n\tmuls r24, r26" + 
       "\n\t# push two byte expression onto stack" + 
-      "\n\tpush   r1" + 
-      "\n\tpush   r0" + 
+      "\n\tpush r1" + 
+      "\n\tpush r0" + 
       "\n\t# clear r0 and r1" + 
-      "\n\teor    r0,r0" + 
-      "\n\teor    r1,r1"
+      "\n\teor r0,r0" + 
+      "\n\teor r1,r1"
     );
   }
 
@@ -872,14 +847,14 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     int size = ST.lookup(node.getId()).getSize();
     write2File(
       "\n\t# NewExp" +
-      "\n\tldi    r24, lo8(" + int2String(size) + ")" + 
-      "\n\tldi    r25, hi8(" + int2String(size) + ")" + 
+      "\n\tldi r24, lo8(" + int2String(size) + ")" + 
+      "\n\tldi r25, hi8(" + int2String(size) + ")" + 
       "\n\t# allocating object of size 0 on heap" +
-      "\n\tcall    malloc" +
+      "\n\tcall malloc" +
       "\n\t# push object address" +
       "\n\t# push two byte expression onto stack" +
-      "\n\tpush   r25" +
-      "\n\tpush   r24"
+      "\n\tpush r25" +
+      "\n\tpush r24"
     );
   }
 
@@ -921,15 +896,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       write2File(
         "\n\n\t# neg int" +
         "\n\t# load a two byte expression off stack" +
-        "\n\tpop    r24" +
-        "\n\tpop    r25" +
-        "\n\tldi     r22, 0" +
-        "\n\tldi     r23, 0" +
-        "\n\tsub     r22, r24" +
-        "\n\tsbc     r23, r25" +
+        "\n\tpop r24" +
+        "\n\tpop r25" +
+        "\n\tldi r22, 0" +
+        "\n\tldi r23, 0" +
+        "\n\tsub r22, r24" +
+        "\n\tsbc r23, r25" +
         "\n\t# push two byte expression onto stack" +
-        "\n\tpush   r23" +
-        "\n\tpush   r22"
+        "\n\tpush r23" +
+        "\n\tpush r22"
       );
     }
   }
@@ -970,17 +945,17 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   public void outPlusExp(PlusExp node) {
      write2File(
         "\n\t# left operand of +" + 
-        "\n\tpop    r18" + 
-        "\n\tpop    r19" + 
+        "\n\tpop r18" + 
+        "\n\tpop r19" + 
         "\n\t# right operand of +" + 
-        "\n\tpop    r24" +
-        "\n\tpop    r25" +
+        "\n\tpop r24" +
+        "\n\tpop r25" +
         "\n\t# Do add operation" +
-        "\n\tadd    r24, r18" +
-        "\n\tadc    r25, r19" +
+        "\n\tadd r24, r18" +
+        "\n\tadc r25, r19" +
         "\n\t# push two byte expression onto stack" +
-        "\n\tpush   r25" +
-        "\n\tpush   r24");
+        "\n\tpush r25" +
+        "\n\tpush r24");
   }
 
   @Override
@@ -1024,11 +999,11 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     write2File(
       "\n\t# loading the implicit \"this\"" +
       "\n\t# load a two byte variable from base+offset" +
-      "\n\tldd    r31, " + thisSTE.getBase() + " + " + int2String(thisSTE.getOffset() + 1) + 
-      "\n\tldd    r30, " + thisSTE.getBase() + " + " + int2String(thisSTE.getOffset()) + 
+      "\n\tldd r31, " + thisSTE.getBase() + " + " + int2String(thisSTE.getOffset() + 1) + 
+      "\n\tldd r30, " + thisSTE.getBase() + " + " + int2String(thisSTE.getOffset()) + 
       "\n\t# push two byte expression onto stack" +
-      "\n\tpush   r31" +
-      "\n\tpush   r30"
+      "\n\tpush r31" +
+      "\n\tpush r30"
     );
   }
 
