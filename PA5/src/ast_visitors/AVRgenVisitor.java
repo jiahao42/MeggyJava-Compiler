@@ -156,58 +156,10 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void inArrayAssignStatement(ArrayAssignStatement node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outArrayAssignStatement(ArrayAssignStatement node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inArrayExp(ArrayExp node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outArrayExp(ArrayExp node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inAssignStatement(AssignStatement node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outAssignStatement(AssignStatement node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inBlockStatement(BlockStatement node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outBlockStatement(BlockStatement node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void inBoolType(BoolType node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outBoolType(BoolType node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inButtonExp(ButtonLiteral node) {
-    defaultIn(node);
+  public void visitAssignStatement(AssignStatement node) {
+    if (node.getExp() != null) {
+      node.getExp().accept(this);
+    }
   }
 
   @Override
@@ -217,16 +169,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tldi r24, " + node.getIntValue() +
       "\n\tpush r24"
     );
-  }
-
-  @Override
-  public void inButtonType(ButtonType node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outButtonType(ButtonType node) {
-    defaultOut(node);
   }
 
   @Override
@@ -242,16 +184,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         "\n\tpush r24 # push lower bits back \n"
       );
     }
-  }
-
-  @Override
-  public void inByteType(ByteType node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outByteType(ByteType node) {
-    defaultOut(node);
   }
 
   @Override
@@ -493,21 +425,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void outIfStatement(IfStatement node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inIntArrayType(IntArrayType node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outIntArrayType(IntArrayType node) {
-    defaultOut(node);
-  }
-
-  @Override
   public void inIntegerExp(IntLiteral node) {
     write2File(
       "\n\t# Load constant int " + node.getIntValue() + 
@@ -517,26 +434,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tpush r25 # higher bits" +
       "\n\tpush r24 # lower bits\n"
     );
-  }
-
-  @Override
-  public void inIntType(IntType node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outIntType(IntType node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inLengthExp(LengthExp node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outLengthExp(LengthExp node) {
-    defaultOut(node);
   }
 
   @Override
@@ -694,21 +591,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tcall   _Z6ReadPxhh" +
       "\n\t# push one byte expression onto stack" +
       "\n\tpush   r24");
-  }
-
-  @Override
-  public void inMeggySetAuxLEDs(MeggySetAuxLEDs node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outMeggySetAuxLEDs(MeggySetAuxLEDs node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inMeggySetPixel(MeggySetPixel node) {
-    defaultIn(node);
   }
 
   @Override
@@ -897,11 +779,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void inMinusExp(MinusExp node) {
-    defaultIn(node);
-  }
-
-  @Override
   public void visitMinusExp(MinusExp node) {
     inMinusExp(node);
     if (node.getLExp() != null) {
@@ -931,11 +808,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\t# push two byte expression onto stack" +
       "\n\tpush   r25 # higher bits" +
       "\n\tpush   r24 # lower bits");
-  }
-
-  @Override
-  public void inMulExp(MulExp node) {
-    defaultIn(node);
   }
 
   @Override
@@ -1043,11 +915,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void inNotExp(NotExp node) {
-    defaultIn(node);
-  }
-
-  @Override
   public void outNotExp(NotExp node) {
     write2File(
       "\n\t# not operation" +
@@ -1127,11 +994,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void outProgram(Program node) {
-    this.out.flush();
-  }
-
-  @Override
   public void outThisExp(ThisLiteral node) {
     VarSTE thisSTE = (VarSTE)(ST.lookupInnermost(node.getLexeme()));
     write2File(
@@ -1158,16 +1020,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void inToneType(ToneType node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outToneType(ToneType node) {
-    defaultOut(node);
-  }
-
-  @Override
   public void inTopClassDecl(TopClassDecl node) {
     assert(ST.getCurrentScope() == ST.getGlobalScope());
     ST.pushScope(ST.lookup(node.getName()).getScope());
@@ -1188,38 +1040,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tpush r22"
     );
   }
-
-  @Override
-  public void outTrueExp(TrueLiteral node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inVarDecl(VarDecl node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outVarDecl(VarDecl node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inVoidType(VoidType node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outVoidType(VoidType node) {
-    defaultOut(node);
-  }
-
+  
   @Override
   public void inWhileStatement(WhileStatement node) {
     write2File(
       "\n\n\t### start of while loop"
     );
-    
   }
 
   @Override
