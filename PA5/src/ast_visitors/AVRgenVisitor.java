@@ -678,7 +678,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void visitMethodDecl(MethodDecl node) {
-    inMethodDecl(node);
     String methodName = ST.genMethodName(node.getName());
     ST.pushScope(ST.lookup(node.getName()).getScope());
     write2File(
@@ -702,15 +701,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         formalSize += getType(e.getType()).getAVRTypeSize(); // calculate size for params
       }
     }
-    int varSize = 0;
+    int localSize = 0;
     {
       List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
       for (VarDecl e : copy) {
         e.accept(this);
-        varSize += getType(e.getType()).getAVRTypeSize(); // calculate size for locals
+        localSize += getType(e.getType()).getAVRTypeSize(); // calculate size for locals
       }
     }
-    for (int i = 0; i < formalSize + varSize; i++) {
+    for (int i = 0; i < formalSize + localSize; i++) {
       write2File(
         "\n\tpush r30" // allocate space on stack
       );
@@ -786,7 +785,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       );
     }
     write2File("\n\t# pop space off stack for parameters and locals");
-    for (int i = 0; i < formalSize; i++) {
+    for (int i = 0; i < formalSize + localSize; i++) {
       write2File("\n\tpop r30");
     }
     write2File(
@@ -797,7 +796,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\t.size " + methodName + ", .-" + methodName + "\n\n"
     );
     ST.popScope();
-    outMethodDecl(node);
   }
 
   @Override
