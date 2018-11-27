@@ -161,8 +161,25 @@ public class BuildSymTable extends DepthFirstVisitor {
     ST.popScope();
   }
 
+  // @Override
+  // public void inTopClassDecl(TopClassDecl node) {
+  //   assert (ST.getCurrentScope() == ST.getGlobalScope());
+  //   ClassSTE classSTE = new ClassSTE(node.getName(), false, null, new Scope(node.getName(), Scope.classScope));
+  //   if (!ST.insert(classSTE)) {
+  //     throw new SemanticException("Class [" + classSTE.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), node.getLine(),
+  //         node.getPos());
+  //   }
+  //   debugInfo("Insert class [" + node.getName() + "] under scope " + ST.getCurrentScope().getName());
+  //   ST.pushScope(classSTE.getScope());
+  // }
+
+  // @Override
+  // public void outTopClassDecl(TopClassDecl node) {
+  //   ST.popScope();
+  // }
+
   @Override
-  public void inTopClassDecl(TopClassDecl node) {
+  public void visitTopClassDecl(TopClassDecl node) {
     assert (ST.getCurrentScope() == ST.getGlobalScope());
     ClassSTE classSTE = new ClassSTE(node.getName(), false, null, new Scope(node.getName(), Scope.classScope));
     if (!ST.insert(classSTE)) {
@@ -171,10 +188,29 @@ public class BuildSymTable extends DepthFirstVisitor {
     }
     debugInfo("Insert class [" + node.getName() + "] under scope " + ST.getCurrentScope().getName());
     ST.pushScope(classSTE.getScope());
-  }
-
-  @Override
-  public void outTopClassDecl(TopClassDecl node) {
+    /* Insert local variables to current scope */
+    {
+      int offset = 1;
+      List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
+      for (VarDecl e : copy) {
+        e.accept(this);
+        VarSTE varSTE = new VarSTE(e.getName(), getType(e.getType()), offset);
+        if (classSTE.getScope().insert(varSTE)) {
+          debugInfo("Insert var [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
+        } else {
+          throw new SemanticException("Var [" + e.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), 
+            node.getLine(),
+            node.getPos());
+        }
+        offset += getType(e.getType()).getAVRTypeSize();
+      }
+    }
+    {
+      List<MethodDecl> copy = new ArrayList<MethodDecl>(node.getMethodDecls());
+      for (MethodDecl e : copy) {
+        e.accept(this);
+      }
+    }
     ST.popScope();
   }
 
