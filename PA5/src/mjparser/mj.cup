@@ -95,12 +95,10 @@ non terminal MethodDecl method_declaration;
 non terminal LinkedList<MethodDecl> method_declaration_list;
 non terminal VarDecl var_declaration;
 non terminal LinkedList<VarDecl> var_declaration_list;
-non terminal AssignStatement assign;
 non terminal Formal formal_param;
 non terminal LinkedList<Formal> formal_param_list;
 non terminal IExp return_stmt;
 non terminal LinkedList<IExp> exp_args_list;
-non terminal IExp exp_arg;
 non terminal ILiteral identifier;
 
 /* 
@@ -134,12 +132,12 @@ program ::=
     ;
     
 main_class ::=
-        CLASS ID:c
+        CLASS identifier:class_name
         LBRACE PUBLIC STATIC VOID MAIN:m
-        LPAREN STRING LBRACKET RBRACKET ID:param RPAREN
+        LPAREN STRING LBRACKET RBRACKET identifier:param_name RPAREN
         block_statement:stmts
           {:
-            RESULT = new MainClass(m.line, m.pos, c.lexeme, param.lexeme, stmts);
+            RESULT = new MainClass(m.line, m.pos, class_name.getLexeme(), param_name.getLexeme(), stmts);
           :}
         RBRACE
     ;
@@ -320,9 +318,9 @@ statement ::=
     ;
 
 statement_list ::=
-    statement_list:list statement:s 
+    statement:s statement_list:list 
     {:  if (s != null) {
-            list.add(s);
+            list.add(0, s);
         } 
         RESULT = list; 
     :}
