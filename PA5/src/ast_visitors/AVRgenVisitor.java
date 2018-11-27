@@ -850,7 +850,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
       for (VarDecl e : copy) {
         e.accept(this);
-        varSize += getType(e).getAVRTypeSize(); // calculate size for locals
+        varSize += getType(e.getType()).getAVRTypeSize(); // calculate size for locals
       }
     }
     {
