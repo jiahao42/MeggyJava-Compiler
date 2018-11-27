@@ -220,12 +220,13 @@ public class BuildSymTable extends DepthFirstVisitor {
       List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
       for (VarDecl e : copy) {
         e.accept(this);
-        VarSTE varSTE = new VarSTE(e.getName(), getType(e), offset);
+        VarSTE varSTE = new VarSTE(e.getName(), getType(e.getType()), offset);
         if (methodSTE.getScope().insert(varSTE)) {
           debugInfo("Insert var [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
         } else {
-          throw new SemanticException("Var [" + e.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), node.getLine(),
-          node.getPos());
+          throw new SemanticException("Var [" + e.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), 
+            node.getLine(),
+            node.getPos());
         }
         offset += getType(e.getType()).getAVRTypeSize();
       }
