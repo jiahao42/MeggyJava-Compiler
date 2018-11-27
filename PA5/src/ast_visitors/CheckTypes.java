@@ -84,9 +84,8 @@ public class CheckTypes extends DepthFirstVisitor {
 
 	@Override
   public void outIdLiteral(IdLiteral node) {
-		STE ste = mCurrentST.lookup(node.getLexeme());
-		if (ste != null && ste instanceof VarSTE) {
-			VarSTE varSTE = (VarSTE)ste;
+		VarSTE varSTE = mCurrentST.lookupVar(node.getLexeme());
+		if (varSTE != null) {
 			setType(node, varSTE.getType());
 		} else {
 			throw new SemanticException(
@@ -263,11 +262,9 @@ public class CheckTypes extends DepthFirstVisitor {
 
 	@Override
   public void outNewExp(NewExp node) {
-    // TODO: should NEW with parameters in the future
-    // TODO: Should calculate the size of object
-		STE ste = mCurrentST.lookup(node.getId());
-		if (ste != null && ste instanceof ClassSTE) {
-			setType(node, Type.getOrCreateType(ste.getName()));
+		ClassSTE classSTE = mCurrentST.lookupClass(node.getId());
+		if (classSTE != null) {
+			setType(node, Type.getOrCreateType(classSTE.getName()));
 		} else {
 			throw new SemanticException(
 				"Name [" + node.getId() + "] is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
@@ -384,9 +381,8 @@ public class CheckTypes extends DepthFirstVisitor {
 	public void outCallExp(CallExp node) {
 		STE ste = mCurrentST.lookup(getType(node.getExp()).toString());
 		mCurrentST.pushScope(ste.getScope());
-		ste = mCurrentST.lookup(node.getId());
-		if (ste != null && ste instanceof MethodSTE) {
-			MethodSTE mSTE = (MethodSTE)ste;
+		MethodSTE mSTE = mCurrentST.lookupMethod(node.getId());
+		if (mSTE != null) {
 			checkMethodParameters(node, mSTE);
 			setType(node, mSTE.getSignature().getReturnType());
 		} else {
@@ -409,9 +405,8 @@ public class CheckTypes extends DepthFirstVisitor {
 			ste = mCurrentST.lookup(getType(node.getExp()).toString());
 			mCurrentST.pushScope(ste.getScope());
 		}
-		ste = mCurrentST.lookup(node.getId());
-		if (ste != null && ste instanceof MethodSTE) {
-			MethodSTE mSTE = (MethodSTE)ste;
+		MethodSTE mSTE = mCurrentST.lookupMethod(node.getId());
+		if (mSTE != null) {
 			checkMethodParameters(node, mSTE);
 			setType(node, mSTE.getSignature().getReturnType());
 		} else {
@@ -464,10 +459,8 @@ public class CheckTypes extends DepthFirstVisitor {
 	@Override
 	public void visitMethodDecl(MethodDecl node) {
 		assert (mCurrentST.getCurrentScope().getScopeType() == Scope.classScope);
-		STE ste = mCurrentST.lookup(node.getName());
-		MethodSTE methodSTE;
-		if (ste != null && ste instanceof MethodSTE) {
-			methodSTE = (MethodSTE)ste;
+		MethodSTE methodSTE = mCurrentST.lookupMethod(node.getName());
+		if (methodSTE != null) {
 			mCurrentST.pushScope(methodSTE.getScope());
 		} else {
 			throw new SemanticException(
@@ -517,9 +510,8 @@ public class CheckTypes extends DepthFirstVisitor {
 	@Override
   public void inTopClassDecl(TopClassDecl node) {
 		assert (mCurrentST.getCurrentScope() == mCurrentST.getGlobalScope());
-		STE ste = mCurrentST.lookup(node.getName());
-		if (ste != null && ste instanceof ClassSTE) {
-			ClassSTE classSTE = (ClassSTE)ste;
+		ClassSTE classSTE = mCurrentST.lookupClass(node.getName());
+		if (classSTE != null) {
 			mCurrentST.pushScope(classSTE.getScope());
 		} else {
 			throw new SemanticException(
@@ -527,7 +519,7 @@ public class CheckTypes extends DepthFirstVisitor {
 				node.getLine(),
 				node.getPos());
 		}
-		mCurrentST.pushScope(ste.getScope());
+		mCurrentST.pushScope(classSTE.getScope());
 	}
 
   @Override
@@ -538,17 +530,16 @@ public class CheckTypes extends DepthFirstVisitor {
 	@Override
   public void inMainClass(MainClass node) {
 		assert (mCurrentST.getCurrentScope() == mCurrentST.getGlobalScope());
-		STE ste = mCurrentST.lookup(node.getName());
-		if (ste != null && ste instanceof ClassSTE) {
-			ClassSTE classSTE = (ClassSTE)ste;
-			mCurrentST.pushScope(classSTE.getScope());
+		ClassSTE mainSTE = mCurrentST.lookupClass(node.getName());
+		if (mainSTE != null) {
+			mCurrentST.pushScope(mainSTE.getScope());
 		} else {
 			throw new SemanticException(
 				"Class [" + node.getName() + "] is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
 				node.getLine(),
 				node.getPos());
 		}
-		mCurrentST.pushScope(ste.getScope());
+		mCurrentST.pushScope(mainSTE.getScope());
 	}
 	
 	@Override
