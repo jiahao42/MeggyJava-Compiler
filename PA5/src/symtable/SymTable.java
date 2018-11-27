@@ -48,12 +48,51 @@ public class SymTable {
         STE result = null;
         while (!copy.empty()) {
             Scope scope = copy.pop();
-            if (scope.lookup(sym) != null) {
-                result = scope.lookup(sym);
-                break;
+            result = scope.lookup(sym);
+            if (result != null) {
+                return result;
             }
         }
-        return result;
+        return null;
+    }
+
+    public VarSTE lookupVar(String sym) {
+        Stack<Scope> copy = (Stack<Scope>)mScopeStack.clone();
+        STE result = null;
+        while (!copy.empty()) {
+            Scope scope = copy.pop();
+            result = scope.lookup(sym);
+            if (result != null && result instanceof VarSTE) {
+                return (VarSTE)result;
+            }
+        }
+        return null;
+    }
+
+    public MethodSTE lookupMethod(String sym) {
+        Stack<Scope> copy = (Stack<Scope>)mScopeStack.clone();
+        STE result = null;
+        while (!copy.empty()) {
+            Scope scope = copy.pop();
+            result = scope.lookup(sym);
+            if (result != null && result instanceof MethodSTE) {
+                return (MethodSTE)result;
+            }
+        }
+        return null;
+    }
+
+    public ClassSTE lookupClass(String sym) {
+        Stack<Scope> copy = (Stack<Scope>)mScopeStack.clone();
+        STE result = null;
+        while (!copy.empty()) {
+            Scope scope = copy.pop();
+            result = scope.lookup(sym);
+            if (result != null && result instanceof ClassSTE) {
+                return (ClassSTE)result;
+            }
+        }
+        return null;
     }
 
     /**

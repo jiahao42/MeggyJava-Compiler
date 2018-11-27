@@ -11,7 +11,7 @@ import meggy.Meggy;
 
 class PA5GrammarTest {
   public static void main(String[] parameters) {
-    new TestVarDecl().func(new CustomType());
+    new TestVarDecl().func(new CustomType(), 1);
   }
 }
 
@@ -28,7 +28,7 @@ class TestVarDecl {
   Meggy.Button bt;
   Meggy.Tone tone;
   TestVarDecl t; // class type
-  public int func(CustomType yo) {
+  public int func(CustomType yo, int zzz) {
     int aa;
     byte bb;
     boolean cc;
@@ -36,6 +36,7 @@ class TestVarDecl {
     Meggy.Button bbtt;
     Meggy.Tone ttone;
     TestVarDecl tt; // class type
+    zzz = 1;
     aa = 1;
     bb = (byte)1;
     cc = true;

@@ -346,7 +346,6 @@ public class CheckTypes extends DepthFirstVisitor {
 	
 	@Override
   public void visitWhileStatement(WhileStatement node) {
-    inWhileStatement(node);
     if (node.getExp() != null) {
       node.getExp().accept(this);
 		}
@@ -359,6 +358,24 @@ public class CheckTypes extends DepthFirstVisitor {
     if (node.getStatement() != null) {
       node.getStatement().accept(this);
     }
+	}
+
+	@Override
+	public void outAssignStatement(AssignStatement node) {
+		VarSTE var = mCurrentST.lookupVar(node.getId());
+		if (var != null) {
+			if (var.getType() != getType(node.getExp())) {
+				throw new SemanticException(
+					"Invalid type in assignment to var [" + node.getId() + "], expect: " + var.getType().toString() + ", actual: " + getType(node.getExp()).toString(), 
+					node.getLine(),
+					node.getPos());
+			}
+		} else {
+			throw new SemanticException(
+				"Var [" + node.getId() + "] is not defined under scope " + mCurrentST.getCurrentScope().getName(), 
+				node.getLine(),
+				node.getPos());
+		}
 	}
 	
 	/** Others **/

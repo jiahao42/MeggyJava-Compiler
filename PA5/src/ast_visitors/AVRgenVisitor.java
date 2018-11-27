@@ -798,7 +798,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         formalSize += getType(e.getType()).getAVRTypeSize(); // calculate size for params
       }
     }
-    for (int i = 0; i < formalSize; i++) {
+    int varSize = 0;
+    {
+      List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
+      for (VarDecl e : copy) {
+        e.accept(this);
+        varSize += getType(e.getType()).getAVRTypeSize(); // calculate size for locals
+      }
+    }
+    for (int i = 0; i < formalSize + varSize; i++) {
       write2File(
         "\n\tpush r30" // allocate space on stack
       );
@@ -845,14 +853,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       reg -= 2;
     }
     write2File("\n\t/* done with function " + methodName + " prologue */\n\n");
-    int varSize = 0;
-    {
-      List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
-      for (VarDecl e : copy) {
-        e.accept(this);
-        varSize += getType(e.getType()).getAVRTypeSize(); // calculate size for locals
-      }
-    }
     {
       List<IStatement> copy = new ArrayList<IStatement>(node.getStatements());
       for (IStatement e : copy) {
@@ -977,8 +977,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void outNewExp(NewExp node) {
-    // TODO: should NEW with parameters in the future
-    // TODO: Should calculate the size of object
     int size = ST.lookup(node.getId()).getSize();
     write2File(
       "\n\t# NewExp" +
@@ -992,7 +990,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tpush   r24"
     );
   }
-  
+
   @Override
   public void visitNegExp(NegExp node) {
     inNegExp(node);
