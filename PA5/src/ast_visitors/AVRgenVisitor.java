@@ -157,8 +157,30 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void visitAssignStatement(AssignStatement node) {
+    write2File(
+      "\n\n\t### AssignStatement" + 
+      "\n\t# eval rhs exp");
     if (node.getExp() != null) {
       node.getExp().accept(this);
+    }
+    write2File(
+      "\n\t# load rhs exp"
+    );
+    VarSTE varSTE = ST.lookupVar(node.getId());
+    if (getType(node.getExp()).getAVRTypeSize() == 1) {
+      write2File(
+        "\n\tpop r24" + 
+        "\n\t# store rhs into var " + node.getId() + 
+        "\n\tstd Y + " + int2String(varSTE.getOffset()) + ", r24"
+      );
+    } else { // 2
+      write2File(
+        "\n\tpop r24" + 
+        "\n\tpop r25" + 
+        "\n\t# store rhs into var " + node.getId() + 
+        "\n\tstd Y + " + int2String(varSTE.getOffset() + 1) + ", r25" + 
+        "\n\tstd Y + " + int2String(varSTE.getOffset()) + ", r24"
+      );
     }
   }
 
@@ -991,6 +1013,11 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         e.printStackTrace();
       }
     }
+  }
+
+  @Override
+  public void outProgram(Program node) {
+    this.out.flush();
   }
 
   @Override
