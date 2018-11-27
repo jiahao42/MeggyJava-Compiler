@@ -87,6 +87,11 @@ public class BuildSymTable extends DepthFirstVisitor {
     setType(node, Type.TONE);
   }
 
+  @Override
+  public void outClassType(ClassType node) {
+    setType(node, Type.getOrCreateType(node.getName()));
+  }
+
   /* Literals */
 	@Override
 	public void outIntegerExp(IntLiteral node) {
