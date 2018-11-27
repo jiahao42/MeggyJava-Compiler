@@ -11,7 +11,7 @@ import meggy.Meggy;
 
 class PA5GrammarTest {
   public static void main(String[] parameters) {
-    
+    new TestVarDecl().func(new CustomType());
   }
 }
 

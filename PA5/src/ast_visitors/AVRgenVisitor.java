@@ -818,9 +818,9 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     int reg = 25;
     int offset = 1;
     write2File(
-      "\n\t# store r" + int2String(reg) + " to Y + " + int2String(offset + 1) + 
+      // "\n\t# store r" + int2String(reg) + " to Y + " + int2String(offset + 1) + 
       "\n\tstd Y + " + int2String(offset + 1) + ", r" + int2String(reg) + 
-      "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
+      // "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
       "\n\tstd Y + " + int2String(offset) + ", r" + int2String(reg - 1)
     );
     reg -= 2;
@@ -829,15 +829,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       int size = getType(e.getType()).getAVRTypeSize();
       if (size == 2) {
         write2File(
-          "\n\t# store r" + int2String(reg) + " to Y + " + int2String(offset + 1) + 
+          // "\n\t# store r" + int2String(reg) + " to Y + " + int2String(offset + 1) + 
           "\n\tstd Y + " + int2String(offset + 1) + ", r" + int2String(reg) + 
-          "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
+          // "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
           "\n\tstd Y + " + int2String(offset) + ", r" + int2String(reg - 1)
         );
         offset += 2;
       } else if (size == 1) {
         write2File(
-          "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
+          // "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
           "\n\tstd Y + " + int2String(offset) + ", r" + int2String(reg - 1)
         );
         offset += 1;
@@ -976,21 +976,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   @Override
-  public void inNewArrayExp(NewArrayExp node) {
-    defaultIn(node);
-  }
-
-  @Override
-  public void outNewArrayExp(NewArrayExp node) {
-    defaultOut(node);
-  }
-
-  @Override
-  public void inNewExp(NewExp node) {
-    defaultIn(node);
-  }
-
-  @Override
   public void outNewExp(NewExp node) {
     // TODO: should NEW with parameters in the future
     // TODO: Should calculate the size of object
@@ -1007,12 +992,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\tpush   r24"
     );
   }
-
-  @Override
-  public void inNegExp(NegExp node) {
-    defaultIn(node);
-  }
-
+  
   @Override
   public void visitNegExp(NegExp node) {
     inNegExp(node);

@@ -204,6 +204,7 @@ public class BuildSymTable extends DepthFirstVisitor {
         }
         offset += getType(e.getType()).getAVRTypeSize();
       }
+      classSTE.setSize(offset - 1);
     }
     {
       List<MethodDecl> copy = new ArrayList<MethodDecl>(node.getMethodDecls());

@@ -29,4 +29,7 @@ public class STE {
     public int getSize() {
         return mSize;
     }
+    public void setSize(int size) {
+        mSize = size;
+    }
 }
