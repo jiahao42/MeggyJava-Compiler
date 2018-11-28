@@ -163,25 +163,54 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     if (node.getExp() != null) {
       node.getExp().accept(this);
     }
-    write2File(
-      "\n\t# load rhs exp"
-    );
-    VarSTE varSTE = ST.lookupVar(node.getId());
     if (getType(node.getExp()).getAVRTypeSize() == 1) {
       write2File(
-        "\n\tpop r24" + 
+        "\n\t# load rhs exp" + 
+        "\n\tpop r24"
+      );
+      VarSTE varSTE = ST.lookupVar(node.getId());
+      if (varSTE.getBase() == SymTable.classVarBase) {
+        write2File(
+          "\n\t# loading the implicit \"this\"" + 
+          "\n\tldd r31, Y + 2" + 
+          "\n\tldd r30, Y + 1"
+        );
+      }
+      write2File(
         "\n\t# store rhs into var " + node.getId() + 
         "\n\tstd " + varSTE.getBase() + " + " + int2String(varSTE.getOffset()) + ", r24"
       );
     } else { // 2
       write2File(
+        "\n\t# load rhs exp" + 
         "\n\tpop r24" + 
-        "\n\tpop r25" + 
+        "\n\tpop r25"
+      );
+      VarSTE varSTE = ST.lookupVar(node.getId());
+      if (varSTE.getBase() == SymTable.classVarBase) {
+        write2File(
+          "\n\t# loading the implicit \"this\"" + 
+          "\n\tldd r31, Y + 2" + 
+          "\n\tldd r30, Y + 1"
+        );
+      }
+      write2File(
         "\n\t# store rhs into var " + node.getId() + 
         "\n\tstd " + varSTE.getBase() + " + " + int2String(varSTE.getOffset() + 1) + ", r25" + 
         "\n\tstd " + varSTE.getBase() + " + " + int2String(varSTE.getOffset()) + ", r24"
       );
     }
+    // if (getType(node.getExp()).getAVRTypeSize() == 1) {
+
+    // } else { // 2
+    //   write2File(
+    //     "\n\tpop r24" + 
+    //     "\n\tpop r25" + 
+    //     "\n\t# store rhs into var " + node.getId() + 
+    //     "\n\tstd " + varSTE.getBase() + " + " + int2String(varSTE.getOffset() + 1) + ", r25" + 
+    //     "\n\tstd " + varSTE.getBase() + " + " + int2String(varSTE.getOffset()) + ", r24"
+    //   );
+    // }
   }
 
   @Override
@@ -343,11 +372,17 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   public void outIdLiteral(IdLiteral node) {
     write2File(
       "\n\t# IdExp" + 
-      "\n\t# load value for variable " + node.getLexeme() + 
-      "\n\t# variable is a local or param variable"
+      "\n\t# load value for variable " + node.getLexeme()
     );
     VarSTE varSTE = (VarSTE)(ST.lookup(node.getLexeme()));
     int size = varSTE.getSize();
+    if (varSTE.getBase() == SymTable.classVarBase) {
+      write2File(
+        "\n\t# loading the implicit \"this\"" + 
+        "\n\tldd    r31, Y + 2" + 
+        "\n\tldd    r30, Y + 1"
+      );
+    }
     if (size == 1) {
       write2File(
         "\n\t# load a one byte variable from base+offset" + 

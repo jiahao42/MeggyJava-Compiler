@@ -160,23 +160,6 @@ public class BuildSymTable extends DepthFirstVisitor {
     ST.popScope();
   }
 
-  // @Override
-  // public void inTopClassDecl(TopClassDecl node) {
-  //   assert (ST.getCurrentScope() == ST.getGlobalScope());
-  //   ClassSTE classSTE = new ClassSTE(node.getName(), false, null, new Scope(node.getName(), Scope.classScope));
-  //   if (!ST.insert(classSTE)) {
-  //     throw new SemanticException("Class [" + classSTE.getName() + "] is already defined in scope " + ST.getCurrentScope().getName(), node.getLine(),
-  //         node.getPos());
-  //   }
-  //   debugInfo("Insert class [" + node.getName() + "] under scope " + ST.getCurrentScope().getName());
-  //   ST.pushScope(classSTE.getScope());
-  // }
-
-  // @Override
-  // public void outTopClassDecl(TopClassDecl node) {
-  //   ST.popScope();
-  // }
-
   @Override
   public void visitTopClassDecl(TopClassDecl node) {
     assert (ST.getCurrentScope() == ST.getGlobalScope());
@@ -189,7 +172,7 @@ public class BuildSymTable extends DepthFirstVisitor {
     ST.pushScope(classSTE.getScope());
     /* Insert local variables to current scope */
     {
-      int offset = 1;
+      int offset = 0;
       List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
       for (VarDecl e : copy) {
         e.accept(this);
@@ -203,7 +186,7 @@ public class BuildSymTable extends DepthFirstVisitor {
         }
         offset += getType(e.getType()).getAVRTypeSize();
       }
-      classSTE.setSize(offset - 1);
+      classSTE.setSize(offset);
     }
     {
       List<MethodDecl> copy = new ArrayList<MethodDecl>(node.getMethodDecls());

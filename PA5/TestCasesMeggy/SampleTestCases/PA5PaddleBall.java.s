@@ -89,7 +89,6 @@ PaddleBallBoard_run:
 	std Y + 3, r24
 	# IdExp
 	# load value for variable b
-	# variable is a local or param variable
 	# load a two byte variable from base+offset
 	ldd r25, Y + 4
 	ldd r24, Y + 3
@@ -124,7 +123,6 @@ PaddleBallBoard_run:
 	std Y + 5, r24
 	# IdExp
 	# load value for variable p
-	# variable is a local or param variable
 	# load a two byte variable from base+offset
 	ldd r25, Y + 6
 	ldd r24, Y + 5
@@ -154,8 +152,8 @@ MJ_L0: # while loop condition
 	breq MJ_L1 # if true, go to body
 	jmp MJ_L2 # if false, go to next block
 MJ_L1: # while loop body
-#### if statement
-	#push Meggy.Button.Left
+	#### if statement
+	# push Meggy.Button.Left
 	ldi r24, 16
 	push r24
 	pop r25 # get button literal
@@ -199,7 +197,6 @@ MJ_L5: # get comparison result
 MJ_L6: # then branch
 	# IdExp
 	# load value for variable p
-	# variable is a local or param variable
 	# load a two byte variable from base+offset
 	ldd r25, Y + 6
 	ldd r24, Y + 5
@@ -217,8 +214,8 @@ MJ_L6: # then branch
 	jmp MJ_L8 # jump over the else branch
 
 MJ_L7: # else branch
-#### if statement
-	#push Meggy.Button.Right
+	#### if statement
+	# push Meggy.Button.Right
 	ldi r24, 32
 	push r24
 	pop r25 # get button literal
@@ -262,7 +259,6 @@ MJ_L14: # get comparison result
 MJ_L15: # then branch
 	# IdExp
 	# load value for variable p
-	# variable is a local or param variable
 	# load a two byte variable from base+offset
 	ldd r25, Y + 6
 	ldd r24, Y + 5
@@ -284,7 +280,6 @@ MJ_L17:
 MJ_L8: 
 	# IdExp
 	# load value for variable b
-	# variable is a local or param variable
 	# load a two byte variable from base+offset
 	ldd r25, Y + 4
 	ldd r24, Y + 3
@@ -372,8 +367,11 @@ Paddle_init:
 
 	# load rhs exp
 	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
 	# store rhs into var centerX
-	std Z + 1, r24
+	std Z + 0, r24
 
 	### AssignStatement
 	# eval rhs exp
@@ -384,8 +382,11 @@ Paddle_init:
 
 	# load rhs exp
 	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
 	# store rhs into var color
-	std Z + 2, r24
+	std Z + 1, r24
 	# loading the implicit "this"
 	# load a two byte variable from base+offset
 	ldd r31, Y + 2
@@ -395,9 +396,11 @@ Paddle_init:
 	push r30
 	# IdExp
 	# load value for variable centerX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -447,7 +450,6 @@ Paddle_drawPaddle:
 
 	# IdExp
 	# load value for variable x
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
@@ -530,9 +532,11 @@ MJ_L24:
 
 	# IdExp
 	# load value for variable color
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 2
+	ldd r24, Z + 1
 	# push one byte expression onto stack
 	push r24
 	### Meggy.setPixel(x,y,color) call
@@ -547,7 +551,6 @@ MJ_L24:
 
 	# IdExp
 	# load value for variable x
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
@@ -569,9 +572,11 @@ MJ_L24:
 
 	# IdExp
 	# load value for variable color
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 2
+	ldd r24, Z + 1
 	# push one byte expression onto stack
 	push r24
 	### Meggy.setPixel(x,y,color) call
@@ -587,7 +592,6 @@ MJ_L24:
 	# start a add operation
 	# IdExp
 	# load value for variable x
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
@@ -668,9 +672,11 @@ MJ_L28:
 
 	# IdExp
 	# load value for variable color
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 2
+	ldd r24, Z + 1
 	# push one byte expression onto stack
 	push r24
 	### Meggy.setPixel(x,y,color) call
@@ -717,7 +723,7 @@ Paddle_moveLeft:
 	/* done with function Paddle_moveLeft prologue */
 
 
-#### if statement
+	#### if statement
 	# loading the implicit "this"
 	# load a two byte variable from base+offset
 	ldd r31, Y + 2
@@ -727,9 +733,11 @@ Paddle_moveLeft:
 	push r30
 	# IdExp
 	# load value for variable centerX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -853,9 +861,11 @@ MJ_L32: # then branch
 	# start a add operation
 	# IdExp
 	# load value for variable centerX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -952,9 +962,11 @@ MJ_L42:
 	# eval rhs exp
 	# IdExp
 	# load value for variable centerX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -1020,8 +1032,11 @@ MJ_L46:
 
 	# load rhs exp
 	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
 	# store rhs into var centerX
-	std Z + 1, r24
+	std Z + 0, r24
 	# loading the implicit "this"
 	# load a two byte variable from base+offset
 	ldd r31, Y + 2
@@ -1031,9 +1046,11 @@ MJ_L46:
 	push r30
 	# IdExp
 	# load value for variable centerX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -1083,7 +1100,7 @@ Paddle_moveRight:
 	/* done with function Paddle_moveRight prologue */
 
 
-#### if statement
+	#### if statement
 	# loading the implicit "this"
 	# load a two byte variable from base+offset
 	ldd r31, Y + 2
@@ -1094,9 +1111,11 @@ Paddle_moveRight:
 	# start a add operation
 	# IdExp
 	# load value for variable centerX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -1217,9 +1236,11 @@ MJ_L49: # get comparison result
 MJ_L50: # then branch
 	# IdExp
 	# load value for variable centerX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -1319,9 +1340,11 @@ MJ_L60:
 	# start a add operation
 	# IdExp
 	# load value for variable centerX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -1385,8 +1408,11 @@ MJ_L64:
 
 	# load rhs exp
 	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
 	# store rhs into var centerX
-	std Z + 1, r24
+	std Z + 0, r24
 	# loading the implicit "this"
 	# load a two byte variable from base+offset
 	ldd r31, Y + 2
@@ -1396,9 +1422,11 @@ MJ_L64:
 	push r30
 	# IdExp
 	# load value for variable centerX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -1508,7 +1536,6 @@ MJ_L66:
 	push r24
 	# IdExp
 	# load value for variable x
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
@@ -1551,7 +1578,6 @@ MJ_L72: # if left expr is true
 	# &&: right operand
 	# IdExp
 	# load value for variable x
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
@@ -1676,7 +1702,6 @@ MJ_L86:
 	push r24
 	# IdExp
 	# load value for variable y
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
@@ -1726,7 +1751,6 @@ MJ_L92: # if left expr is true
 	# &&: right operand
 	# IdExp
 	# load value for variable y
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
@@ -1850,8 +1874,11 @@ Ball_init:
 
 	# load rhs exp
 	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
 	# store rhs into var prevX
-	std Z + 3, r24
+	std Z + 2, r24
 
 	### AssignStatement
 	# eval rhs exp
@@ -1872,8 +1899,11 @@ Ball_init:
 
 	# load rhs exp
 	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
 	# store rhs into var prevY
-	std Z + 4, r24
+	std Z + 3, r24
 
 	### AssignStatement
 	# eval rhs exp
@@ -1894,8 +1924,11 @@ Ball_init:
 
 	# load rhs exp
 	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
 	# store rhs into var currentX
-	std Z + 1, r24
+	std Z + 0, r24
 
 	### AssignStatement
 	# eval rhs exp
@@ -1916,8 +1949,11 @@ Ball_init:
 
 	# load rhs exp
 	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
 	# store rhs into var currentY
-	std Z + 2, r24
+	std Z + 1, r24
 
 	### AssignStatement
 	# eval rhs exp
@@ -1928,27 +1964,36 @@ Ball_init:
 
 	# load rhs exp
 	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
 	# store rhs into var ballColor
-	std Z + 5, r24
+	std Z + 4, r24
 	# IdExp
 	# load value for variable currentX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
+	# load a one byte variable from base+offset
+	ldd r24, Z + 0
+	# push one byte expression onto stack
+	push r24
+	# IdExp
+	# load value for variable currentY
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
 	ldd r24, Z + 1
 	# push one byte expression onto stack
 	push r24
 	# IdExp
-	# load value for variable currentY
-	# variable is a local or param variable
-	# load a one byte variable from base+offset
-	ldd r24, Z + 2
-	# push one byte expression onto stack
-	push r24
-	# IdExp
 	# load value for variable ballColor
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 5
+	ldd r24, Z + 4
 	# push one byte expression onto stack
 	push r24
 	### Meggy.setPixel(x,y,color) call
@@ -2054,7 +2099,6 @@ MJ_L103:
 	push r24
 	# IdExp
 	# load value for variable x
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
@@ -2097,7 +2141,6 @@ MJ_L109: # if left expr is true
 	# &&: right operand
 	# IdExp
 	# load value for variable x
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
@@ -2222,7 +2265,6 @@ MJ_L123:
 	push r24
 	# IdExp
 	# load value for variable y
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
@@ -2272,7 +2314,6 @@ MJ_L129: # if left expr is true
 	# &&: right operand
 	# IdExp
 	# load value for variable y
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
@@ -2388,14 +2429,12 @@ Ball_collision:
 
 	# IdExp
 	# load value for variable x
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
 	push r24
 	# IdExp
 	# load value for variable y
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
@@ -2502,9 +2541,11 @@ Ball_move:
 	# start a add operation
 	# IdExp
 	# load value for variable currentX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -2521,9 +2562,11 @@ MJ_L147:
 	push r24
 	# IdExp
 	# load value for variable prevX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 3
+	ldd r24, Z + 2
 	# push one byte expression onto stack
 	push r24
 
@@ -2574,9 +2617,11 @@ MJ_L151:
 	push r24
 	# IdExp
 	# load value for variable currentX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -2621,9 +2666,11 @@ MJ_L153:
 	# start a add operation
 	# IdExp
 	# load value for variable currentY
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 2
+	ldd r24, Z + 1
 	# push one byte expression onto stack
 	push r24
 
@@ -2640,9 +2687,11 @@ MJ_L155:
 	push r24
 	# IdExp
 	# load value for variable prevY
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 4
+	ldd r24, Z + 3
 	# push one byte expression onto stack
 	push r24
 
@@ -2693,9 +2742,11 @@ MJ_L159:
 	push r24
 	# IdExp
 	# load value for variable currentY
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 2
+	ldd r24, Z + 1
 	# push one byte expression onto stack
 	push r24
 
@@ -2734,7 +2785,7 @@ MJ_L161:
 	pop r24
 	# store rhs into var nextY
 	std Y + 4, r24
-#### if statement
+	#### if statement
 	#### short-circuited && operation
 	# &&: left operand
 	# loading the implicit "this"
@@ -2746,14 +2797,12 @@ MJ_L161:
 	push r30
 	# IdExp
 	# load value for variable nextX
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
 	push r24
 	# IdExp
 	# load value for variable nextY
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
@@ -2790,14 +2839,12 @@ MJ_L168: # if left expr is true
 	push r30
 	# IdExp
 	# load value for variable nextX
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
 	push r24
 	# IdExp
 	# load value for variable nextY
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
@@ -2866,9 +2913,11 @@ MJ_L166: # else branch
 	# eval rhs exp
 	# IdExp
 	# load value for variable currentX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -2885,9 +2934,11 @@ MJ_L172:
 	push r24
 	# IdExp
 	# load value for variable prevX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 3
+	ldd r24, Z + 2
 	# push one byte expression onto stack
 	push r24
 
@@ -2933,9 +2984,11 @@ MJ_L174:
 	# eval rhs exp
 	# IdExp
 	# load value for variable currentY
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 2
+	ldd r24, Z + 1
 	# push one byte expression onto stack
 	push r24
 
@@ -2952,9 +3005,11 @@ MJ_L176:
 	push r24
 	# IdExp
 	# load value for variable prevY
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 4
+	ldd r24, Z + 3
 	# push one byte expression onto stack
 	push r24
 
@@ -3001,9 +3056,11 @@ MJ_L178:
 	# start a add operation
 	# IdExp
 	# load value for variable currentX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -3020,7 +3077,6 @@ MJ_L180:
 	push r24
 	# IdExp
 	# load value for variable deltaX
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 5
 	# push one byte expression onto stack
@@ -3066,9 +3122,11 @@ MJ_L182:
 	# eval rhs exp
 	# IdExp
 	# load value for variable currentY
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 2
+	ldd r24, Z + 1
 	# push one byte expression onto stack
 	push r24
 
@@ -3085,7 +3143,6 @@ MJ_L184:
 	push r24
 	# IdExp
 	# load value for variable deltaY
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 6
 	# push one byte expression onto stack
@@ -3128,7 +3185,7 @@ MJ_L186:
 	pop r24
 	# store rhs into var nextY
 	std Y + 4, r24
-#### if statement
+	#### if statement
 	#### short-circuited && operation
 	# &&: left operand
 	# loading the implicit "this"
@@ -3140,14 +3197,12 @@ MJ_L186:
 	push r30
 	# IdExp
 	# load value for variable nextX
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
 	push r24
 	# IdExp
 	# load value for variable nextY
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
@@ -3184,14 +3239,12 @@ MJ_L193: # if left expr is true
 	push r30
 	# IdExp
 	# load value for variable nextX
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
 	push r24
 	# IdExp
 	# load value for variable nextY
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
@@ -3260,9 +3313,11 @@ MJ_L191: # else branch
 	# eval rhs exp
 	# IdExp
 	# load value for variable currentX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 
@@ -3279,7 +3334,6 @@ MJ_L197:
 	push r24
 	# IdExp
 	# load value for variable deltaX
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 5
 	# push one byte expression onto stack
@@ -3328,9 +3382,11 @@ MJ_L199:
 	# start a add operation
 	# IdExp
 	# load value for variable currentY
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 2
+	ldd r24, Z + 1
 	# push one byte expression onto stack
 	push r24
 
@@ -3347,7 +3403,6 @@ MJ_L201:
 	push r24
 	# IdExp
 	# load value for variable deltaY
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 6
 	# push one byte expression onto stack
@@ -3388,7 +3443,7 @@ MJ_L203:
 	pop r24
 	# store rhs into var nextY
 	std Y + 4, r24
-#### if statement
+	#### if statement
 	#### short-circuited && operation
 	# &&: left operand
 	# loading the implicit "this"
@@ -3400,14 +3455,12 @@ MJ_L203:
 	push r30
 	# IdExp
 	# load value for variable nextX
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
 	push r24
 	# IdExp
 	# load value for variable nextY
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
@@ -3444,14 +3497,12 @@ MJ_L210: # if left expr is true
 	push r30
 	# IdExp
 	# load value for variable nextX
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
 	push r24
 	# IdExp
 	# load value for variable nextY
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
@@ -3520,9 +3571,11 @@ MJ_L208: # else branch
 	# eval rhs exp
 	# IdExp
 	# load value for variable prevX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 3
+	ldd r24, Z + 2
 	# push one byte expression onto stack
 	push r24
 	# load rhs exp
@@ -3534,9 +3587,11 @@ MJ_L208: # else branch
 	# eval rhs exp
 	# IdExp
 	# load value for variable prevY
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 4
+	ldd r24, Z + 3
 	# push one byte expression onto stack
 	push r24
 	# load rhs exp
@@ -3548,16 +3603,20 @@ MJ_L192:
 MJ_L167: 
 	# IdExp
 	# load value for variable currentX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 1
+	ldd r24, Z + 0
 	# push one byte expression onto stack
 	push r24
 	# IdExp
 	# load value for variable currentY
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 2
+	ldd r24, Z + 1
 	# push one byte expression onto stack
 	push r24
 	# Color expression Meggy.Color.DARK
@@ -3577,23 +3636,23 @@ MJ_L167:
 
 	# IdExp
 	# load value for variable nextX
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
 	push r24
 	# IdExp
 	# load value for variable nextY
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
 	push r24
 	# IdExp
 	# load value for variable ballColor
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
-	ldd r24, Z + 5
+	ldd r24, Z + 4
 	# push one byte expression onto stack
 	push r24
 	### Meggy.setPixel(x,y,color) call
@@ -3611,57 +3670,71 @@ MJ_L167:
 	# eval rhs exp
 	# IdExp
 	# load value for variable currentX
-	# variable is a local or param variable
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
+	# load a one byte variable from base+offset
+	ldd r24, Z + 0
+	# push one byte expression onto stack
+	push r24
+	# load rhs exp
+	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
+	# store rhs into var prevX
+	std Z + 2, r24
+
+	### AssignStatement
+	# eval rhs exp
+	# IdExp
+	# load value for variable currentY
+	# loading the implicit "this"
+	ldd    r31, Y + 2
+	ldd    r30, Y + 1
 	# load a one byte variable from base+offset
 	ldd r24, Z + 1
 	# push one byte expression onto stack
 	push r24
 	# load rhs exp
 	pop r24
-	# store rhs into var prevX
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
+	# store rhs into var prevY
 	std Z + 3, r24
 
 	### AssignStatement
 	# eval rhs exp
 	# IdExp
-	# load value for variable currentY
-	# variable is a local or param variable
-	# load a one byte variable from base+offset
-	ldd r24, Z + 2
-	# push one byte expression onto stack
-	push r24
-	# load rhs exp
-	pop r24
-	# store rhs into var prevY
-	std Z + 4, r24
-
-	### AssignStatement
-	# eval rhs exp
-	# IdExp
 	# load value for variable nextX
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 3
 	# push one byte expression onto stack
 	push r24
 	# load rhs exp
 	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
 	# store rhs into var currentX
-	std Z + 1, r24
+	std Z + 0, r24
 
 	### AssignStatement
 	# eval rhs exp
 	# IdExp
 	# load value for variable nextY
-	# variable is a local or param variable
 	# load a one byte variable from base+offset
 	ldd r24, Y + 4
 	# push one byte expression onto stack
 	push r24
 	# load rhs exp
 	pop r24
+	# loading the implicit "this"
+	ldd r31, Y + 2
+	ldd r30, Y + 1
 	# store rhs into var currentY
-	std Z + 2, r24
+	std Z + 1, r24
 	/* epilogue start for Ball_move */
 	# handle return value
 	# no return value
