@@ -13,10 +13,10 @@ public class VarSTE extends STE {
     private Type mType;
     private String mBase;
     private int mOffset;
-    public VarSTE(String name, Type type, int offset) {
+    public VarSTE(String name, Type type, int offset, String base) {
         super(name, null);
         mType = type;
-        mBase = "Y";
+        mBase = base;
         mOffset = offset;
         mSize = mType.getAVRTypeSize();
     }

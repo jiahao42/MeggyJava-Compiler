@@ -16,7 +16,7 @@ class PA5GrammarTest {
 }
 
 class CustomType {
-  
+  int a;
 }
 
 class TestVarDecl {
@@ -36,12 +36,16 @@ class TestVarDecl {
     Meggy.Button bbtt;
     Meggy.Tone ttone;
     TestVarDecl tt; // class type
-    aa = 1;
+    aa = 11;
     bb = (byte)1;
     cc = true;
     ccolor = Meggy.Color.GREEN;
-    // bbtt = Meggy.Button.Up;
-    ttone = Meggy.Tone.Cs3;
+    Meggy.setPixel(bb, bb, ccolor);
+    // bbtt = Meggy.Button.Up; // Button Literal
+    if (Meggy.checkButton(Meggy.Button.Up) == false) {
+      ttone = Meggy.Tone.Cs3;
+      Meggy.toneStart(ttone, aa);
+    }
     return aa;
   }
 }

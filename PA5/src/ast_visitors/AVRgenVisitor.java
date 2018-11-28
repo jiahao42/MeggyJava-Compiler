@@ -84,7 +84,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     }
   }
 
-  private void promoteTo2Bytes(Node n) {
+  private void promoteTo2Bytes() {
     String negBranch = new Label().toString();
     String storeResult = new Label().toString();
     write2File(
@@ -171,15 +171,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       write2File(
         "\n\tpop r24" + 
         "\n\t# store rhs into var " + node.getId() + 
-        "\n\tstd Y + " + int2String(varSTE.getOffset()) + ", r24"
+        "\n\tstd " + varSTE.getBase() + " + " + int2String(varSTE.getOffset()) + ", r24"
       );
     } else { // 2
       write2File(
         "\n\tpop r24" + 
         "\n\tpop r25" + 
         "\n\t# store rhs into var " + node.getId() + 
-        "\n\tstd Y + " + int2String(varSTE.getOffset() + 1) + ", r25" + 
-        "\n\tstd Y + " + int2String(varSTE.getOffset()) + ", r24"
+        "\n\tstd " + varSTE.getBase() + " + " + int2String(varSTE.getOffset() + 1) + ", r25" + 
+        "\n\tstd " + varSTE.getBase() + " + " + int2String(varSTE.getOffset()) + ", r24"
       );
     }
   }
@@ -187,7 +187,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   @Override
   public void outButtonExp(ButtonLiteral node) {
     write2File(
-      "\n\t#push " + node.getLexeme() + 
+      "\n\t# push " + node.getLexeme() + 
       "\n\tldi r24, " + node.getIntValue() +
       "\n\tpush r24"
     );
@@ -294,17 +294,18 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     String trueBranch = new Label().toString();
     String falseBranch = new Label().toString();
     String nextBlock = new Label().toString();
-    if (!isInt(getType(node.getRExp()))) {
-      promoteTo2Bytes(null);
+    if (getType(node.getRExp()).getAVRTypeSize() == 1) {
+      promoteTo2Bytes();
     }
+
     write2File(
       "\n\t# right operand of ==" +
       "\n\tpop r18" + 
       "\n\tpop r19"
     );
 
-    if (!isInt(getType(node.getLExp()))) {
-      promoteTo2Bytes(null);
+    if (getType(node.getLExp()).getAVRTypeSize() == 1) {
+      promoteTo2Bytes();
     }
 
     write2File(
@@ -368,7 +369,7 @@ public class AVRgenVisitor extends DepthFirstVisitor {
 
   @Override
   public void inIfStatement(IfStatement node) {
-    write2File("\n#### if statement");
+    write2File("\n\t#### if statement");
   }
 
   @Override
@@ -705,9 +706,9 @@ public class AVRgenVisitor extends DepthFirstVisitor {
     int offset = 1;
     write2File(
       // "\n\t# store r" + int2String(reg) + " to Y + " + int2String(offset + 1) + 
-      "\n\tstd Y + " + int2String(offset + 1) + ", r" + int2String(reg) + 
+      "\n\tstd " + SymTable.methodVarBase + " + " + int2String(offset + 1) + ", r" + int2String(reg) + 
       // "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
-      "\n\tstd Y + " + int2String(offset) + ", r" + int2String(reg - 1)
+      "\n\tstd " + SymTable.methodVarBase + " + " + int2String(offset) + ", r" + int2String(reg - 1)
     );
     reg -= 2;
     offset += 2;
@@ -716,15 +717,15 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       if (size == 2) {
         write2File(
           // "\n\t# store r" + int2String(reg) + " to Y + " + int2String(offset + 1) + 
-          "\n\tstd Y + " + int2String(offset + 1) + ", r" + int2String(reg) + 
+          "\n\tstd " + SymTable.methodVarBase + " + " + int2String(offset + 1) + ", r" + int2String(reg) + 
           // "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
-          "\n\tstd Y + " + int2String(offset) + ", r" + int2String(reg - 1)
+          "\n\tstd " + SymTable.methodVarBase + " + " + int2String(offset) + ", r" + int2String(reg - 1)
         );
         offset += 2;
       } else if (size == 1) {
         write2File(
           // "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
-          "\n\tstd Y + " + int2String(offset) + ", r" + int2String(reg - 1)
+          "\n\tstd " + SymTable.methodVarBase + " + " + int2String(offset) + ", r" + int2String(reg - 1)
         );
         offset += 1;
       }

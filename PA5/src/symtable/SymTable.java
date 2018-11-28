@@ -15,6 +15,9 @@ public class SymTable {
     private final HashMap<Node, Type> mExpType = new HashMap<Node, Type>();
     private Scope mGlobalScope;
     private Stack<Scope> mScopeStack;
+    public static final int maxParamNum = 12; // 12 formal parameters at most
+    public static final String classVarBase = "Z";
+    public static final String methodVarBase = "Y";
 
     public SymTable() {
         mGlobalScope = new Scope("global", Scope.globalScope); // Global Scope don't need name, maybe?

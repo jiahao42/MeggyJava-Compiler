@@ -18,7 +18,6 @@ import exceptions.SemanticException;
 public class BuildSymTable extends DepthFirstVisitor {
   SymTable ST;
   boolean mDebug;
-  public static final int maxParamNum = 12; // 12 formal parameters at most
 
   public BuildSymTable() {
     ST = new SymTable();
@@ -194,7 +193,7 @@ public class BuildSymTable extends DepthFirstVisitor {
       List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
       for (VarDecl e : copy) {
         e.accept(this);
-        VarSTE varSTE = new VarSTE(e.getName(), getType(e.getType()), offset);
+        VarSTE varSTE = new VarSTE(e.getName(), getType(e.getType()), offset, SymTable.classVarBase);
         if (classSTE.getScope().insert(varSTE)) {
           debugInfo("Insert var [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
         } else {
@@ -233,7 +232,7 @@ public class BuildSymTable extends DepthFirstVisitor {
     setType(node, getType(node.getType()));
     /* Insert the this pointer to current scope */
     int offset = 1;
-    VarSTE thisSTE = new VarSTE("this", Type.getOrCreateType(ST.getInnermostClassName()), offset);
+    VarSTE thisSTE = new VarSTE("this", Type.getOrCreateType(ST.getInnermostClassName()), offset, SymTable.methodVarBase);
     methodSTE.getScope().insert(thisSTE);
     offset += 2;
     /* Insert formal parameters to current scope */
@@ -241,7 +240,7 @@ public class BuildSymTable extends DepthFirstVisitor {
       List<Formal> copy = new ArrayList<Formal>(node.getFormals());
       for (Formal e : copy) {
         e.accept(this);
-        VarSTE varSTE = new VarSTE(e.getName(), getType(e.getType()), offset);
+        VarSTE varSTE = new VarSTE(e.getName(), getType(e.getType()), offset, SymTable.methodVarBase);
         if (ST.getCurrentScope().insert(varSTE)) {
           debugInfo("Insert formal [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
         } else {
@@ -257,7 +256,7 @@ public class BuildSymTable extends DepthFirstVisitor {
       List<VarDecl> copy = new ArrayList<VarDecl>(node.getVarDecls());
       for (VarDecl e : copy) {
         e.accept(this);
-        VarSTE varSTE = new VarSTE(e.getName(), getType(e.getType()), offset);
+        VarSTE varSTE = new VarSTE(e.getName(), getType(e.getType()), offset, SymTable.methodVarBase);
         if (methodSTE.getScope().insert(varSTE)) {
           debugInfo("Insert var [" + e.getName() + "] under scope " + ST.getCurrentScope().getName());
         } else {
@@ -294,7 +293,7 @@ public class BuildSymTable extends DepthFirstVisitor {
     Signature mSignature = new Signature(mTypeList, retType);
     methodSTE.setSignature(mSignature);
     ST.popScope();
-    if (node.getFormals().size() > maxParamNum) { // 12 formal parameters at most
+    if (node.getFormals().size() > SymTable.maxParamNum) { // 12 formal parameters at most
       throw new SemanticException("Method [" + node.getName() + mSignature.toString() + "] under scope " + ST.getCurrentScope().getName() + " has too many parameters (at most 12)", 
         node.getLine(),
         node.getPos());
