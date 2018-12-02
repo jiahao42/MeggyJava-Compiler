@@ -30,19 +30,19 @@ public class AVRgenVisitor extends DepthFirstVisitor {
   }
 
   private boolean isByte(Type t) {
-		return t == Type.BYTE;
+    return t == Type.BYTE;
   }
 
   private boolean isInt(Type t) {
-		return t == Type.INT;
+    return t == Type.INT;
   }
 
   private Type getType(Node node) {
-		return this.ST.getExpType(node);
+    return this.ST.getExpType(node);
   }
   
   private void setType(Node node, Type t) {
-		this.ST.setExpType(node, t);
+    this.ST.setExpType(node, t);
   }
   
   private void dumpWarning(int line, int pos, String msg) {
