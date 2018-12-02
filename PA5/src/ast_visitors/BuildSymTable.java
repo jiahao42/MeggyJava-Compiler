@@ -92,39 +92,39 @@ public class BuildSymTable extends DepthFirstVisitor {
   }
 
   /* Literals */
-	@Override
-	public void outIntegerExp(IntLiteral node) {
-		setType(node, Type.INT);
-	}
+  @Override
+  public void outIntegerExp(IntLiteral node) {
+    setType(node, Type.INT);
+  }
 
-	@Override
-	public void outColorExp(ColorLiteral node) {
-		setType(node, Type.COLOR);
-	}
+  @Override
+  public void outColorExp(ColorLiteral node) {
+    setType(node, Type.COLOR);
+  }
 
-	@Override
+  @Override
   public void outButtonExp(ButtonLiteral node) {
     setType(node, Type.BUTTON);
-	}
-	
-	@Override
-  public void outTrueExp(TrueLiteral node) {
-		setType(node, Type.BOOL);
-	}
-
-	@Override
-  public void outFalseExp(FalseLiteral node) {
-		setType(node, Type.BOOL);
-	}
-
-	@Override
-	public void outToneExp(ToneLiteral node) {
-		setType(node, Type.TONE);
   }
   
   @Override
-	public void outByteCast(ByteCast node) {
-		setType(node, Type.BYTE);
+  public void outTrueExp(TrueLiteral node) {
+    setType(node, Type.BOOL);
+  }
+
+  @Override
+  public void outFalseExp(FalseLiteral node) {
+    setType(node, Type.BOOL);
+  }
+
+  @Override
+  public void outToneExp(ToneLiteral node) {
+    setType(node, Type.TONE);
+  }
+  
+  @Override
+  public void outByteCast(ByteCast node) {
+    setType(node, Type.BYTE);
   }
   
   @Override
