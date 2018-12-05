@@ -30,7 +30,10 @@ class TestVarDecl {
   TestVarDecl t; // class type
   public int func(CustomType yo) {
     int aa;
+    int a;
     byte bb;
+    byte d;
+    byte c;
     boolean cc;
     Meggy.Color ccolor;
     Meggy.Button bbtt;
@@ -39,6 +42,7 @@ class TestVarDecl {
     aa = 11;
     bb = (byte)1;
     cc = true;
+    a = b + c * d - 5 + c * d;
     ccolor = Meggy.Color.GREEN;
     Meggy.setPixel(bb, bb, ccolor);
     // bbtt = Meggy.Button.Up; // Button Literal

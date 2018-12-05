@@ -200,17 +200,6 @@ public class AVRgenVisitor extends DepthFirstVisitor {
         "\n\tstd " + varSTE.getBase() + " + " + int2String(varSTE.getOffset()) + ", r24"
       );
     }
-    // if (getType(node.getExp()).getAVRTypeSize() == 1) {
-
-    // } else { // 2
-    //   write2File(
-    //     "\n\tpop r24" + 
-    //     "\n\tpop r25" + 
-    //     "\n\t# store rhs into var " + node.getId() + 
-    //     "\n\tstd " + varSTE.getBase() + " + " + int2String(varSTE.getOffset() + 1) + ", r25" + 
-    //     "\n\tstd " + varSTE.getBase() + " + " + int2String(varSTE.getOffset()) + ", r24"
-    //   );
-    // }
   }
 
   @Override
@@ -735,14 +724,10 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       "\n\t# save off parameters" + 
       "\n\t# implicit this pointer"
     );
-    // int formalNum = node.getFormals().size();
-    // int reg = 19 + (1 + formalNum) * 2; // with implicit this pointer
     int reg = 25;
     int offset = 1;
     write2File(
-      // "\n\t# store r" + int2String(reg) + " to Y + " + int2String(offset + 1) + 
       "\n\tstd " + SymTable.methodVarBase + " + " + int2String(offset + 1) + ", r" + int2String(reg) + 
-      // "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
       "\n\tstd " + SymTable.methodVarBase + " + " + int2String(offset) + ", r" + int2String(reg - 1)
     );
     reg -= 2;
@@ -751,15 +736,12 @@ public class AVRgenVisitor extends DepthFirstVisitor {
       int size = getType(e.getType()).getAVRTypeSize();
       if (size == 2) {
         write2File(
-          // "\n\t# store r" + int2String(reg) + " to Y + " + int2String(offset + 1) + 
           "\n\tstd " + SymTable.methodVarBase + " + " + int2String(offset + 1) + ", r" + int2String(reg) + 
-          // "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
           "\n\tstd " + SymTable.methodVarBase + " + " + int2String(offset) + ", r" + int2String(reg - 1)
         );
         offset += 2;
       } else if (size == 1) {
         write2File(
-          // "\n\t# store r" + int2String(reg - 1) + " to Y + " + int2String(offset) + 
           "\n\tstd " + SymTable.methodVarBase + " + " + int2String(offset) + ", r" + int2String(reg - 1)
         );
         offset += 1;
