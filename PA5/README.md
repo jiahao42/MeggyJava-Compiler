@@ -9,7 +9,7 @@
 
 Dear Mary and TA,
 
-I think PA5 is kind of simple compare to PA3 and PA5, I just need to add a few things, such as:
+I think PA5 is kind of simple comparing to PA3 and PA4, I just need to add a few things, such as:
 
 * augment grammar in `mj.cup`
 * support custom class type, and add type checking for them
