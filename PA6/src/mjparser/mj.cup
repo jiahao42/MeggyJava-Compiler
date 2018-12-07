@@ -89,6 +89,8 @@ non terminal LinkedList<IStatement> statement_list;
 non terminal BlockStatement block_statement;
 non terminal MainClass main_class;
 non terminal IType type;
+non terminal IType primitive_type;
+non terminal IType custom_type;
 non terminal TopClassDecl class_declaration;
 non terminal LinkedList<IClassDecl> class_declaration_list;
 non terminal MethodDecl method_declaration;
@@ -120,8 +122,6 @@ precedence right UMINUS;
 precedence left RBRACKET, RBRACKET, DOT, LPAREN, RPAREN;
 precedence left ELSE;
 precedence left COMMA;
-precedence left identifier;
-
 
 
 /* Meggy Java Grammar */
@@ -244,6 +244,9 @@ return_stmt ::=
     ;
 
 type ::=
+    primitive_type | custom_type;
+
+primitive_type ::=
     BOOLEAN:b
     {:
         RESULT = new BoolType(b.line, b.pos);
@@ -272,7 +275,14 @@ type ::=
     {:
         RESULT = new ToneType(m.line, m.pos);
     :}
-    | identifier:id
+    | INT:i LBRACKET RBRACKET
+    {:
+        RESULT = new IntArrayType(i.line, i.pos);
+    :}
+    ;
+
+custom_type ::=
+    identifier:id
     {:
         RESULT = new ClassType(id.getLine(), id.getPos(), id.getLexeme());
     :}
@@ -315,6 +325,12 @@ statement ::=
     {:
         RESULT = new AssignStatement(id.getLine(), id.getPos(), id.getLexeme(), e);
     :}
+    ///*
+    | identifier:id LBRACKET exp:idx RBRACKET ASSIGN exp:e SEMI
+    {:
+        RESULT = new ArrayAssignStatement(id.getLine(), id.getPos(), id, idx, e);
+    :}
+    //*/
     ;
 
 statement_list ::=
@@ -447,6 +463,10 @@ exp ::=
     | NEW:n identifier:id LPAREN RPAREN
     {:
         RESULT = new NewExp(n.line, n.pos, id.getLexeme());
+    :}
+    | exp:arr LBRACKET exp:idx RBRACKET
+    {:
+        RESULT = new ArrayExp(arr.getLine(), arr.getPos(), arr, idx);
     :}
     ;
 
