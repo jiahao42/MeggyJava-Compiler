@@ -89,8 +89,6 @@ non terminal LinkedList<IStatement> statement_list;
 non terminal BlockStatement block_statement;
 non terminal MainClass main_class;
 non terminal IType type;
-non terminal IType primitive_type;
-non terminal IType custom_type;
 non terminal TopClassDecl class_declaration;
 non terminal LinkedList<IClassDecl> class_declaration_list;
 non terminal MethodDecl method_declaration;
@@ -244,9 +242,6 @@ return_stmt ::=
     ;
 
 type ::=
-    primitive_type | custom_type;
-
-primitive_type ::=
     BOOLEAN:b
     {:
         RESULT = new BoolType(b.line, b.pos);
@@ -263,6 +258,10 @@ primitive_type ::=
     {:
         RESULT = new VoidType(v.line, v.pos);
     :}
+    | INT:i LBRACKET RBRACKET
+    {:
+        RESULT = new IntArrayType(i.line, i.pos);
+    :}
     | MEGGYCOLOR:m
     {:
         RESULT = new ColorType(m.line, m.pos);
@@ -275,13 +274,7 @@ primitive_type ::=
     {:
         RESULT = new ToneType(m.line, m.pos);
     :}
-    | INT:i LBRACKET RBRACKET
-    {:
-        RESULT = new IntArrayType(i.line, i.pos);
-    :}
-    ;
-
-custom_type ::=
+    |
     identifier:id
     {:
         RESULT = new ClassType(id.getLine(), id.getPos(), id.getLexeme());

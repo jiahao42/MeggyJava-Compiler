@@ -1,11 +1,4 @@
-# CS6620 - PA3
-
-## Basic info 
-
-* GitHub username: jiahao42
-* email: jc4mf@virginia.edu
-
-## Info about PA3
+# PA3
 
 Dear Mary and TA:
 

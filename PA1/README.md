@@ -1,11 +1,4 @@
-# CS6620 - PA1
-
-## Basic info 
-
-* GitHub username: jiahao42
-* email: jc4mf@virginia.edu
-
-## Info about PA1
+# PA1
 
 Dear Mary and TA,
 
