@@ -1199,46 +1199,6 @@ TestParameters_testInt:
 /* done with function TestParameters_testInt prologue */
 
 
-    # IdExp
-    # load value for variable i
-    # variable is a local or param variable
-
-    # load a two byte variable from base+offset
-    ldd    r25, Y + 4
-    ldd    r24, Y + 3
-    # push two byte expression onto stack
-    push   r25
-    push   r24
-
-    # Load constant int 1
-    ldi    r24,lo8(1)
-    ldi    r25,hi8(1)
-    # push two byte expression onto stack
-    push   r25
-    push   r24
-    # load a two byte expression off stack
-    pop    r18
-    pop    r19
-    # load a two byte expression off stack
-    pop    r24
-    pop    r25
-
-    # Do add operation
-    add    r24, r18
-    adc    r25, r19
-    # push two byte expression onto stack
-    push   r25
-    push   r24
-
-    ### AssignStatement
-    # load rhs exp
-    # load a two byte expression off stack
-    pop    r24
-    pop    r25
-    # store rhs into var i
-    std    Y + 4, r25
-    std    Y + 3, r24
-
 /* epilogue start for TestParameters_testInt */
     # no return value
     # pop space off stack for parameters and locals

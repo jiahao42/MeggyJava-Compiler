@@ -14,7 +14,7 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 
 import mjparser.*;
-import symtable.SymTable;
+import symtable.*;
 import ast_visitors.*;
 import ast.visitor.*;
 import ast.node.*;
@@ -73,11 +73,13 @@ public class MJDriver {
 
       // print Symbol table to file
       java.io.PrintStream STout = new java.io.PrintStream(new java.io.FileOutputStream(filename + ".ST.dot"));
+      // ast_root.accept(new DotVisitorWithMap(new PrintWriter(STout), globalST));
+      SymTableVisualize symTableVisualize = new SymTableVisualize(globalST, new PrintWriter(STout));
+      symTableVisualize.visualize();
       System.out.println("Printing symbol table to " + filename + ".ST.dot");
       // globalST.outputDot(STout);
 
       // perform type checking
-      // TODO: Not implemented Type check yet
       ast_root.accept(new CheckTypes(globalST));
 
       // Determine whether to do register allocation or not.

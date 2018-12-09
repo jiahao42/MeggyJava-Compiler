@@ -23,4 +23,7 @@ public class ClassSTE extends STE {
             }
         }
     }
+    public boolean getMain() {
+        return mMain;
+    }
 }
