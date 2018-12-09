@@ -19,7 +19,7 @@ t2
 
 # Generated Graphviz file
 *.dot
-*.png
+# *.png
 *.ppm
 
 # Log file
